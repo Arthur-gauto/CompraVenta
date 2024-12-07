@@ -45,5 +45,7 @@
             $query->bindValue(3,$cat_nom);
             $query->execute();
         }
+        //TODO MERKER PUTAZO
     }
 ?>
+
