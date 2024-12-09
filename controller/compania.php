@@ -9,9 +9,9 @@
         //todo Guardar y editar, guardar cuando el ID este vacio, y Actualizar cuando se envie el Id
         case "guardaryeditar":
             if(empty($_POST["com_id"])){
-                $compania->insert_compania($POST["com_nom"]);
+                $compania->insert_compania($_POST["com_nom"]);
             }else{
-                $compania->update_compania($POST["com_id"],$POST["com_nom"]);
+                $compania->update_compania($_POST["com_id"],$_POST["com_nom"]);
             }
             break;
 
@@ -36,7 +36,7 @@
             break;
         //todo Mostrar información de registro según su ID
         case "mostar":
-            $datos=$compania->get_compania_x_com_id($POST["com_id"]);
+            $datos=$compania->get_compania_x_com_id($_POST["com_id"]);
             if(is_array($datos)==true and count($datos)>0){
                 foreach($datos as $row){
                     $output["com_id"] = $row["com_id"];
@@ -47,7 +47,7 @@
             break;
         //todo Cambiar estado a 0 del Registro
         case "eliminar":
-            $compania->delete_compania($POST["com_id"]);
+            $compania->delete_compania($_POST["com_id"]);
             break;
 
         

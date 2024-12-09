@@ -10,31 +10,31 @@
         case "guardaryeditar":
             if(empty($_POST["usu_id"])){
                 $usuario->insert_usuario(
-                    $POST["suc_id"],
-                    $POST["usu_correo"],
-                    $POST["usu_nom"],
-                    $POST["usu_ape"],
-                    $POST["usu_dni"],
-                    $POST["usu_telf"],
-                    $POST["usu_pass"],
-                    $POST["rol_id"]);
+                    $_POST["suc_id"],
+                    $_POST["usu_correo"],
+                    $_POST["usu_nom"],
+                    $_POST["usu_ape"],
+                    $_POST["usu_dni"],
+                    $_POST["usu_telf"],
+                    $_POST["usu_pass"],
+                    $_POST["rol_id"]);
             }else{
                 $usuario->update_usuario(
-                    $POST["usu_id"],
-                    $POST["suc_id"],
-                    $POST["usu_correo"],
-                    $POST["usu_nom"],
-                    $POST["usu_ape"],
-                    $POST["usu_dni"],
-                    $POST["usu_telf"],
-                    $POST["usu_pass"],
-                    $POST["rol_id"]);
+                    $_POST["usu_id"],
+                    $_POST["suc_id"],
+                    $_POST["usu_correo"],
+                    $_POST["usu_nom"],
+                    $_POST["usu_ape"],
+                    $_POST["usu_dni"],
+                    $_POST["usu_telf"],
+                    $_POST["usu_pass"],
+                    $_POST["rol_id"]);
             }
             break;
 
         //todo Listado de registros formato JSON para datable JS
         case "listar":
-            $datos=$usuario->get_usuario_x_suc_id($POST["suc_id"]);
+            $datos=$usuario->get_usuario_x_suc_id($_POST["suc_id"]);
             $data=Array();
             foreach($datos as $row){
                 $sub_array = array();
@@ -59,7 +59,7 @@
             break;
         //todo Mostrar información de registro según su ID
         case "mostar":
-            $datos=$usuario->get_usuario_x_usu_id($POST["usu_id"]);
+            $datos=$usuario->get_usuario_x_usu_id($_POST["usu_id"]);
             if(is_array($datos)==true and count($datos)>0){
                 foreach($datos as $row){
                     $output["usu_id"] = $row["usu_id"];
@@ -77,7 +77,7 @@
             break;
         //todo Cambiar estado a 0 del Registro
         case "eliminar":
-            $usuario->delete_usuario($POST["usu_id"]);
+            $usuario->delete_usuario($_POST["usu_id"]);
             break;
 
         

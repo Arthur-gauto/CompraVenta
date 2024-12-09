@@ -57,6 +57,37 @@
             $query->bindValue(9,$rol_id);
             $query->execute();
         }
+
+        //TODO Acceso al sistema
+        public function login(){
+            $conectar=parent::Conexion();
+            if(isset($_POST["enviar"])){
+                $sucursal = $_POST["suc_id"];
+                $correo = $_POST["usu_correo"];
+                $pass = $_POST["usu_pass"];
+                if(empty($sucursal) or empty($correo) or empty($pass) ){
+                    exit();
+                }else{
+                    $sql="SP_L_USUARIO_04 ?,?,?";
+                    $query=$conectar->prepare($sql);
+                    $query->bindValue(1,$sucursal);
+                    $query->bindValue(2,$correo);
+                    $query->bindValue(3,$pass);
+                    $query->execute();
+                    $resultado = $query->fetch();
+                    if(is_array($resultado) and count($resultado)>0){
+                        $_SESSION["USU_ID"]=$resultado["USU_ID"];
+                        $_SESSION["SUC_ID"]=$resultado["SUC_ID"];
+
+                        header("Location:".Conectar::ruta()."view/home/");
+                    }else{
+                        exit();
+                    }
+                }
+            }else{
+                exit();
+            }
+        }
     }
 ?>
 
