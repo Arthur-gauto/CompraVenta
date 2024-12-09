@@ -29,7 +29,7 @@
         //TODO Registro de datos
         public function insert_categoria($suc_id,$cat_nom){
             $conectar=parent::Conexion();
-            $sql="SP_I_CATEGORIA_01 ?";
+            $sql="SP_I_CATEGORIA_01 ?,?";
             $query=$conectar->prepare($sql);
             $query->bindValue(1,$suc_id);
             $query->bindValue(2,$cat_nom);
@@ -38,14 +38,13 @@
         //TODO Actualizar Datos
         public function update_categoria($cat_id,$suc_id,$cat_nom){
             $conectar=parent::Conexion();
-            $sql="SP_I_CATEGORIA_01 ?";
+            $sql="SP_I_CATEGORIA_01 ?,?,?";
             $query=$conectar->prepare($sql);
             $query->bindValue(1,$cat_id);
             $query->bindValue(2,$suc_id);
             $query->bindValue(3,$cat_nom);
             $query->execute();
         }
-        //TODO MERKER PUTAZO
     }
 ?>
 

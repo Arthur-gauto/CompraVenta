@@ -29,7 +29,7 @@
         //TODO Registro de datos
         public function insert_unidad($suc_id,$und_nom){
             $conectar=parent::Conexion();
-            $sql="SP_I_UNIDAD_01 ?";
+            $sql="SP_I_UNIDAD_01 ?,'";
             $query=$conectar->prepare($sql);
             $query->bindValue(1,$suc_id);
             $query->bindValue(2,$und_nom);
@@ -38,7 +38,7 @@
         //TODO Actualizar Datos
         public function update_unidad($und_id,$suc_id,$und_nom){
             $conectar=parent::Conexion();
-            $sql="SP_I_UNIDAD_01 ?";
+            $sql="SP_I_UNIDAD_01 ?,?,?";
             $query=$conectar->prepare($sql);
             $query->bindValue(1,$und_id);
             $query->bindValue(2,$suc_id);
