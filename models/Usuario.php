@@ -77,7 +77,11 @@
                     $resultado = $query->fetch();
                     if(is_array($resultado) and count($resultado)>0){
                         $_SESSION["USU_ID"]=$resultado["USU_ID"];
+                        $_SESSION["USU_NOM"]=$resultado["USU_NOM"];
+                        $_SESSION["USU_APE"]=$resultado["USU_APE"];
+                        $_SESSION["USU_CORREO"]=$resultado["USU_CORREO"];
                         $_SESSION["SUC_ID"]=$resultado["SUC_ID"];
+                        $_SESSION["COM_ID"]=$resultado["COM_ID"];
 
                         header("Location:".Conectar::ruta()."view/home/");
                     }else{
