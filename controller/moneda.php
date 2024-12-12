@@ -35,7 +35,7 @@
             echo json_encode($results);
             break;
         //todo Mostrar información de registro según su ID
-        case "mostar":
+        case "mostrar":
             $datos=$moneda->get_moneda_x_mon_id($POST["mon_id"]);
             if(is_array($datos)==true and count($datos)>0){
                 foreach($datos as $row){

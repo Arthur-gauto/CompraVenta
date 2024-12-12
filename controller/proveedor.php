@@ -38,7 +38,7 @@
             echo json_encode($results);
             break;
         //todo Mostrar información de registro según su ID
-        case "mostar":
+        case "mostrar":
             $datos=$proveedor->get_proveedor_x_prov_id($POST["prov_id"]);
             if(is_array($datos)==true and count($datos)>0){
                 foreach($datos as $row){

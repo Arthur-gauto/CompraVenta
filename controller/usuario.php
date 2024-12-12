@@ -58,7 +58,7 @@
             echo json_encode($results);
             break;
         //todo Mostrar información de registro según su ID
-        case "mostar":
+        case "mostrar":
             $datos=$usuario->get_usuario_x_usu_id($_POST["usu_id"]);
             if(is_array($datos)==true and count($datos)>0){
                 foreach($datos as $row){

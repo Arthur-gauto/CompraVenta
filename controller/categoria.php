@@ -8,22 +8,29 @@
     switch($_GET["op"]){
         //todo Guardar y editar, guardar cuando el ID este vacio, y Actualizar cuando se envie el Id
         case "guardaryeditar":
+            error_log("cat_id: " . $_POST["cat_id"]);
+
             if(empty($_POST["cat_id"])){
-                $categoria->insert_categoria($POST["suc_id"],$POST["cat_nom"]);
+                $categoria->insert_categoria($_POST["suc_id"],$_POST["cat_nom"]);
+                //$mensaje = "INSERTT";
+                //cho "<script>console.log('Mensaje desde PHP: " . $mensaje . "');</script>";
             }else{
-                $categoria->update_categoria($POST["cat_id"],$POST["suc_id"],$POST["cat_nom"]);
+                $categoria->update_categoria($_POST["cat_id"],$_POST["suc_id"],$_POST["cat_nom"]);
+                //$mensaje = "UPDATEE";
+                //echo "<script>console.log('Mensaje desde PHP: " . $mensaje . "');</script>";
             }
             break;
 
         //todo Listado de registros formato JSON para datable JS
         case "listar":
-            $datos=$categoria->get_categoria_x_suc_id($POST["suc_id"]);
+            $datos=$categoria->get_categoria_x_suc_id($_POST["suc_id"]);
             $data=Array();
             foreach($datos as $row){
                 $sub_array = array();
-                $sub_array = $row["cat_nom"];
-                $sub_array = "Editar";
-                $sub_array = "Eliminar";
+                $sub_array[] = $row["CAT_NOM"];
+                $sub_array[] = $row["FECH_CREA"];
+                $sub_array[] = '<button type="button" onClick="editar('.$row["CAT_ID"].')" id="'.$row["CAT_ID"].'" class="btn btn-warning btn-icon waves-effect waves-light"><i class="ri-edit-2-line"></i></button>';
+                $sub_array[] = '<button type="button" onClick="eliminar('.$row["CAT_ID"].')" id="'.$row["CAT_ID"].'" class="btn btn-danger btn-icon waves-effect waves-light"><i class="ri-delete-bin-5-line"></i></button>';
                 $data[] = $sub_array;
             }
 
@@ -35,20 +42,20 @@
             echo json_encode($results);
             break;
         //todo Mostrar información de registro según su ID
-        case "mostar":
-            $datos=$categoria->get_categoria_x_cat_id($POST["cat_id"]);
+        case "mostrar":
+            $datos=$categoria->get_categoria_x_cat_id($_POST["cat_id"]);
             if(is_array($datos)==true and count($datos)>0){
                 foreach($datos as $row){
-                    $output["cat_id"] = $row["cat_id"];
-                    $output["suc_id"] = $row["suc_id"];
-                    $output["cat_nom"] = $row["cat_nom"];
+                    $output["CAT_ID"] = $row["CAT_ID"];
+                    $output["SUC_ID"] = $row["SUC_ID"];
+                    $output["CAT_NOM"] = $row["CAT_NOM"];
                 }
                 echo json_encode($output);
             }
             break;
         //todo Cambiar estado a 0 del Registro
         case "eliminar":
-            $categoria->delete_categoria($POST["cat_id"]);
+            $categoria->delete_categoria($_POST["cat_id"]);
             break;
 
         

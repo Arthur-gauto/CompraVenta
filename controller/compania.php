@@ -35,7 +35,7 @@
             echo json_encode($results);
             break;
         //todo Mostrar información de registro según su ID
-        case "mostar":
+        case "mostrar":
             $datos=$compania->get_compania_x_com_id($_POST["com_id"]);
             if(is_array($datos)==true and count($datos)>0){
                 foreach($datos as $row){
