@@ -47,7 +47,7 @@
         //TODO Actualizar Datos
         public function update_producto($prod_id,$suc_id,$cat_id,$prod_nom,$prod_descrip,$und_id,$mon_id,$prod_pcompra,$prod_pventa,$prod_stock,$prod_fechaven,$prod_img){
             $conectar=parent::Conexion();
-            $sql="SP_I_PRODUCTO_01 ?,?,?,?,?,?,?,?,?,?,?,?";
+            $sql="SP_U_PRODUCTO_01 ?,?,?,?,?,?,?,?,?,?,?,?";
             $query=$conectar->prepare($sql);
             $query->bindValue(1,$prod_id);
             $query->bindValue(2,$suc_id);

@@ -38,7 +38,7 @@
         //TODO Actualizar Datos
         public function update_rol($rol_id,$suc_id,$rol_nom){
             $conectar=parent::Conexion();
-            $sql="SP_I_ROL_01 ?,?,?";
+            $sql="SP_U_ROL_01 ?,?,?";
             $query=$conectar->prepare($sql);
             $query->bindValue(1,$rol_id);
             $query->bindValue(2,$suc_id);

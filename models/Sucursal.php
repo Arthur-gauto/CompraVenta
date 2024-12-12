@@ -38,7 +38,7 @@
         //TODO Actualizar Datos
         public function update_sucursal($suc_id,$emp_id,$suc_nom){
             $conectar=parent::Conexion();
-            $sql="SP_I_SUCURSAL_01 ?,?,?";
+            $sql="SP_U_SUCURSAL_01 ?,?,?";
             $query=$conectar->prepare($sql);
             $query->bindValue(1,$suc_id);
             $query->bindValue(2,$emp_id);

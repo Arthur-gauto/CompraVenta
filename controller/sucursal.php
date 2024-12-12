@@ -8,7 +8,7 @@
     switch($_GET["op"]){
         // Guardar y editar, guardar cuando el ID esté vacío, y actualizar cuando se envíe el ID
         case "guardaryeditar":
-            if(empty($_POST["emp_id"])){
+            if(empty($_POST["suc_id"])){
                 $sucursal->insert_sucursal($_POST["emp_id"], $_POST["suc_nom"]);
             } else {
                 $sucursal->update_sucursal($_POST["suc_id"], $_POST["emp_id"], $_POST["suc_nom"]);
@@ -22,8 +22,9 @@
             foreach($datos as $row){
                 $sub_array = array();
                 $sub_array[] = $row["SUC_NOM"];
-                $sub_array[] = "Editar";
-                $sub_array[] = "Eliminar";
+                $sub_array[] = $row["FECH_CREA"];
+                $sub_array[] = '<button type="button" onClick="editar('.$row["SUC_ID"].')" id="'.$row["SUC_ID"].'" class="btn btn-warning btn-icon waves-effect waves-light"><i class="ri-edit-2-line"></i></button>';
+                $sub_array[] = '<button type="button" onClick="eliminar('.$row["SUC_ID"].')" id="'.$row["SUC_ID"].'" class="btn btn-danger btn-icon waves-effect waves-light"><i class="ri-delete-bin-5-line"></i></button>';
                 $data[] = $sub_array;
             }
 
@@ -38,13 +39,12 @@
 
         // Mostrar información de registro según su ID
         case "mostrar":
-            $datos = $sucursal->get_sucursal_x_emp_id($_POST["emp_id"]);
+            $datos = $sucursal->get_sucursal_x_suc_id($_POST["suc_id"]);
             if(is_array($datos) && count($datos) > 0){
                 foreach($datos as $row){
-                    $output["emp_id"] = $row["emp_id"];
-                    $output["emp_id"] = $row["emp_id"];
-                    $output["emp_nom"] = $row["emp_nom"];
-                    $output["emp_ruc"] = $row["emp_ruc"];
+                    $output["SUC_ID"] = $row["SUC_ID"];
+                    $output["EMP_ID"] = $row["EMP_ID"];
+                    $output["SUC_NOM"] = $row["SUC_NOM"];
                 }
                 echo json_encode($output);
             }

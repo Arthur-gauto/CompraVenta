@@ -28,7 +28,7 @@ function guardaryeditar(e){
 
             // Opcional: Mensaje de éxito (puedes personalizarlo)
             swal.fire({
-                title: 'Registro guardado',
+                title: 'Categoria',
                 text: 'El registro se guardó correctamente.',
                 icon: 'success',
                 customClass: {

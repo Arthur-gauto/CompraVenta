@@ -44,7 +44,7 @@
         //TODO Actualizar Datos
         public function update_usuario($usu_id,$suc_id,$usu_correo,$usu_nom,$usu_ape,$usu_dni,$usu_telf,$usu_pass,$rol_id){
             $conectar=parent::Conexion();
-            $sql="SP_I_USUARIO_01 ?,?,?,?,?,?,?,?,?";
+            $sql="SP_U_USUARIO_01 ?,?,?,?,?,?,?,?,?";
             $query=$conectar->prepare($sql);
             $query->bindValue(1,$usu_id);
             $query->bindValue(2,$suc_id);
@@ -82,6 +82,7 @@
                         $_SESSION["USU_CORREO"]=$resultado["USU_CORREO"];
                         $_SESSION["SUC_ID"]=$resultado["SUC_ID"];
                         $_SESSION["COM_ID"]=$resultado["COM_ID"];
+                        $_SESSION["EMP_ID"]=$resultado["EMP_ID"];
 
                         header("Location:".Conectar::ruta()."view/home/");
                     }else{

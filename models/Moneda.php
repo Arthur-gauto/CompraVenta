@@ -38,7 +38,7 @@
         //TODO Actualizar Datos
         public function update_moneda($mon_id,$suc_id,$mon_nom){
             $conectar=parent::Conexion();
-            $sql="SP_I_MONEDA_01 ?,?,?";
+            $sql="SP_U_MONEDA_01 ?,?,?";
             $query=$conectar->prepare($sql);
             $query->bindValue(1,$mon_id);
             $query->bindValue(2,$suc_id);

@@ -42,7 +42,7 @@
         //TODO Actualizar Datos
         public function update_cliente($cli_id,$emp_id,$cli_nom,$cli_ruc,$cli_telf,$cli_direcc,$cli_correo){
             $conectar=parent::Conexion();
-            $sql="SP_I_CLIENTE_01 ?,?,?,?,?,?,?";
+            $sql="SP_U_CLIENTE_01 ?,?,?,?,?,?,?";
             $query=$conectar->prepare($sql);
             $query=$conectar->prepare($sql);
             $query->bindValue(1,$cli_id);

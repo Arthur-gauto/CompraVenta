@@ -12,9 +12,9 @@ function guardaryeditar(e){
     var formData = new FormData( $("#mantenimiento_form")[0]);
     console.log("Datos enviados:", Array.from(formData.entries()));
 
-    formData.append('suc_id',$("#SUC_IDx").val())
+    formData.append('com_id',$("#COM_IDx").val())
     $.ajax({
-        url:"../../controller/moneda.php?op=guardaryeditar",
+        url:"../../controller/empresa.php?op=guardaryeditar",
         type:"POST",
         data:formData,
         contentType:false,
@@ -28,7 +28,7 @@ function guardaryeditar(e){
 
             // Opcional: Mensaje de éxito (puedes personalizarlo)
             swal.fire({
-                title: 'Moneda',
+                title: 'EMPRESA',
                 text: 'El registro se guardó correctamente.',
                 icon: 'success',
                 customClass: {
@@ -51,9 +51,9 @@ $(document).ready(function(){
             'csvHtml5',
         ],
         "ajax":{
-            url:"../../controller/moneda.php?op=listar",
+            url:"../../controller/empresa.php?op=listar",
             type:"post",
-            data:{suc_id:1}
+            data:{com_id:1}
         },
         "bDestroy": true,
         "responsive": true,
@@ -88,15 +88,16 @@ $(document).ready(function(){
 
 });
 
-function editar(mon_id){
-    // Verifica que mon_id tiene el valor esperado
-    console.log("mon_id recibido en editar:", mon_id);
+function editar(emp_id){
+    // Verifica que com_id tiene el valor esperado
+    console.log("emp_id recibido en editar:", emp_id);
     
-    $.post("../../controller/moneda.php?op=mostrar",{mon_id:mon_id}, function(data)  {
+    $.post("../../controller/empresa.php?op=mostrar",{emp_id:emp_id}, function(data)  {
         data=JSON.parse(data);
         console.log("Datos cargados desde el servidor:", data);
-        $("#mon_id").val(data.MON_ID);
-        $("#mon_nom").val(data.MON_NOM);
+        $("#emp_id").val(data.EMP_ID);
+        $("#emp_nom").val(data.EMP_NOM);
+        $("#emp_ruc").val(data.EMP_RUC);
         
     });
     $('#lbltitulo').html('Editar Registro');
@@ -104,8 +105,8 @@ function editar(mon_id){
     
 }
 
-function eliminar(mon_id){
-    console.log(mon_id)
+function eliminar(emp_id){
+    console.log(emp_id)
     swal.fire({
         title:"ELIMINAR",
         text:"¿Desea eliminar el registro?",
@@ -115,14 +116,14 @@ function eliminar(mon_id){
         cancelButtonText: "No",
     }).then((result)=>{
         if (result.value){
-            $.post("../../controller/moneda.php?op=eliminar",{mon_id:mon_id}, function(data)  {
+            $.post("../../controller/empresa.php?op=eliminar",{emp_id:emp_id}, function(data)  {
                 console.log(data);
             });
 
             $('#table_data').DataTable().ajax.reload();
 
             swal.fire({
-                title:'Moneda',
+                title:'EMPRESA',
                 text: 'Registro eliminado',
                 icon: 'success',
                 customClass: {
@@ -134,9 +135,10 @@ function eliminar(mon_id){
 }
 
 $(document).on("click","#btnnuevo", function(){
-    console.log("cad_id entró en btn nuevo", mon_id);
-    $("#mon_id").val('');
-    $("#mon_nom").val('');
+    console.log("cad_id entró en btn nuevo", emp_id);
+    $("#emp_id").val('');
+    $("#emp_nom").val('');
+    $("#emp_ruc").val('');
     $('#lbltitulo').html('Nuevo Registro');
     $("#mantenimiento_form")[0].reset();
     $('#modalmantenimiento').modal('show');

@@ -42,7 +42,7 @@
         //TODO Actualizar Datos
         public function update_proveedor($prov_id,$emp_id,$prov_nom,$prov_ruc,$prov_telf,$prov_direcc,$prov_correo){
             $conectar=parent::Conexion();
-            $sql="SP_I_PROVEEDOR_01 ?,?,?,?,?,?,?";
+            $sql="SP_U_PROVEEDOR_01 ?,?,?,?,?,?,?";
             $query=$conectar->prepare($sql);
             $query=$conectar->prepare($sql);
             $query->bindValue(1,$prov_id);

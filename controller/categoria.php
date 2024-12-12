@@ -12,12 +12,8 @@
 
             if(empty($_POST["cat_id"])){
                 $categoria->insert_categoria($_POST["suc_id"],$_POST["cat_nom"]);
-                //$mensaje = "INSERTT";
-                //cho "<script>console.log('Mensaje desde PHP: " . $mensaje . "');</script>";
             }else{
                 $categoria->update_categoria($_POST["cat_id"],$_POST["suc_id"],$_POST["cat_nom"]);
-                //$mensaje = "UPDATEE";
-                //echo "<script>console.log('Mensaje desde PHP: " . $mensaje . "');</script>";
             }
             break;
 

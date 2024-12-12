@@ -87,7 +87,8 @@
                     </button>
 
                     <input type="hidden" name="SUC_ID" id="SUC_IDx" value="<?php echo $_SESSION["SUC_ID"]?>">
-
+                    <input type="hidden" name="SUC_ID" id="COM_IDx" value="<?php echo $_SESSION["COM_ID"]?>">
+                    <input type="hidden" name="EMP_ID" id="EMP_IDx" value="<?php echo $_SESSION["EMP_ID"]?>">
                     <div class="dropdown-menu dropdown-menu-end">
                         <!-- item-->
                         <h6 class="dropdown-header">Bienvenido <?php echo $_SESSION["USU_NOM"]?>!</h6>

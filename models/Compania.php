@@ -36,7 +36,7 @@
         //TODO Actualizar Datos
         public function update_compania($com_id,$com_nom){
             $conectar=parent::Conexion();
-            $sql="SP_I_COMPANIA_01 ?,?";
+            $sql="SP_U_COMPANIA_01 ?,?";
             $query=$conectar->prepare($sql);
             $query->bindValue(1,$com_id);
             $query->bindValue(2,$com_nom);
