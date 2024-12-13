@@ -1,6 +1,8 @@
 <?php
     require_once("../../config/conexion.php");
+    if (isset($_SESSION["USU_ID"])){
 ?>
+
 
 <!doctype html>
 <html lang="es" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg" data-sidebar-image="none">
@@ -82,3 +84,8 @@
 </body>
 
 </html>
+<?php
+    }else{
+        header("Location:".Conectar::ruta()."view/404/");
+    }
+?>
