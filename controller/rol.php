@@ -51,7 +51,17 @@
             $rol->delete_rol($POST["rol_id"]);
             break;
 
-        
+        case "combo":
+            $datos = $rol->get_rol_x_suc_id($_POST["suc_id"]);
+            if(is_array($datos) and count($datos) > 0){
+                $html = "";
+                $html .= "<option selected>Seleccionar</option>";
+                foreach($datos as $row){
+                    $html .= "<option value='".$row["ROL_ID"]."'>".$row["ROL_NOM"]."</option>";
+                }
+                echo $html;
+            }
+            break;
 
     }
 ?>

@@ -38,15 +38,16 @@
             $data=Array();
             foreach($datos as $row){
                 $sub_array = array();
-                $sub_array = $row["usu_correo"];
-                $sub_array = $row["usu_nom"];
-                $sub_array = $row["usu_ape"];
-                $sub_array = $row["usu_dni"];
-                $sub_array = $row["usu_telf"];
-                $sub_array = $row["usu_pass"];
-                $sub_array = $row["rol_id"];
-                $sub_array = "Editar";
-                $sub_array = "Eliminar";
+                $sub_array[] = $row["USU_CORREO"];
+                $sub_array[] = $row["USU_NOM"];
+                $sub_array[] = $row["USU_APE"];
+                $sub_array[] = $row["USU_DNI"];
+                $sub_array[] = $row["USU_TELF"];
+                $sub_array[] = $row["USU_PASS"];
+                $sub_array[] = $row["ROL_ID"];
+                $sub_array[] = $row["FECH_CREA"];
+                $sub_array[] = '<button type="button" onClick="editar('.$row["USU_ID"].')" id="'.$row["USU_ID"].'" class="btn btn-warning btn-icon waves-effect waves-light"><i class="ri-edit-2-line"></i></button>';
+                $sub_array[] = '<button type="button" onClick="eliminar('.$row["USU_ID"].')" id="'.$row["USU_ID"].'" class="btn btn-danger btn-icon waves-effect waves-light"><i class="ri-delete-bin-5-line"></i></button>';
                 $data[] = $sub_array;
             }
 
@@ -62,15 +63,15 @@
             $datos=$usuario->get_usuario_x_usu_id($_POST["usu_id"]);
             if(is_array($datos)==true and count($datos)>0){
                 foreach($datos as $row){
-                    $output["usu_id"] = $row["usu_id"];
-                    $output["suc_id"] = $row["suc_id"];
-                    $output["usu_nom"] = $row["usu_nom"];
-                    $output["usu_ape"] = $row["usu_ape"];
-                    $output["usu_correo"] = $row["usu_correo"];
-                    $output["usu_dni"] = $row["usu_dni"];
-                    $output["usu_telf"] = $row["usu_telf"];
-                    $output["usu_pass"] = $row["usu_pass"];
-                    $output["rol_id"] = $row["rol_id"];
+                    $output["USU_ID"] = $row["USU_ID"];
+                    $output["SUC_ID"] = $row["SUC_ID"];
+                    $output["USU_NOM"] = $row["USU_NOM"];
+                    $output["USU_APE"] = $row["USU_APE"];
+                    $output["USU_CORREO"] = $row["USU_CORREO"];
+                    $output["USU_DNI"] = $row["USU_DNI"];
+                    $output["USU_TELF"] = $row["USU_TELF"];
+                    $output["USU_PASS"] = $row["USU_PASS"];
+                    $output["ROL_ID"] = $row["ROL_ID"];
                 }
                 echo json_encode($output);
             }

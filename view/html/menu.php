@@ -86,6 +86,12 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="../MntUsuario/">
+                        <i class="ri-honour-line"></i> <span data-key="t-widgets">Mnt.Usuario</span>
+                    </a>
+                </li>
+
                 <li class="menu-title"><span data-key="t-menu">Compra</span></li>
 
                 <li class="menu-title"><span data-key="t-menu">Venta</span></li>

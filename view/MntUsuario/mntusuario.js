@@ -1,0 +1,159 @@
+var suc_id = $('#SUC_IDx').val();
+function init (){
+    $("#mantenimiento_form").on("submit", function(e){
+        
+        guardaryeditar(e);
+    });
+}
+
+function guardaryeditar(e){
+    e.preventDefault();
+    var formData = new FormData( $("#mantenimiento_form")[0]);
+    console.log("Datos enviados:", Array.from(formData.entries()));
+
+    formData.append('suc_id',$("#SUC_IDx").val())
+    $.ajax({
+        url:"../../controller/usuario.php?op=guardaryeditar",
+        type:"POST",
+        data:formData,
+        contentType:false,
+        processData:false,
+        success:function(data){
+            console.log(data);
+            $('#modalmantenimiento').modal('hide');  // Cierra el modal
+
+            // Opcional: Recargar la tabla de datos (si es necesario)
+            $('#table_data').DataTable().ajax.reload();
+
+            // Opcional: Mensaje de éxito (puedes personalizarlo)
+            swal.fire({
+                title: 'Usuario',
+                text: 'El registro se guardó correctamente.',
+                icon: 'success',
+                customClass: {
+                    confirmButton: 'btn-success'  // Personalización del botón de confirmación
+                }
+            });
+        }
+    });
+}
+
+$(document).ready(function(){
+    $.post("../../controller/rol.php?op=combo",{suc_id:suc_id},function(data){
+        console.log(data);
+        $("#rol_id").html(data);
+    });
+
+    $('#table_data').DataTable({
+        "aProcessing": true,
+        "aServerSide": true,
+        dom: 'Bfrtip',
+        buttons: [
+            'copyHtml5',
+            'excelHtml5',
+            'csvHtml5',
+        ],
+        "ajax":{
+            url:"../../controller/usuario.php?op=listar",
+            type:"post",
+            data:{suc_id:suc_id}
+        },
+        "bDestroy": true,
+        "responsive": true,
+        "bInfo":true,
+        "iDisplayLength": 10,
+        "order": [[ 0, "desc" ]],
+        "language": {
+            "sProcessing":     "Procesando...",
+            "sLengthMenu":     "Mostrar _MENU_ registros",
+            "sZeroRecords":    "No se encontraron resultados",
+            "sEmptyTable":     "Ningún dato disponible en esta tabla",
+            "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix":    "",
+            "sSearch":         "Buscar:",
+            "sUrl":            "",
+            "sInfoThousands":  ",",
+            "sLoadingRecords": "Cargando...",
+            "oPaginate": {
+                "sFirst":    "Primero",
+                "sLast":     "Último",
+                "sNext":     "Siguiente",
+                "sPrevious": "Anterior"
+            },
+            "oAria": {
+                "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+            }
+        },
+    });
+
+});
+
+function editar(usu_id){
+    // Verifica que usu_id tiene el valor esperado
+    console.log("usu_id recibido en editar:", usu_id);
+    
+    $.post("../../controller/usuario.php?op=mostrar",{usu_id:usu_id}, function(data)  {
+        data=JSON.parse(data);
+        console.log("Datos cargados desde el servidor:", data);
+        $("#usu_id").val(data.USU_ID);
+        $("#usu_correo").val(data.USU_CORREO);
+        $("#usu_nom").val(data.USU_NOM);
+        $("#usu_ape").val(data.USU_APE);
+        $("#usu_dni").val(data.USU_DNI);
+        $("#usu_telf").val(data.USU_TELF);
+        $("#usu_pass").val(data.USU_PASS);
+        $("#rol_id").val(data.ROL_ID).trigger('change');
+    });
+    $('#lbltitulo').html('Editar Registro');
+    $('#modalmantenimiento').modal('show');
+    
+}
+
+function eliminar(usu_id){
+    console.log(usu_id)
+    swal.fire({
+        title:"ELIMINAR",
+        text:"¿Desea eliminar el registro?",
+        icon: "question",
+        confirmButtonText: "Si",
+        showCancelButton: true,
+        cancelButtonText: "No",
+    }).then((result)=>{
+        if (result.value){
+            $.post("../../controller/usuario.php?op=eliminar",{usu_id:usu_id}, function(data)  {
+                console.log(data);
+            });
+
+            $('#table_data').DataTable().ajax.reload();
+
+            swal.fire({
+                title:'Usuario',
+                text: 'Registro eliminado',
+                icon: 'success',
+                customClass: {
+                    confirmButton: 'btn-danger'  // Personalización del botón de confirmación para el error
+                }
+            })
+        }
+    })
+}
+
+$(document).on("click","#btnnuevo", function(){
+    console.log("cad_id entró en btn nuevo", usu_id);
+        $("#usu_id").val('');
+        $("#usu_correo").val('');
+        $("#usu_nom").val('');
+        $("#usu_ape").val('');
+        $("#usu_dni").val('');
+        $("#usu_telf").val('');
+        $("#usu_pass").val('');
+        $("#rol_id").val('').trigger('change');
+    $('#lbltitulo').html('Nuevo Registro');
+    $("#mantenimiento_form")[0].reset();
+    $('#modalmantenimiento').modal('show');
+});
+
+init();
