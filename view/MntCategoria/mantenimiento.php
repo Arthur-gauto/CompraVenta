@@ -22,7 +22,6 @@
                 <div class="modal-footer">
                     <button type="reset" class="btn btn-light" data-bs-dismiss="modal">Cerrar</button>
                     <button type="submit" name="action" value="add" class="btn btn-primary ">Guardar</button>
-                    <button type="button" onclick="pruebaEnvioDatos()">Probar Envío</button>
                 </div>
             </form>
         </div><!-- /.modal-content -->

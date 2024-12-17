@@ -53,7 +53,18 @@
         case "eliminar":
             $categoria->delete_categoria($_POST["cat_id"]);
             break;
-
+        
+        case "combo":
+            $datos = $categoria->get_categoria_x_suc_id($_POST["suc_id"]);
+            if(is_array($datos) and count($datos) > 0){
+                $html = "";
+                $html .= "<option selected>Seleccionar</option>";
+                foreach($datos as $row){
+                    $html .= "<option value='".$row["CAT_ID"]."'>".$row["CAT_NOM"]."</option>";
+                }
+                echo $html;
+            }
+            break;
         
 
     }

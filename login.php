@@ -90,7 +90,7 @@
 
                                                 <div class="mb-3">
                                                     <label for="emp_id" class="form-label">Empresa</label>
-                                                    <select type="text" class="form-control form-select" id="emp_id" aria-label="Seleccionar">
+                                                    <select type="text" class="form-control form-select" name="emp_id" id="emp_id" aria-label="Seleccionar">
                                                         <option selected>Seleccionar </option>
                                                     </select>
                                                 </div>
@@ -156,6 +156,7 @@
             </div>
         </footer>
     </div>
+    
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="assets/libs/simplebar/simplebar.min.js"></script>
@@ -167,7 +168,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-    <script type="text/javascript" src="index.js"></script>
+    <script type="text/javascript" src="login.js"></script>
 </body>
 
 </html>

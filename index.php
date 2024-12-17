@@ -1,15 +1,3 @@
-Conversación abierta; 1 mensaje no leído
-
-Ir al contenido
-Cómo usar Gmail con lectores de pantalla
-1 de 971
-footer
-Recibidos
-
-Arturo Enmanuel Gauto Oviedo <arturotecnoman@fpuna.edu.py>
-10:07 a.m. (hace 0 minutos)
-para mí
-
 <!doctype html>
 <html lang="en" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg" data-sidebar-image="none">
 

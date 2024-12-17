@@ -1,5 +1,4 @@
-console.log("test");
-
+var emp_id = $('#EMP_IDx').val();
 function init (){
     $("#mantenimiento_form").on("submit", function(e){
         
@@ -53,7 +52,7 @@ $(document).ready(function(){
         "ajax":{
             url:"../../controller/sucursal.php?op=listar",
             type:"post",
-            data:{emp_id:1}
+            data:{emp_id:emp_id}
         },
         "bDestroy": true,
         "responsive": true,

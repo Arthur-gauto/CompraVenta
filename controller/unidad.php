@@ -52,7 +52,17 @@
             $unidad->delete_unidad($_POST["und_id"]);
             break;
 
-        
+        case "combo":
+            $datos = $unidad->get_unidad_x_suc_id($_POST["suc_id"]);
+            if(is_array($datos) and count($datos) > 0){
+                $html = "";
+                $html .= "<option selected>Seleccionar</option>";
+                foreach($datos as $row){
+                    $html .= "<option value='".$row["UND_ID"]."'>".$row["UND_NOM"]."</option>";
+                }
+                echo $html;
+            }
+            break;
 
     }
 ?>
