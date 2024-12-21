@@ -56,7 +56,7 @@
         
         case "combo":
             $datos = $categoria->get_categoria_x_suc_id($_POST["suc_id"]);
-            if(is_array($datos) and count($datos) > 0){
+            if(is_array($datos)== true and count($datos) > 0){
                 $html = "";
                 $html .= "<option selected>Seleccionar</option>";
                 foreach($datos as $row){

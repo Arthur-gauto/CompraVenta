@@ -9,7 +9,7 @@
                             <img src="../../assets/images/logo-sm.png" alt="" height="22">
                         </span>
                         <span class="logo-lg">
-                            <img src="../../assets/images/logo-dark.png" alt="" height="17">
+                            <img src="../../assets/images/logo-light.png" alt="" height="50">
                         </span>
                     </a>
 
@@ -18,7 +18,7 @@
                             <img src="../../assets/images/logo-sm.png" alt="" height="22">
                         </span>
                         <span class="logo-lg">
-                            <img src="../../assets/images/logo-light.png" alt="" height="17">
+                            <img src="../../assets/images/logo-light.png" alt="" height="50" width="100">
                         </span>
                     </a>
                 </div>
@@ -86,13 +86,14 @@
                         </span>
                     </button>
 
+                    <input type="hidden" name="USU_ID" id="USU_IDx" value="<?php echo $_SESSION["USU_ID"]?>">
                     <input type="hidden" name="SUC_ID" id="SUC_IDx" value="<?php echo $_SESSION["SUC_ID"]?>">
                     <input type="hidden" name="SUC_ID" id="COM_IDx" value="<?php echo $_SESSION["COM_ID"]?>">
                     <input type="hidden" name="EMP_ID" id="EMP_IDx" value="<?php echo $_SESSION["EMP_ID"]?>">
                     <div class="dropdown-menu dropdown-menu-end">
                         <!-- item-->
                         <h6 class="dropdown-header">Bienvenido <?php echo $_SESSION["USU_NOM"]?>!</h6>
-                        <a class="dropdown-item" href="pages-profile.html"><i
+                        <a class="dropdown-item" href="../MntPerfil/index.php"><i
                                 class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i> <span
                                 class="align-middle">Perfil</span></a>
                         <a class="dropdown-item" href="pages-faqs.html"><i

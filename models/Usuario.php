@@ -58,6 +58,17 @@
             $query->execute();
         }
 
+        public function update_usuario_pass($usu_id,$usu_pass){
+            $conectar=parent::Conexion();
+            $sql="SP_U_USUARIO_02 ?,?";
+            $query=$conectar->prepare($sql);
+            $query->bindValue(1,$usu_id);
+            $query->bindValue(2,$usu_pass);
+            $query->execute();
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+
         //TODO Acceso al sistema
         public function login(){
             $conectar=parent::Conexion();

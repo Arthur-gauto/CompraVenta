@@ -18,6 +18,15 @@
             $query->execute();
             return $query->fetchAll(PDO::FETCH_ASSOC);
         }
+
+        public function get_producto_x_cat_id($cat_id){
+            $conectar=parent::Conexion();
+            $sql="SP_L_PRODUCTO_03 ?";
+            $query=$conectar->prepare($sql);
+            $query->bindValue(1,$cat_id);
+            $query->execute();
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
         //TODO Eliminar o cambiar estado a eliminado
         public function delete_producto($prod_id){
             $conectar=parent::Conexion();

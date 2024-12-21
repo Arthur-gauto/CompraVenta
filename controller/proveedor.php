@@ -59,6 +59,18 @@
             $proveedor->delete_proveedor($_POST["prov_id"]);
             break;
 
+        case "combo":
+            $datos = $proveedor->get_proveedor_x_emp_id($_POST["emp_id"]);
+            if(is_array($datos)== true and count($datos) > 0){
+                $html = "";
+                $html .= "<option selected>Seleccionar</option>";
+                foreach($datos as $row){
+                    $html .= "<option value='".$row["PROV_ID"]."'>".$row["PROV_NOM"]."</option>";
+                }
+                echo $html;
+            }
+            break;
+
         
 
     }
