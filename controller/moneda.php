@@ -56,7 +56,7 @@
             $datos = $moneda->get_moneda_x_suc_id($_POST["suc_id"]);
             if(is_array($datos) and count($datos) > 0){
                 $html = "";
-                $html .= "<option selected>Seleccionar</option>";
+                $html .= "<option value='0' selected>Seleccionar</option>";
                 foreach($datos as $row){
                     $html .= "<option value='".$row["MON_ID"]."'>".$row["MON_NOM"]."</option>";
                 }

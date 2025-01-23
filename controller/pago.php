@@ -10,7 +10,7 @@
             $datos = $pago->get_pago();
             if(is_array($datos)== true and count($datos) > 0){
                 $html = "";
-                $html .= "<option selected>Seleccionar</option>";
+                $html .= "<option value='0' selected>Seleccionar</option>";
                 foreach($datos as $row){
                     $html .= "<option value='".$row["PAG_ID"]."'>".$row["PAG_NOM"]."</option>";
                 }
