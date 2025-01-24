@@ -125,5 +125,33 @@ switch($_GET["op"]){
         echo json_encode($output);
         
     break;
+
+    case "listarcompra":
+        $datos=$compra->get_compra_listado($_POST["suc_id"]);
+        $data = Array();
+        foreach($datos as $row){
+            $sub_array = array();
+            $sub_array[] = "C-".$row["COMPR_ID"];
+            $sub_array[] = $row["PROV_RUC"];
+            $sub_array[] = $row["PROV_NOM"];
+            $sub_array[] = $row["PAG_NOM"];
+            $sub_array[] = $row["MON_NOM"];
+            $sub_array[] = $row["COMPR_SUBTOTAL"];
+            $sub_array[] = $row["COMPR_IGV"];
+            $sub_array[] = $row["COMPR_TOTAL"];
+            $sub_array[] = $row["USU_NOM"]." ".$row["USU_APE"];
+            $sub_array[] = '<a href="../ViewCompra/?c='.$row["COMPR_ID"].'" target="_blank" class="btn btn-primary btn-icon waves-effect waves-light"><i class="ri-printer-line"></i></a>';
+            $sub_array[] = '<button type="button" onClick="ver('.$row["COMPR_ID"].')" id="'.$row["COMPR_ID"].'" class="btn btn-success btn-icon waves-effect waves-light"><i class="ri-settings-2-line"></i></button>';
+            $data[]=$sub_array;
+        }
+
+        $results = array(
+            "sEcho"=>1,
+            "iTotalRecords" =>count($data),
+            "iTotalDislpayRecords"=>count($data),
+            "aaData"=>$data);
+        echo json_encode($results);
+    
+    break;
 }
 ?>
