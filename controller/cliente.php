@@ -57,9 +57,19 @@
         //todo Cambiar estado a 0 del Registro
         case "eliminar":
             $cliente->delete_cliente($_POST["cli_id"]);
-            break;
+        break;
 
-        
+        case "combo":
+            $datos = $cliente->get_cliente_x_emp_id($_POST["emp_id"]);
+            if(is_array($datos)== true and count($datos) > 0){
+                $html = "";
+                $html .= "<option value ='0' selected>Seleccionar</option>";
+                foreach($datos as $row){
+                    $html .= "<option value='".$row["CLI_ID"]."'>".$row["CLI_NOM"]."</option>";
+                }
+                echo $html;
+            }
+        break;
 
     }
 ?>
