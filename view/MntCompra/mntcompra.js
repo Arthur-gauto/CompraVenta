@@ -18,6 +18,12 @@ $(document).ready(function(){
 
     $('#mon_id').select2();
 
+    $('#doc_id').select2();
+
+    $.post("../../controller/documento.php?op=combo", {doc_tipo: "compra"}, function(data) {
+        $("#doc_id").html(data);
+    });
+
     $.post("../../controller/proveedor.php?op=combo", {emp_id: emp_id}, function(data) {
         $("#prov_id").html(data);
     });
@@ -206,6 +212,7 @@ function listar(compr_id){
 
 $(document).on("click","#btnguardar", function(){
     var compr_id = $("#compr_id").val();
+    var doc_id = $("#doc_id").val();
     var pag_id = $("#pag_id").val();
     var prov_id = $("#prov_id").val();
     var prov_ruc = $("#prov_ruc").val();
@@ -214,7 +221,7 @@ $(document).on("click","#btnguardar", function(){
     var compr_coment = $("#compr_coment").val();
     var mon_id = $("#mon_id").val();
 
-    if($("#pag_id").val()=='0' || $("#prov_id").val()=='0' || $("#mon_id").val()=='0'){
+    if($("#doc_id").val()=='0' || $("#pag_id").val()=='0' || $("#prov_id").val()=='0' || $("#mon_id").val()=='0'){
         /* TODO: Validación pago, proveedor y moneda*/
         swal.fire({
             title: 'Compra',
@@ -243,7 +250,9 @@ $(document).on("click","#btnguardar", function(){
                     prov_direcc: prov_direcc,
                     prov_correo: prov_correo,
                     compr_coment: compr_coment,
-                    mon_id: mon_id
+                    mon_id: mon_id,
+                    doc_id: doc_id
+
                     }, function(data) {
                         swal.fire({
                             title:'Compra',

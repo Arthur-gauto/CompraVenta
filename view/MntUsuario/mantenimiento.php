@@ -68,6 +68,27 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row gy-2">
+                        <div class="col-md-12">
+                            <div>
+                                <label for="valueInput" class="form-label">Imagen</label>
+                                <input type="file" class="form-control" id="usu_img" name="usu_img"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="row gy-2">
+                        <div class="col-md-12">
+                            <div class="text-center">
+                            <a id="btnremovephoto" class="btn btn-danger btn-icon waves-effect waves-light btn-sm"><i class="ri-delete-bin-5-line"></i></a>
+                                <div class="profile-user position-relative d-inline-block mx-auto  mb-4">
+                                    <span id="pre_imagen"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="reset" class="btn btn-light" data-bs-dismiss="modal">Cerrar</button>

@@ -134,6 +134,10 @@ function eliminar(rol_id){
 
 function permiso(rol_id){
 
+    $.post("../../controller/menu.php?op=insert",{rol_id:rol_id}, function(data)  {
+
+    });
+
     $('#permisos_data').DataTable({
         "aProcessing": true,
         "aServerSide": true,

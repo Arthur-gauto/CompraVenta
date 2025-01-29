@@ -56,10 +56,10 @@
             return $query->fetchAll(PDO::FETCH_ASSOC);
         }
 
-        public function update_venta($vent_id, $pag_id, $cli_id, $cli_ruc, $cli_direcc, $cli_correo, $vent_coment, $mon_id){
+        public function update_venta($vent_id, $pag_id, $cli_id, $cli_ruc, $cli_direcc, $cli_correo, $vent_coment, $mon_id,$doc_id){
             $conectar=parent::Conexion();
             $sql="";
-            $sql="SP_U_VENTA_03 ?,?,?,?,?,?,?,?";
+            $sql="SP_U_VENTA_03 ?,?,?,?,?,?,?,?,?";
             $query=$conectar->prepare($sql);
             $query->bindValue(1,$vent_id);
             $query->bindValue(2,$pag_id);
@@ -69,6 +69,7 @@
             $query->bindValue(6,$cli_correo);
             $query->bindValue(7,$vent_coment);
             $query->bindValue(8,$mon_id);
+            $query->bindValue(9,$doc_id);
             $query->execute();
             return $query->fetchAll(PDO::FETCH_ASSOC);
         }
@@ -87,6 +88,16 @@
             $conectar=parent::Conexion();
             $sql="";
             $sql="SP_L_VENTA_03 ?";
+            $query=$conectar->prepare($sql);
+            $query->bindValue(1,$suc_id);
+            $query->execute();
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        public function get_venta_top_productos($suc_id){
+            $conectar=parent::Conexion();
+            $sql="";
+            $sql="SP_L_VENTA_04 ?";
             $query=$conectar->prepare($sql);
             $query->bindValue(1,$suc_id);
             $query->execute();

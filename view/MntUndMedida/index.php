@@ -1,8 +1,11 @@
 <?php
     require_once("../../config/conexion.php");
+    require_once("../../models/Rol.php");
+    $rol = new rol();
+    $datos= $rol -> validar_acceso_rol($_SESSION["USU_ID"],"mntundmedida");
     if (isset($_SESSION["USU_ID"])){
+        if(is_array($datos) and count($datos)>0){
 ?>
-
 <!doctype html>
 <html lang="es" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg" data-sidebar-image="none">
 
@@ -84,6 +87,9 @@
 
 </html>
 <?php
+        }else{
+            header("Location:".Conectar::ruta()."view/404/");
+        }
     }else{
         header("Location:".Conectar::ruta()."view/404/");
     }

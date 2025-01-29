@@ -43,6 +43,21 @@ switch($_GET["op"]){
         $data = Array();
         foreach($datos as $row){
             $sub_array = array();
+            if ($row["PROD_IMG"] != ''){
+                $sub_array[] = 
+                "<div class='d-flex align-items-center'>" .
+                    "<div class='flex-shrink-0 me-2'>" .
+                        "<img src='../../assets/Producto/".$row["PROD_IMG"]."' alt='' class='avatar-xs rounded-circle'>".
+                    "</div>".
+                "</div>";   
+            }else{
+                $sub_array[] = 
+                "<div class='d-flex align-items-center'>" .
+                    "<div class='flex-shrink-0 me-2'>" .
+                        "<img src='../../assets/Producto/no_imagen.png' alt='' class='avatar-xs rounded-circle'>".
+                    "</div>".
+                "</div>";   
+            }
             $sub_array[] = $row["CAT_NOM"];
             $sub_array[] = $row["PROD_NOM"];
             $sub_array[] = $row["UND_NOM"];
@@ -67,7 +82,32 @@ switch($_GET["op"]){
         foreach($datos as $row){
             ?>
             <tr>
-                <th  ><?php echo $row["CAT_NOM"] ;?></th>
+                        <td>
+                            <?php 
+                                if ($row["PROD_IMG"] != ''){
+                                    ?>
+                                        <?php
+                                            echo "<div class='d-flex align-items-center'>" .
+                                                    "<div class='flex-shrink-0 me-2'>".
+                                                        "<img src='../../assets/producto/".$row["PROD_IMG"]."' alt='' class='avatar-xs rounded-circle'>".
+                                                    "</div>".
+                                                "</div>";
+                                        ?>
+                                    <?php
+                                }else{
+                                    ?>
+                                        <?php 
+                                            echo "<div class='d-flex align-items-center'>" .
+                                                    "<div class='flex-shrink-0 me-2'>".
+                                                        "<img src='../../assets/producto/no_imagen.png' alt='' class='avatar-xs rounded-circle'>".
+                                                    "</div>".
+                                                "</div>";
+                                        ?>
+                                    <?php
+                                }
+                            ?>
+                        </td>
+                <td  ><?php echo $row["CAT_NOM"] ;?></td>
                 <td><?php echo $row["PROD_NOM"]; ?></td>
                 <td scope="row"><?php echo $row["UND_NOM"]; ?></td>
                 <td ><?php echo $row["PROD_PVENTA"]; ?></td>
@@ -83,7 +123,8 @@ switch($_GET["op"]){
         $datos=$venta->update_venta($_POST["vent_id"],$_POST["pag_id"],$_POST["cli_id"],
                                         $_POST["cli_ruc"],$_POST["cli_direcc"],
                                         $_POST["cli_correo"],$_POST["vent_coment"],
-                                        $_POST["mon_id"]);
+                                        $_POST["mon_id"],
+                                        $_POST["doc_id"]);
         
         break;
 
@@ -131,6 +172,7 @@ switch($_GET["op"]){
         foreach($datos as $row){
             $sub_array = array();
             $sub_array[] = "V-".$row["VENT_ID"];
+            $sub_array[] = $row["DOC_NOM"];
             $sub_array[] = $row["CLI_RUC"];
             $sub_array[] = $row["CLI_NOM"];
             $sub_array[] = $row["PAG_NOM"];
@@ -139,6 +181,21 @@ switch($_GET["op"]){
             $sub_array[] = $row["VENT_IGV"];
             $sub_array[] = $row["VENT_TOTAL"];
             $sub_array[] = $row["USU_NOM"]." ".$row["USU_APE"];
+            if ($row["USU_IMG"] != ''){
+                $sub_array[] =
+                "<div class='d-flex align-items-center'>" .
+                    "<div class='flex-shrink-0 me-2'>".
+                        "<img src='../../assets/usuario/".$row["USU_IMG"]."' alt='' class='avatar-xs rounded-circle'>".
+                    "</div>".
+                "</div>";
+            }else{
+                $sub_array[] =
+                "<div class='d-flex align-items-center'>" .
+                    "<div class='flex-shrink-0 me-2'>".
+                        "<img src='../../assets/usuario/no_imagen.png' alt='' class='avatar-xs rounded-circle'>".
+                    "</div>".
+                "</div>";
+            }
             $sub_array[] = '<a href="../ViewVenta/?v='.$row["VENT_ID"].'" target="_blank" class="btn btn-primary btn-icon waves-effect waves-light"><i class="ri-printer-line"></i></a>';
             $sub_array[] = '<button type="button" onClick="ver('.$row["VENT_ID"].')" id="'.$row["VENT_ID"].'" class="btn btn-secondary btn-icon waves-effect waves-light"><i class="ri-settings-2-line"></i></button>';
             $data[]=$sub_array;
@@ -151,6 +208,58 @@ switch($_GET["op"]){
             "aaData"=>$data);
         echo json_encode($results);
     
+    break;
+
+    case "listartopproducto";
+        $datos=$venta->get_venta_top_productos($_POST["suc_id"]);
+        foreach($datos as $row){
+            ?>
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="avatar-sm bg-light rounded p-1 me-2">
+                            <?php 
+                                if ($row["PROD_IMG"] != ''){
+                                    ?>
+                                        <?php
+                                            echo "<img src='../../assets/producto/".$row["PROD_IMG"]."' alt='' class='img-fluid d-block' />";
+                                        ?>
+                                    <?php
+                                }else{
+                                    ?>
+                                        <?php 
+                                            echo "<img src='../../assets/producto/no_imagen.png' alt='' class='img-fluid d-block' />";
+                                        ?>
+                                    <?php
+                                }
+                            ?>
+                            </div>
+                            <div>
+                                <h5 class="fs-14 my-1"><a href="apps-ecommerce-product-details.html" class="text-reset"><?php echo $row["PROD_NOM"];?></a></h5>
+                                <span class="text-muted"><?php echo $row["CAT_NOM"];?></span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <h5 class="fs-14 my-1 fw-normal"><?php echo $row["PROD_PVENTA"];?></h5>
+                        <span class="text-muted">P.Venta</span>
+                    </td>
+                    <td>
+                        <h5 class="fs-14 my-1 fw-normal"><?php echo $row["CANT"];?></h5>
+                        <span class="text-muted">Cant</span>
+                    </td>
+                    <td>
+                        <h5 class="fs-14 my-1 fw-normal"><?php echo $row["PROD_STOCK"];?></h5>
+                        <span class="text-muted">Stock</span>
+                    </td>
+                    <td>
+                        <h5 class="fs-14 my-1 fw-normal"><b><?php echo $row["MON_NOM"];?></b> <?php echo $row["TOTAL"];?></h5>
+                        <span class="text-muted">Total</span>
+                    </td>
+                </tr>
+            <?php
+        }
+
     break;
 }
 ?>

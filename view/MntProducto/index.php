@@ -1,6 +1,10 @@
 <?php
     require_once("../../config/conexion.php");
+    require_once("../../models/Rol.php");
+    $rol = new rol();
+    $datos= $rol -> validar_acceso_rol($_SESSION["USU_ID"],"mntproducto");
     if (isset($_SESSION["USU_ID"])){
+        if(is_array($datos) and count($datos)>0){
 ?>
 
 <!doctype html>
@@ -46,6 +50,7 @@
                                     <table id="table_data" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
                                         <thead>
                                             <tr>
+                                                <th></th>
                                                 <th>Categoria</th>
                                                 <th>Nombre</th>
                                                 <th>Und.</th>
@@ -90,6 +95,9 @@
 
 </html>
 <?php
+        }else{
+            header("Location:".Conectar::ruta()."view/404/");
+        }
     }else{
         header("Location:".Conectar::ruta()."view/404/");
     }

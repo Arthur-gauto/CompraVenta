@@ -1,6 +1,10 @@
 <?php
     require_once("../../config/conexion.php");
+    require_once("../../models/Rol.php");
+    $rol = new rol();
+    $datos= $rol -> validar_acceso_rol($_SESSION["USU_ID"],"mntperfil");
     if (isset($_SESSION["USU_ID"])){
+        if(is_array($datos) and count($datos)>0){
 ?>
 
 <!doctype html>
@@ -88,6 +92,9 @@
 
 </html>
 <?php
+        }else{
+            header("Location:".Conectar::ruta()."view/404/");
+        }
     }else{
         header("Location:".Conectar::ruta()."view/404/");
     }

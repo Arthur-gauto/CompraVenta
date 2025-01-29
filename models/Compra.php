@@ -56,10 +56,10 @@
             return $query->fetchAll(PDO::FETCH_ASSOC);
         }
 
-        public function update_compra($compr_id, $pag_id, $prov_id, $prov_ruc, $prov_direcc, $prov_correo, $compr_coment, $mon_id){
+        public function update_compra($compr_id, $pag_id, $prov_id, $prov_ruc, $prov_direcc, $prov_correo, $compr_coment, $mon_id,$doc_id){
             $conectar=parent::Conexion();
             $sql="";
-            $sql="SP_U_COMPRA_03 ?,?,?,?,?,?,?,?";
+            $sql="SP_U_COMPRA_03 ?,?,?,?,?,?,?,?,?";
             $query=$conectar->prepare($sql);
             $query->bindValue(1,$compr_id);
             $query->bindValue(2,$pag_id);
@@ -69,6 +69,7 @@
             $query->bindValue(6,$prov_correo);
             $query->bindValue(7,$compr_coment);
             $query->bindValue(8,$mon_id);
+            $query->bindValue(9,$doc_id);
             $query->execute();
             return $query->fetchAll(PDO::FETCH_ASSOC);
         }
@@ -87,6 +88,16 @@
             $conectar=parent::Conexion();
             $sql="";
             $sql="SP_L_COMPRA_03 ?";
+            $query=$conectar->prepare($sql);
+            $query->bindValue(1,$suc_id);
+            $query->execute();
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        public function get_compra_top_productos($suc_id){
+            $conectar=parent::Conexion();
+            $sql="";
+            $sql="SP_L_COMPRAS_04 ?";
             $query=$conectar->prepare($sql);
             $query->bindValue(1,$suc_id);
             $query->execute();

@@ -9,7 +9,6 @@ function init (){
 function guardaryeditar(e){
     e.preventDefault();
     var formData = new FormData( $("#mantenimiento_form")[0]);
-    console.log("Datos enviados:", Array.from(formData.entries()));
 
     formData.append('suc_id',$("#SUC_IDx").val())
     $.ajax({
@@ -19,7 +18,6 @@ function guardaryeditar(e){
         contentType:false,
         processData:false,
         success:function(data){
-            console.log(data);
             $('#modalmantenimiento').modal('hide');  // Cierra el modal
 
             // Opcional: Recargar la tabla de datos (si es necesario)
@@ -40,15 +38,12 @@ function guardaryeditar(e){
 
 $(document).ready(function(){
     $.post("../../controller/categoria.php?op=combo",{suc_id:suc_id},function(data){
-        console.log(data);
         $("#cat_id").html(data);
     });
     $.post("../../controller/moneda.php?op=combo",{suc_id:suc_id},function(data){
-        console.log(data);
         $("#mon_id").html(data);
     });
     $.post("../../controller/unidad.php?op=combo",{suc_id:suc_id},function(data){
-        console.log(data);
         $("#und_id").html(data);
     });
 
@@ -101,11 +96,9 @@ $(document).ready(function(){
 
 function editar(prod_id){
     // Verifica que prod_id tiene el valor esperado
-    console.log("prod_id recibido en editar:", prod_id);
     
     $.post("../../controller/producto.php?op=mostrar",{prod_id:prod_id}, function(data)  {
         data=JSON.parse(data);
-        console.log("Datos cargados desde el servidor:", data);
         $("#prod_id").val(data.PROD_ID);
         $("#prod_nom").val(data.PROD_NOM);
         $("#prod_descrip").val(data.PROD_DESCRIP);
@@ -115,6 +108,7 @@ function editar(prod_id){
         $("#cat_id").val(data.CAT_ID).trigger('change');
         $("#und_id").val(data.UND_ID).trigger('change');
         $("#mon_id").val(data.MON_ID).trigger('change');
+        $("#pre_imagen").html(data.PROD_IMG);
     });
     $('#lbltitulo').html('Editar Registro');
     $('#modalmantenimiento').modal('show');
@@ -122,7 +116,6 @@ function editar(prod_id){
 }
 
 function eliminar(prod_id){
-    console.log(prod_id)
     swal.fire({
         title:"ELIMINAR",
         text:"¿Desea eliminar el registro?",
@@ -133,7 +126,6 @@ function eliminar(prod_id){
     }).then((result)=>{
         if (result.value){
             $.post("../../controller/producto.php?op=eliminar",{prod_id:prod_id}, function(data)  {
-                console.log(data);
             });
 
             $('#table_data').DataTable().ajax.reload();
@@ -151,7 +143,6 @@ function eliminar(prod_id){
 }
 
 $(document).on("click","#btnnuevo", function(){
-    console.log("cad_id entró en btn nuevo", prod_id);
     $("#prod_id").val('');
     $("#prod_nom").val('');
     $("#prod_descrip").val('');
@@ -162,8 +153,27 @@ $(document).on("click","#btnnuevo", function(){
     $("#und_id").val('').trigger('change');
     $("#mon_id").val('').trigger('change');
     $('#lbltitulo').html('Nuevo Registro');
+    $('#pre_imagen').html('<img src="../../assets/producto/no_imagen.png" class="rounded-circle avatar-xl img-thumbnail user-profile-image" alt="user-profile-image"></img><input type="hidden" name="hidden_producto_imagen" value="" />');
     $("#mantenimiento_form")[0].reset();
     $('#modalmantenimiento').modal('show');
 });
 
+function filePreview(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $('#pre_imagen').html('<img src='+e.target.result+' class="rounded-circle avatar-xl img-thumbnail user-profile-image" alt="user-profile-image"></img>');
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+$(document).on('change','#prod_img',function(){
+    filePreview(this);
+});
+
+$(document).on("click","#btnremovephoto", function(){
+    $("#prod_img").val('');
+    $("#pre_imagen").html('<img src="../../assets/producto/no_imagen.png" class="rounded-circle avatar-xl img-thumbnail user-profile-image" alt="user-profile-image"></img><input type="hidden" name="hidden_producto_imagen" value="" />');
+});                                                                                                                                          
 init();

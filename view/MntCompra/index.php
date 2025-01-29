@@ -1,8 +1,11 @@
-<?php 
+<?php
     require_once("../../config/conexion.php");
-    if(isset($_SESSION["USU_ID"])){
+    require_once("../../models/Rol.php");
+    $rol = new rol();
+    $datos= $rol -> validar_acceso_rol($_SESSION["USU_ID"],"mntcompra");
+    if (isset($_SESSION["USU_ID"])){
+        if(is_array($datos) and count($datos)>0){
 ?>
-
 <!doctype html>
 <html lang="en" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg" data-sidebar-image="none">
 
@@ -53,15 +56,23 @@
                                         <div class="live-preview">
                                             <div class="row align-items-center g-3">
                                                 
-                                                <div class="col-lg-6">
-                                                    <label for="valueInput" class="form-label">Tipo de pago</label>
+                                                <div class="col-lg-4">
+                                                    <label for="doc_id" class="form-label">Documento</label>
+                                                        <select id="doc_id" name="doc_id" class="form-control form-select" aria-label=".form-select-sm example">
+                                                            <option value="0" selected>Seleccione</option>
+                                                            
+                                                        </select>
+                                                </div>                                    
+
+                                                <div class="col-lg-4">
+                                                    <label for="valueInput" class="form-label">Pago</label>
                                                         <select id="pag_id" name="pag_id" class="form-control form-select" aria-label=".form-select-sm example">
                                                             <option value="0" selected>Seleccione</option>
                                                             
                                                         </select>
                                                 </div>
                                                 
-                                                <div class="col-lg-6">
+                                                <div class="col-lg-4">
                                                     <label for="valueInput" class="form-label">Moneda</label>
                                                         <select id="mon_id" name="mon_id" class="form-control form-select" aria-label=".form-select-sm example">
                                                             <option value="0" selected>Seleccione</option>
@@ -179,6 +190,7 @@
                                         <table id="table_data" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
                                             <thead>
                                                 <tr>
+                                                    <th></th>
                                                     <th>Categoria</th>
                                                     <th>Producto</th>
                                                     <th>Und</th>
@@ -243,8 +255,11 @@
 
 </html>
 
-<?php 
-    }else {
-        header("Location:".Conectar::ruta()."view/404");
+<?php
+        }else{
+            header("Location:".Conectar::ruta()."view/404/");
+        }
+    }else{
+        header("Location:".Conectar::ruta()."view/404/");
     }
 ?>
