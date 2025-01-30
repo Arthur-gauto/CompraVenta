@@ -261,5 +261,14 @@ switch($_GET["op"]){
         }
 
     break;
+
+    case "barras":
+        $datos=$venta->get_venta_barras($_POST["suc_id"]);
+        $data = array();
+        foreach($datos as $row){
+            $data[]=$row;
+        }
+        echo json_encode($data);
+    break;
 }
 ?>
