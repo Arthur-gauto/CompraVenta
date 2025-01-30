@@ -235,7 +235,7 @@ switch($_GET["op"]){
                             ?>
                             </div>
                             <div>
-                                <h5 class="fs-14 my-1"><a href="apps-ecommerce-product-details.html" class="text-reset"><?php echo $row["PROD_NOM"];?></a></h5>
+                                <h5 class="fs-14 my-1"><?php echo $row["PROD_NOM"];?></a></h5>
                                 <span class="text-muted"><?php echo $row["CAT_NOM"];?></span>
                             </div>
                         </div>

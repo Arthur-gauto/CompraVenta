@@ -353,23 +353,11 @@
                                     <div class="col-xl-4">
                                         <div class="card card-height-100">
                                             <div class="card-header align-items-center d-flex">
-                                                <h4 class="card-title mb-0 flex-grow-1">Store Visits by Source</h4>
-                                                <div class="flex-shrink-0">
-                                                    <div class="dropdown card-header-dropdown">
-                                                        <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            <span class="text-muted">Report<i class="mdi mdi-chevron-down ms-1"></i></span>
-                                                        </a>
-                                                        <div class="dropdown-menu dropdown-menu-end">
-                                                            <a class="dropdown-item" href="#">Download Report</a>
-                                                            <a class="dropdown-item" href="#">Export</a>
-                                                            <a class="dropdown-item" href="#">Import</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div><!-- end card header -->
+                                                <h4 class="card-title mb-0 flex-grow-1">Consumo Compras Por Categoria</h4>
+                                            </div>
 
                                             <div class="card-body">
-                                                <div id="store-visits-source" data-colors='["--vz-primary", "--vz-success", "--vz-warning", "--vz-danger", "--vz-info"]' class="apex-charts" dir="ltr"></div>
+                                                <canvas id="doughnut" class="chartjs-chart" data-colors='["--vz-primary", "--vz-success", "--vz-warning", "--vz-danger", "--vz-info"]'></canvas>
                                             </div>
                                         </div> <!-- .card-->
                                     </div> <!-- .col-->
@@ -385,136 +373,17 @@
                                                     <table class="table table-borderless table-centered align-middle table-nowrap mb-0">
                                                         <thead class="text-muted table-light">
                                                             <tr>
-                                                                <th scope="col">Order ID</th>
-                                                                <th scope="col">Customer</th>
-                                                                <th scope="col">Product</th>
-                                                                <th scope="col">Amount</th>
-                                                                <th scope="col">Vendor</th>
-                                                                <th scope="col">Status</th>
-                                                                <th scope="col">Rating</th>
+                                                                <th scope="col">Nro</th>
+                                                                <th scope="col">Usuario</th>
+                                                                <th scope="col">Proveedor</th>
+                                                                <th scope="col">Moneda</th>
+                                                                <th scope="col">Subtotal</th>
+                                                                <th scope="col">IVA</th>
+                                                                <th scope="col">total</th>
                                                             </tr>
                                                         </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td>
-                                                                    <a href="apps-ecommerce-order-details.html" class="fw-medium link-primary">#VZ2112</a>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="d-flex align-items-center">
-                                                                        <div class="flex-shrink-0 me-2">
-                                                                            <img src="../../assets/images/users/avatar-1.jpg" alt="" class="avatar-xs rounded-circle" />
-                                                                        </div>
-                                                                        <div class="flex-grow-1">Alex Smith</div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>Clothes</td>
-                                                                <td>
-                                                                    <span class="text-success">$109.00</span>
-                                                                </td>
-                                                                <td>Zoetic Fashion</td>
-                                                                <td>
-                                                                    <span class="badge badge-soft-success">Paid</span>
-                                                                </td>
-                                                                <td>
-                                                                    <h5 class="fs-14 fw-medium mb-0">5.0<span class="text-muted fs-11 ms-1">(61 votes)</span></h5>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <a href="apps-ecommerce-order-details.html" class="fw-medium link-primary">#VZ2111</a>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="d-flex align-items-center">
-                                                                        <div class="flex-shrink-0 me-2">
-                                                                            <img src="../../assets/images/users/avatar-2.jpg" alt="" class="avatar-xs rounded-circle" />
-                                                                        </div>
-                                                                        <div class="flex-grow-1">Jansh Brown</div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>Kitchen Storage</td>
-                                                                <td>
-                                                                    <span class="text-success">$149.00</span>
-                                                                </td>
-                                                                <td>Micro Design</td>
-                                                                <td>
-                                                                    <span class="badge badge-soft-warning">Pending</span>
-                                                                </td>
-                                                                <td>
-                                                                    <h5 class="fs-14 fw-medium mb-0">4.5<span class="text-muted fs-11 ms-1">(61 votes)</span></h5>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <a href="apps-ecommerce-order-details.html" class="fw-medium link-primary">#VZ2109</a>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="d-flex align-items-center">
-                                                                        <div class="flex-shrink-0 me-2">
-                                                                            <img src="../../assets/images/users/avatar-3.jpg" alt="" class="avatar-xs rounded-circle" />
-                                                                        </div>
-                                                                        <div class="flex-grow-1">Ayaan Bowen</div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>Bike Accessories</td>
-                                                                <td>
-                                                                    <span class="text-success">$215.00</span>
-                                                                </td>
-                                                                <td>Nesta Technologies</td>
-                                                                <td>
-                                                                    <span class="badge badge-soft-success">Paid</span>
-                                                                </td>
-                                                                <td>
-                                                                    <h5 class="fs-14 fw-medium mb-0">4.9<span class="text-muted fs-11 ms-1">(89 votes)</span></h5>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <a href="apps-ecommerce-order-details.html" class="fw-medium link-primary">#VZ2108</a>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="d-flex align-items-center">
-                                                                        <div class="flex-shrink-0 me-2">
-                                                                            <img src="../../assets/images/users/avatar-4.jpg" alt="" class="avatar-xs rounded-circle" />
-                                                                        </div>
-                                                                        <div class="flex-grow-1">Prezy Mark</div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>Furniture</td>
-                                                                <td>
-                                                                    <span class="text-success">$199.00</span>
-                                                                </td>
-                                                                <td>Syntyce Solutions</td>
-                                                                <td>
-                                                                    <span class="badge badge-soft-danger">Unpaid</span>
-                                                                </td>
-                                                                <td>
-                                                                    <h5 class="fs-14 fw-medium mb-0">4.3<span class="text-muted fs-11 ms-1">(47 votes)</span></h5>
-                                                                </td>
-                                                            </tr><!-- end tr -->
-                                                            <tr>
-                                                                <td>
-                                                                    <a href="apps-ecommerce-order-details.html" class="fw-medium link-primary">#VZ2107</a>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="d-flex align-items-center">
-                                                                        <div class="flex-shrink-0 me-2">
-                                                                            <img src="../../assets/images/users/avatar-6.jpg" alt="" class="avatar-xs rounded-circle" />
-                                                                        </div>
-                                                                        <div class="flex-grow-1">Vihan Hudda</div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>Bags and Wallets</td>
-                                                                <td>
-                                                                    <span class="text-success">$330.00</span>
-                                                                </td>
-                                                                <td>iTest Factory</td>
-                                                                <td>
-                                                                    <span class="badge badge-soft-success">Paid</span>
-                                                                </td>
-                                                                <td>
-                                                                    <h5 class="fs-14 fw-medium mb-0">4.7<span class="text-muted fs-11 ms-1">(161 votes)</span></h5>
-                                                                </td>
-                                                            </tr>
+                                                        <tbody id="listventatop5">
+                                                            
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -532,165 +401,26 @@
                                 <div class="card h-100 rounded-0">
                                     <div class="card-body p-0">
                                         <div class="p-3">
-                                            <h6 class="text-muted mb-0 text-uppercase fw-semibold">Recent Activity</h6>
+                                            <h6 class="text-muted mb-0 text-uppercase fw-semibold">Actividad Reciente</h6>
                                         </div>
                                         <div data-simplebar style="max-height: 710px;" class="p-3 pt-0">
-                                            <div class="acitivity-timeline acitivity-main">
-                                                <div class="acitivity-item d-flex">
-                                                    <div class="flex-shrink-0 avatar-xs acitivity-avatar">
-                                                        <div class="avatar-title bg-soft-success text-success rounded-circle">
-                                                            <i class="ri-shopping-cart-2-line"></i>
-                                                        </div>
-                                                    </div>
-                                                    <div class="flex-grow-1 ms-3">
-                                                        <h6 class="mb-1 lh-base">Purchase by James Price</h6>
-                                                        <p class="text-muted mb-1">Product noise evolve smartwatch </p>
-                                                        <small class="mb-0 text-muted">02:14 PM Today</small>
-                                                    </div>
-                                                </div>
-                                                <div class="acitivity-item py-3 d-flex">
-                                                    <div class="flex-shrink-0 avatar-xs acitivity-avatar">
-                                                        <div class="avatar-title bg-soft-danger text-danger rounded-circle">
-                                                            <i class="ri-stack-fill"></i>
-                                                        </div>
-                                                    </div>
-                                                    <div class="flex-grow-1 ms-3">
-                                                        <h6 class="mb-1 lh-base">Added new <span class="fw-semibold">style collection</span></h6>
-                                                        <p class="text-muted mb-1">By Nesta Technologies</p>
-                                                        <div class="d-inline-flex gap-2 border border-dashed p-2 mb-2">
-                                                            <a href="apps-ecommerce-product-details.html" class="bg-light rounded p-1">
-                                                                <img src="../../assets/images/products/img-8.png" alt="" class="img-fluid d-block" />
-                                                            </a>
-                                                            <a href="apps-ecommerce-product-details.html" class="bg-light rounded p-1">
-                                                                <img src="../../assets/images/products/img-2.png" alt="" class="img-fluid d-block" />
-                                                            </a>
-                                                            <a href="apps-ecommerce-product-details.html" class="bg-light rounded p-1">
-                                                                <img src="../../assets/images/products/img-10.png" alt="" class="img-fluid d-block" />
-                                                            </a>
-                                                        </div>
-                                                        <p class="mb-0 text-muted"><small>9:47 PM Yesterday</small></p>
-                                                    </div>
-                                                </div>
-                                                <div class="acitivity-item py-3 d-flex">
-                                                    <div class="flex-shrink-0">
-                                                        <img src="../../assets/images/users/avatar-2.jpg" alt="" class="avatar-xs rounded-circle acitivity-avatar">
-                                                    </div>
-                                                    <div class="flex-grow-1 ms-3">
-                                                        <h6 class="mb-1 lh-base">Natasha Carey have liked the products</h6>
-                                                        <p class="text-muted mb-1">Allow users to like products in your WooCommerce store.</p>
-                                                        <small class="mb-0 text-muted">25 Dec, 2021</small>
-                                                    </div>
-                                                </div>
-                                                <div class="acitivity-item py-3 d-flex">
-                                                    <div class="flex-shrink-0">
-                                                        <div class="avatar-xs acitivity-avatar">
-                                                            <div class="avatar-title rounded-circle bg-secondary">
-                                                                <i class="mdi mdi-sale fs-14"></i>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="flex-grow-1 ms-3">
-                                                        <h6 class="mb-1 lh-base">Today offers by <a href="apps-ecommerce-seller-details.html" class="link-secondary">Digitech Galaxy</a></h6>
-                                                        <p class="text-muted mb-2">Offer is valid on orders of Rs.500 Or above for selected products only.</p>
-                                                        <small class="mb-0 text-muted">12 Dec, 2021</small>
-                                                    </div>
-                                                </div>
-                                                <div class="acitivity-item py-3 d-flex">
-                                                    <div class="flex-shrink-0">
-                                                        <div class="avatar-xs acitivity-avatar">
-                                                            <div class="avatar-title rounded-circle bg-soft-danger text-danger">
-                                                                <i class="ri-bookmark-fill"></i>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="flex-grow-1 ms-3">
-                                                        <h6 class="mb-1 lh-base">Favoried Product</h6>
-                                                        <p class="text-muted mb-2">Esther James have favorited product.</p>
-                                                        <small class="mb-0 text-muted">25 Nov, 2021</small>
-                                                    </div>
-                                                </div>
-                                                <div class="acitivity-item py-3 d-flex">
-                                                    <div class="flex-shrink-0">
-                                                        <div class="avatar-xs acitivity-avatar">
-                                                            <div class="avatar-title rounded-circle bg-secondary">
-                                                                <i class="mdi mdi-sale fs-14"></i>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="flex-grow-1 ms-3">
-                                                        <h6 class="mb-1 lh-base">Flash sale starting <span class="text-primary">Tomorrow.</span></h6>
-                                                        <p class="text-muted mb-0">Flash sale by <a href="javascript:void(0);" class="link-secondary fw-medium">Zoetic Fashion</a></p>
-                                                        <small class="mb-0 text-muted">22 Oct, 2021</small>
-                                                    </div>
-                                                </div>
-                                                <div class="acitivity-item py-3 d-flex">
-                                                    <div class="flex-shrink-0">
-                                                        <div class="avatar-xs acitivity-avatar">
-                                                            <div class="avatar-title rounded-circle bg-soft-info text-info">
-                                                                <i class="ri-line-chart-line"></i>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="flex-grow-1 ms-3">
-                                                        <h6 class="mb-1 lh-base">Monthly sales report</h6>
-                                                        <p class="text-muted mb-2"><span class="text-danger">2 days left</span> notification to submit the monthly sales report. <a href="javascript:void(0);" class="link-warning text-decoration-underline">Reports Builder</a></p>
-                                                        <small class="mb-0 text-muted">15 Oct</small>
-                                                    </div>
-                                                </div>
-                                                <div class="acitivity-item d-flex">
-                                                    <div class="flex-shrink-0">
-                                                        <img src="../../assets/images/users/avatar-3.jpg" alt="" class="avatar-xs rounded-circle acitivity-avatar" />
-                                                    </div>
-                                                    <div class="flex-grow-1 ms-3">
-                                                        <h6 class="mb-1 lh-base">Frank Hook Commented</h6>
-                                                        <p class="text-muted mb-2 fst-italic">" A product that has reviews is more likable to be sold than a product. "</p>
-                                                        <small class="mb-0 text-muted">26 Aug, 2021</small>
-                                                    </div>
-                                                </div>
+                                            <div class="acitivity-timeline acitivity-main" id="listcompraventa">
+                                                
                                             </div>
                                         </div>
 
+                                        <!-- TODO TOTAL DE CATEGORIA -->
                                         <div class="p-3 mt-2">
-                                            <h6 class="text-muted mb-3 text-uppercase fw-semibold">Top 10 Categories
+                                            <h6 class="text-muted mb-3 text-uppercase fw-semibold">TOTAL DE STOCK POR CATEGORIA
                                             </h6>
 
-                                            <ol class="ps-3 text-muted">
-                                                <li class="py-1">
-                                                    <a href="#" class="text-muted">Mobile & Accessories <span class="float-end">(10,294)</span></a>
-                                                </li>
-                                                <li class="py-1">
-                                                    <a href="#" class="text-muted">Desktop <span class="float-end">(6,256)</span></a>
-                                                </li>
-                                                <li class="py-1">
-                                                    <a href="#" class="text-muted">Electronics <span class="float-end">(3,479)</span></a>
-                                                </li>
-                                                <li class="py-1">
-                                                    <a href="#" class="text-muted">Home & Furniture <span class="float-end">(2,275)</span></a>
-                                                </li>
-                                                <li class="py-1">
-                                                    <a href="#" class="text-muted">Grocery <span class="float-end">(1,950)</span></a>
-                                                </li>
-                                                <li class="py-1">
-                                                    <a href="#" class="text-muted">Fashion <span class="float-end">(1,582)</span></a>
-                                                </li>
-                                                <li class="py-1">
-                                                    <a href="#" class="text-muted">Appliances <span class="float-end">(1,037)</span></a>
-                                                </li>
-                                                <li class="py-1">
-                                                    <a href="#" class="text-muted">Beauty, Toys & More <span class="float-end">(924)</span></a>
-                                                </li>
-                                                <li class="py-1">
-                                                    <a href="#" class="text-muted">Food & Drinks <span class="float-end">(701)</span></a>
-                                                </li>
-                                                <li class="py-1">
-                                                    <a href="#" class="text-muted">Toys & Games <span class="float-end">(239)</span></a>
-                                                </li>
+                                            <ol class="ps-3 text-muted" id="listcategoriastock">
                                             </ol>
                                             <div class="mt-3 text-center">
-                                                <a href="javascript:void(0);" class="text-muted text-decoration-underline">View all Categories</a>
+                                                <a href="../MntCategoria/" class="text-muted text-decoration-underline">Ver Todas Las Categorias</a>
                                             </div>
                                         </div>
-
+                                        <!-- FIN: TOTAL DE CATEGORIA -->
                                     </div>
                                 </div> 
                             </div>
@@ -726,8 +456,6 @@
 
     <!-- Chart JS -->
     <script src="../../assets/libs/chart.js/chart.min.js"></script>
-
-    <script src="../../assets/js/pages/chartjs.init.js"></script>
 
     <script type="text/javascript" src="home.js"></script>
 

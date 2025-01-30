@@ -235,7 +235,7 @@ switch($_GET["op"]){
                             ?>
                             </div>
                             <div>
-                                <h5 class="fs-14 my-1"><a href="apps-ecommerce-product-details.html" class="text-reset"><?php echo $row["PROD_NOM"];?></a></h5>
+                                <h5 class="fs-14 my-1"><?php echo $row["PROD_NOM"];?></h5>
                                 <span class="text-muted"><?php echo $row["CAT_NOM"];?></span>
                             </div>
                         </div>
@@ -260,6 +260,89 @@ switch($_GET["op"]){
             <?php
         }
 
+    break;
+
+    case "top5":
+        $datos=$compra->get_compra_top_5($_POST["suc_id"]);
+        foreach($datos as $row){
+            ?>
+                <tr>
+                    <td>
+                        C-<?php echo $row["COMPR_ID"];?>
+                    </td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0 me-2">
+                                <?php 
+                                    if ($row["USU_IMG"] != ''){
+                                        ?>
+                                            <?php
+                                                echo "<img src='../../assets/usuario/".$row["USU_IMG"]."' alt='' class='avatar-xs rounded-circle' />";
+                                            ?>
+                                        <?php
+                                    }else{
+                                        ?>
+                                            <?php 
+                                                echo "<img src='../../assets/usuairo/no_imagen.png' alt='' class='avatar-xs rounded-circle' />";
+                                            ?>
+                                        <?php
+                                    }
+                                ?>
+                            </div>
+                        <div class="flex-grow-1"><?php echo $row["USU_NOM"];?> <?php echo $row["USU_APE"];?></div>
+                        </div>
+                    </td>
+                    <td><?php echo $row["PROV_NOM"];?></td>
+                    <td><?php echo $row["MON_NOM"];?> </td>
+                    <td><?php echo $row["COMPR_SUBTOTAL"];?></td>
+                    <td> <?php echo $row["COMPR_IGV"];?></td>
+                    <td><?php echo $row["COMPR_TOTAL"];?></td>
+                </tr>
+            <?php
+        }
+    break;
+
+    case "compraventa":
+        $datos=$compra->get_compraventa($_POST["suc_id"]);
+        foreach($datos as $row){
+            ?>
+                <div class="acitivity-item py-3 d-flex">
+                    <div class="flex-shrink-0 avatar-xs acitivity-avatar">
+                        <?php 
+                            if ($row["REGISTRO"] == 'Compra'){
+                                ?>
+                                    <div class="avatar-title bg-soft-success text-success rounded-circle">
+                                        <i class="ri-shopping-cart-2-line"></i>
+                                    </div>
+                                <?php
+                            }else{
+                                ?>
+                                    <div class="avatar-title bg-soft-danger text-danger rounded-circle">
+                                        <i class="ri-stack-fill"></i>
+                                    </div>
+                                <?php
+                            }
+                        ?>
+                        
+
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="mb-1 lh-base"><?php echo $row["REGISTRO"];?> - <?php echo $row["DOC_NOM"];?></h6>
+                        <p class="text-muted mb-1"><?php echo $row["PROV_NOM"];?> </p>
+                        <small class="mb-0 text-muted"><?php echo $row["FECH_CREA"];?></small>
+                    </div>
+                </div>
+            <?php
+        }
+    break;
+
+    case "dountcompra":
+        $datos=$compra->get_consumocompra_categoria($_POST["suc_id"]);
+        $data = array();
+        foreach($datos as $row){
+            $data[]=$row;
+        }
+        echo json_encode($data);
     break;
 }
 ?>
