@@ -50,11 +50,11 @@
                                                 <th>Nro</th>
                                                 <th>Doc.</th>
                                                 <th>RUC</th>
+                                                <th>Nro Fact.</th>
                                                 <th>Proveedor</th>
                                                 <th>Pago</th>
                                                 <th>Moneda</th>
                                                 <th>Subtotal</th>
-                                                <th>Iva</th>
                                                 <th>Total</th>
                                                 <th>Usuario</th>
                                                 <th></th>

@@ -104,6 +104,8 @@
                                                     <p class="fw-medium mb-2" id="prov_ruc"></p>
                                                     <p class="fw-medium mb-2" id="prov_direcc"></p>
                                                     <p class="fw-medium mb-2" id="prov_correo"></p>
+                                                    <p class="fw-medium mb-2" id="nro_fact"></p>
+                                                    <p class="fw-medium mb-2" id="fech_fact"></p>
                                                 </div>
                                             </div>
                                             <!--end row-->
@@ -134,6 +136,7 @@
                                                 <table class="table table-borderless text-center table-nowrap align-middle mb-0">
                                                     <thead>
                                                         <tr class="table-active">
+                                                            <th scope="col"></th>
                                                             <th scope="col">Categoria</th>
                                                             <th scope="col">Producto</th>
                                                             <th scope="col" style="width: 50px;">Und</th>

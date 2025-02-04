@@ -46,12 +46,15 @@
                         <input type="hidden" name="compr_id" id="compr_id">
 
                         <!--TODO: DATOS DEL PAGO-->
-                        <div class="row">
+                        <div>
+                        <button onclick="mostrarDiv()" class="btn btn-success waves-effect waves-light ri-money-dollar-circle-line"></button>
+                        </div>
+                        <div class="row" id="tipoPagoDiv" hidden>
                             <div class="col-lg-12">
                                 <div class="card">
                                     <div class="card-header align-items-center d-flex">
                                         <h4 class="card-title mb-0 flex-grow-1">Tipo de pago</h4>
-                                    </div><!-- end card header -->
+                                    </div>
                                     <div class="card-body">
                                         <div class="live-preview">
                                             <div class="row align-items-center g-3">
@@ -59,7 +62,7 @@
                                                 <div class="col-lg-4">
                                                     <label for="doc_id" class="form-label">Documento</label>
                                                         <select id="doc_id" name="doc_id" class="form-control form-select" aria-label=".form-select-sm example">
-                                                            <option value="0" selected>Seleccione</option>
+                                                            <option value="1" selected>Seleccione</option>
                                                             
                                                         </select>
                                                 </div>                                    
@@ -67,7 +70,7 @@
                                                 <div class="col-lg-4">
                                                     <label for="valueInput" class="form-label">Pago</label>
                                                         <select id="pag_id" name="pag_id" class="form-control form-select" aria-label=".form-select-sm example">
-                                                            <option value="0" selected>Seleccione</option>
+                                                            <option value="1" selected>Seleccione</option>
                                                             
                                                         </select>
                                                 </div>
@@ -75,7 +78,7 @@
                                                 <div class="col-lg-4">
                                                     <label for="valueInput" class="form-label">Moneda</label>
                                                         <select id="mon_id" name="mon_id" class="form-control form-select" aria-label=".form-select-sm example">
-                                                            <option value="0" selected>Seleccione</option>
+                                                            <option value="1" selected>Seleccione</option>
                                                             
                                                         </select>
                                                 </div>
@@ -85,7 +88,7 @@
                                         
                                     </div>
                                 </div>
-                            </div> <!-- end col -->
+                            </div>
                         </div>
                         <!--TODO: DATOS DEL PROVEEDOR-->
                         <div class="row">
@@ -93,7 +96,24 @@
                                 <div class="card">
                                     <div class="card-header align-items-center d-flex">
                                         <h4 class="card-title mb-0 flex-grow-1">Datos del Proveedor</h4>
-                                    </div><!-- end card header -->
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="live-preview">
+                                            <div class="row align-items-center g-3">
+                                                <div class="col-lg-4">
+                                                    <div>
+                                                        <label for="exampleInputdate" class="form-label">Fecha</label>
+                                                        <input type="date" class="form-control" id="fech_fact" name="fech_fact" 
+                                                        value="<?php echo date('Y-m-d'); ?>"> <!-- Aquí asignamos la fecha en formato yyyy-mm-dd -->
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <label for="valueInput" class="form-label">Nro Factura</label>
+                                                    <input type="text" class="form-control" id="nro_fact" name="nro_fact" placeholder="Número Factura.">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="card-body">
                                         <div class="live-preview">
                                             <div class="row align-items-center g-3">
@@ -112,20 +132,12 @@
                                                 <label for="valueInput" class="form-label">Dirección: </label>
                                                 <input type="text" class="form-control" id="prov_direcc" name="prov_direcc" readonly>
                                                 </div>
-                                                <div class="col-lg-4">
-                                                <label for="valueInput" class="form-label">Teléfono: </label>
-                                                <input type="text" class="form-control" id="prov_telf" name="prov_telf" readonly>
-                                                </div>
-                                                <div class="col-lg-4">
-                                                <label for="valueInput" class="form-label">Correo: </label>
-                                                <input type="text" class="form-control" id="prov_correo" name="prov_correo" readonly>
-                                                </div>
                                             </div>
                                         </div>
                                         
                                     </div>
                                 </div>
-                            </div> <!-- end col -->
+                            </div> 
                         </div>
                         <!--TODO: DATOS DEL PRODUCTO-->
                         <div class="row">
@@ -173,20 +185,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
-                                    </div>
-                                </div>
-                            </div> <!-- end col -->
-                        </div>
-                        <!-- end row -->
-                        <!--TODO: DETALLE DE COMPRA-->
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="card">
-                                    <div class="card-header align-items-center d-flex">
-                                        <h4 class="card-title mb-0 flex-grow-1">Agregar producto</h4>
-                                    </div><!-- end card header -->
-                                    <div class="card-body">
+                                        <br>
+                                        <br>
                                         <table id="table_data" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
                                             <thead>
                                                 <tr>
@@ -230,10 +230,26 @@
                                                 <button type="submit" id= "btnguardar" class="btn btn-success"><i class="ri-save-line align-bottom me-1"></i> Guardar</button>
                                                 <a id="btnlimpiar" class="btn btn-warning"><i class="ri-brush-2-line align-bottom me-1"></i> Limpiar</a>
                                         </div>
+
+
                                     </div>
                                 </div>
                             </div> <!-- end col -->
                         </div>
+                        <!-- end row -->
+                        <!--TODO: DETALLE DE COMPRA-->
+                        <!-- <div class="row">
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-header align-items-center d-flex">
+                                        <h4 class="card-title mb-0 flex-grow-1">Agregar producto</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        
+                                    </div>
+                                </div>
+                            </div> 
+                        </div> -->
                         
                     </div>
 

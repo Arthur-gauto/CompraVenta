@@ -12,6 +12,8 @@ $(document).ready(function(){
         $("#fech_crea").html(data.FECH_CREA);
         $("#pag_nom").html(data.PAG_NOM);
         $("#txt_total").html(data.COMPR_TOTAL);
+        $("#nro_fact").html(data.NRO_FACT);
+        $("#fech_fact").html(data.FECH_FACT);
         $("#txtruc").html(data.EMP_RUC);
         $("#compr_subtotal").html(data.COMPR_SUBTOTAL);
         $("#compr_igv").html(data.COMPR_IGV);
@@ -23,6 +25,8 @@ $(document).ready(function(){
         $("#prov_ruc").html("<b>RUC: </b>&nbsp;&nbsp;&nbsp;"+data.PROV_RUC);
         $("#prov_direcc").html("<b>Dirección: </b>&nbsp;&nbsp;&nbsp;" + data.PROV_DIRECC);
         $("#prov_correo").html("<b>Correo: </b>&nbsp;&nbsp;&nbsp;"+data.PROV_CORREO);
+        $("#nro_fact").html("<b>Nro de Factura: </b>&nbsp;&nbsp;&nbsp;" + data.NRO_FACT);
+        $("#fech_fact").html("<b>Fecha Facturación: </b>&nbsp;&nbsp;&nbsp;"+data.FECH_FACT);
 
     });
 

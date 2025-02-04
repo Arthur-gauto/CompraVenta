@@ -2,16 +2,18 @@
     class Compra extends Conectar{
 
         //TODO LISTAR REGISTROS POR ID
-        public function insert_compra_x_suc_id($suc_id, $usu_id){
-            $conectar=parent::Conexion();
-            $sql="";
-            $sql="SP_I_COMPRA_01 ?,?";
-            $query=$conectar->prepare($sql);
-            $query->bindValue(1,$suc_id);
-            $query->bindValue(2,$usu_id);
+        public function insert_compra_x_suc_id($suc_id, $usu_id, $nro_fact, $fech_fact){
+            $conectar = parent::Conexion();
+            $sql = "SP_I_COMPRA_01 ?,?,?,?";
+            $query = $conectar->prepare($sql);
+            $query->bindValue(1, $suc_id);
+            $query->bindValue(2, $usu_id);
+            $query->bindValue(3, $nro_fact);
+            $query->bindValue(4, $fech_fact);
             $query->execute();
             return $query->fetchAll(PDO::FETCH_ASSOC);
         }
+        
 
         public function insert_compra_detalle($compr_id, $prod_id, $prod_pcompra, $detc_cant){
             $conectar=parent::Conexion();
@@ -56,23 +58,26 @@
             return $query->fetchAll(PDO::FETCH_ASSOC);
         }
 
-        public function update_compra($compr_id, $pag_id, $prov_id, $prov_ruc, $prov_direcc, $prov_correo, $compr_coment, $mon_id,$doc_id){
-            $conectar=parent::Conexion();
-            $sql="";
-            $sql="SP_U_COMPRA_03 ?,?,?,?,?,?,?,?,?";
-            $query=$conectar->prepare($sql);
-            $query->bindValue(1,$compr_id);
-            $query->bindValue(2,$pag_id);
-            $query->bindValue(3,$prov_id);
-            $query->bindValue(4,$prov_ruc);
-            $query->bindValue(5,$prov_direcc);
-            $query->bindValue(6,$prov_correo);
-            $query->bindValue(7,$compr_coment);
-            $query->bindValue(8,$mon_id);
-            $query->bindValue(9,$doc_id);
+        public function update_compra($compr_id, $pag_id, $prov_id, $prov_ruc, $prov_direcc, $prov_correo, $compr_coment, $mon_id, $doc_id, $nro_fact, $fech_fact){
+            $conectar = parent::Conexion();
+            $sql = "SP_U_COMPRA_03 ?,?,?,?,?,?,?,?,?,?,?";
+            $query = $conectar->prepare($sql);
+            $query->bindValue(1, $compr_id);
+            $query->bindValue(2, $pag_id);
+            $query->bindValue(3, $prov_id);
+            $query->bindValue(4, $prov_ruc);
+            $query->bindValue(5, $prov_direcc);
+            $query->bindValue(6, $prov_correo);
+            $query->bindValue(7, $compr_coment);
+            $query->bindValue(8, $mon_id);
+            $query->bindValue(9, $doc_id);
+            $query->bindValue(10, $nro_fact);
+            $query->bindValue(11, $fech_fact);
             $query->execute();
             return $query->fetchAll(PDO::FETCH_ASSOC);
         }
+        
+        
 
         public function get_compra($compr_id){
             $conectar=parent::Conexion();

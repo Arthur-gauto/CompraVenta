@@ -2,8 +2,11 @@ var emp_id= $('#EMP_IDx').val();
 var suc_id= $('#SUC_IDx').val();
 var usu_id= $('#USU_IDx').val();
 
+
 $(document).ready(function(){
-    $.post("../../controller/compra.php?op=registrar", {suc_id: suc_id, usu_id:usu_id}, function(data) {
+    var nro_fact = $('#nro_fact').val();  // Captura el valor de nro_fact
+    var fech_fact = $('#fech_fact').val(); // Captura el valor de fech_fact
+    $.post("../../controller/compra.php?op=registrar", {suc_id: suc_id, usu_id:usu_id,nro_fact: nro_fact,fech_fact: fech_fact}, function(data) {
         data=JSON.parse(data);
         $("#compr_id").val(data.COMPR_ID);
     });
@@ -22,11 +25,14 @@ $(document).ready(function(){
 
     $.post("../../controller/documento.php?op=combo", {doc_tipo: "compra"}, function(data) {
         $("#doc_id").html(data);
+        $("#doc_id").val(1).trigger('change');
     });
+    
 
     $.post("../../controller/proveedor.php?op=combo", {emp_id: emp_id}, function(data) {
         $("#prov_id").html(data);
     });
+    
 
     $.post("../../controller/categoria.php?op=combo", {suc_id: suc_id}, function(data) {
         $("#cat_id").html(data);
@@ -34,10 +40,12 @@ $(document).ready(function(){
 
     $.post("../../controller/pago.php?op=combo",  function(data) {
         $("#pag_id").html(data);
+        $("#pag_id").val(1).trigger('change');
     });
 
     $.post("../../controller/moneda.php?op=combo", {suc_id: suc_id}, function(data) {
         $("#mon_id").html(data);
+        $("#mon_id").val(1).trigger('change');
     });
 
 
@@ -81,6 +89,11 @@ $(document).ready(function(){
     
 
 });
+
+function mostrarDiv() {
+    let div = document.getElementById("tipoPagoDiv");
+    div.hidden = !div.hidden; // Alterna entre oculto y visible
+}
 
 $(document).on("click","#btnagregar", function(){
     var compr_id = $("#compr_id").val();
@@ -210,7 +223,7 @@ function listar(compr_id){
     });
 }
 
-$(document).on("click","#btnguardar", function(){
+$(document).on("click", "#btnguardar", function(){
     var compr_id = $("#compr_id").val();
     var doc_id = $("#doc_id").val();
     var pag_id = $("#pag_id").val();
@@ -220,28 +233,25 @@ $(document).on("click","#btnguardar", function(){
     var prov_correo = $("#prov_correo").val();
     var compr_coment = $("#compr_coment").val();
     var mon_id = $("#mon_id").val();
+    var nro_fact = $("#nro_fact").val(); // Captura el valor de nro_fact
+    var fech_fact = $("#fech_fact").val(); // Captura el valor de fech_fact
 
-    if($("#doc_id").val()=='0' || $("#pag_id").val()=='0' || $("#prov_id").val()=='0' || $("#mon_id").val()=='0'){
-        /* TODO: Validación pago, proveedor y moneda*/
+    if ($("#doc_id").val() == '0' || $("#pag_id").val() == '0' || $("#prov_id").val() == '0' || $("#mon_id").val() == '0') {
         swal.fire({
             title: 'Compra',
             text: 'Error. Campos vacíos',
             icon: 'error'
         })
-    }else{
-
-        $.post("../../controller/compra.php?op=calculo",{compr_id:compr_id}, function(data)  {
-            
-            data=JSON.parse(data);
-           
-            /* TODO: Validación existencia detalle*/
-            if(data.COMPR_TOTAL==null){
+    } else {
+        $.post("../../controller/compra.php?op=calculo", {compr_id: compr_id}, function(data) {
+            data = JSON.parse(data);
+            if (data.COMPR_TOTAL == null) {
                 swal.fire({
                     title: 'Compra',
                     text: 'Error. No existe detalle',
                     icon: 'error'
                 })
-            }else{
+            } else {
                 $.post("../../controller/compra.php?op=guardar", {
                     compr_id: compr_id,
                     pag_id: pag_id,
@@ -251,27 +261,22 @@ $(document).on("click","#btnguardar", function(){
                     prov_correo: prov_correo,
                     compr_coment: compr_coment,
                     mon_id: mon_id,
-                    doc_id: doc_id
-
-                    }, function(data) {
-                        swal.fire({
-                            title:'Compra',
-                            text: 'Registrado correctamente con Nro: C-' + compr_id,
-                            icon: 'success',
-                            footer: "<a href='../ViewCompra/?c="+compr_id+"' target='_blank'>Desea ver el documento</a>"
-                        })
-                    });
+                    doc_id: doc_id,
+                    nro_fact: nro_fact, // Envía nro_fact al servidor
+                    fech_fact: fech_fact // Envía fech_fact al servidor
+                }, function(data) {
+                    swal.fire({
+                        title: 'Compra',
+                        text: 'Registrado correctamente con Nro: C-' + compr_id,
+                        icon: 'success',
+                        footer: "<a href='../ViewCompra/?c=" + compr_id + "' target='_blank'>Desea ver el documento</a>"
+                    })
+                });
             }
-    
         });
-        
-        
-
-        
     }
-
-    
 });
+
 
 $(document).on("click","#btnlimpiar", function(){
     location.reload();
