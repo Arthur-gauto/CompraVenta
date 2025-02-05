@@ -7,8 +7,9 @@ $venta=new Venta();
 switch($_GET["op"]){
     //TODO Guardar y editar, guardar cuando el cat_id esté vacío, actualizar cuando se reciba el id
     case "registrar":
-        
-        $datos=$venta->insert_venta_x_suc_id($_POST["suc_id"],$_POST["usu_id"]);
+        $nro_factv = $_POST["nro_factv"];  // Nuevo campo
+        $fech_factv = $_POST["fech_factv"]; // Nuevo campo
+        $datos=$venta->insert_venta_x_suc_id($_POST["suc_id"],$_POST["usu_id"], $nro_factv, $fech_factv);
         foreach($datos as $row){
             $output["VENT_ID"]=$row["VENT_ID"];
         }
@@ -119,12 +120,13 @@ switch($_GET["op"]){
         }
     break;
     case "guardar":
-    
+        $nro_factv = $_POST["nro_factv"];  // Nuevo campo
+        $fech_factv = $_POST["fech_factv"]; // Nuevo campo
         $datos=$venta->update_venta($_POST["vent_id"],$_POST["pag_id"],$_POST["cli_id"],
                                         $_POST["cli_ruc"],$_POST["cli_direcc"],
                                         $_POST["cli_correo"],$_POST["vent_coment"],
                                         $_POST["mon_id"],
-                                        $_POST["doc_id"]);
+                                        $_POST["doc_id"], $nro_factv, $fech_factv);
         
         break;
 
@@ -161,6 +163,8 @@ switch($_GET["op"]){
             $output["COM_NOM"]=$row["COM_NOM"];
             $output["ROL_NOM"]=$row["ROL_NOM"];
             $output["CLI_NOM"]=$row["CLI_NOM"];
+            $output["NRO_FACTV"] = $row["NRO_FACTV"];  
+            $output["FECH_FACTV"] = $row["FECH_FACTV"]; 
         }
         echo json_encode($output);
         
@@ -174,6 +178,7 @@ switch($_GET["op"]){
             $sub_array[] = "V-".$row["VENT_ID"];
             $sub_array[] = $row["DOC_NOM"];
             $sub_array[] = $row["CLI_RUC"];
+            $sub_array[] = $row["NRO_FACTV"];
             $sub_array[] = $row["CLI_NOM"];
             $sub_array[] = $row["PAG_NOM"];
             $sub_array[] = $row["MON_NOM"];

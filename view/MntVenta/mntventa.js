@@ -3,7 +3,10 @@ var suc_id= $('#SUC_IDx').val();
 var usu_id= $('#USU_IDx').val();
 
 $(document).ready(function(){
-    $.post("../../controller/venta.php?op=registrar", {suc_id: suc_id, usu_id:usu_id}, function(data) {
+    var nro_factv = $('#nro_factv').val();  
+    var fech_factv = $('#fech_factv').val(); 
+    cargarProductos("");
+    $.post("../../controller/venta.php?op=registrar", {suc_id: suc_id, usu_id:usu_id,nro_factv: nro_factv,fech_factv: fech_factv}, function(data) {
         data=JSON.parse(data);
         $("#vent_id").val(data.VENT_ID);
     });
@@ -22,6 +25,7 @@ $(document).ready(function(){
 
     $.post("../../controller/documento.php?op=combo", {doc_tipo: "Venta"}, function(data) {
         $("#doc_id").html(data);
+        $("#doc_id").val(1).trigger('change');
     });
 
     $.post("../../controller/cliente.php?op=combo", {emp_id: emp_id}, function(data) {
@@ -34,10 +38,12 @@ $(document).ready(function(){
 
     $.post("../../controller/pago.php?op=combo",  function(data) {
         $("#pag_id").html(data);
+        $("#pag_id").val(1).trigger('change');
     });
 
     $.post("../../controller/moneda.php?op=combo", {suc_id: suc_id}, function(data) {
         $("#mon_id").html(data);
+        $("#mon_id").val(1).trigger('change');
     });
 
 
@@ -65,6 +71,48 @@ $(document).ready(function(){
         });
     });
 
+    $("#buscar_prod").on("input", function () {
+        var prod_nom = $(this).val();
+        cargarProductos(prod_nom);
+    });
+
+    function cargarProductos(prod_nom) {
+        $.post("../../controller/producto.php?op=buscar_producto", { prod_nom: prod_nom }, function (data) {
+            $("#prod_id").html(data);
+        });
+    }
+
+
+    $('#prod_id').change(function () {
+        var prod_id = $(this).val();
+        if (prod_id === '') {
+            $("#cat_nom").val('');
+            $("#prod_pventa").val('');
+            $("#prod_stock").val('');
+            $("#und_nom").val('');
+            $("#cat_id").val('');
+            return;
+        }
+        $.post("../../controller/producto.php?op=mostrar", { prod_id: prod_id }, function (data) {
+            data = JSON.parse(data);
+            if (data.error) {
+                swal.fire({
+                    title: 'Error',
+                    text: data.error,
+                    icon: 'error'
+                });
+            } else {
+                // Completar campos automáticamente
+                $("#cat_nom").val(data.CAT_NOM);
+                $("#prod_pventa").val(data.PROD_PVOMPRA);
+                $("#prod_stock").val(data.PROD_STOCK);
+                $("#und_nom").val(data.UND_NOM);
+                $("#cat_id").val(data.CAT_ID);
+            }
+        });
+    });
+
+
     $("#prod_id").change(function(){
         $("#prod_id").each(function(){
             prod_id= $(this).val();
@@ -81,6 +129,11 @@ $(document).ready(function(){
     
 
 });
+
+function mostrarDiv() {
+    let div = document.getElementById("tipoPagoDiv");
+    div.hidden = !div.hidden; // Alterna entre oculto y visible
+}
 
 $(document).on("click","#btnagregar", function(){
     var vent_id = $("#vent_id").val();
@@ -220,11 +273,12 @@ $(document).on("click","#btnguardar", function(){
     var cli_correo = $("#cli_correo").val();
     var vent_coment = $("#vent_coment").val();
     var mon_id = $("#mon_id").val();
+    var nro_factv = $("#nro_factv").val(); 
+    var fech_factv = $("#fech_factv").val(); 
 
-    if($("#doc_id").val()=='0' || $("#pag_id").val()=='0' || $("#cli_id").val()=='0' || $("#mon_id").val()=='0'){
-        /* TODO: Validación pago, cliente y moneda*/
+    if (nro_factv.trim() === '' || fech_factv.trim() === '' || doc_id === '0' || pag_id === '0' || cli_id === '0' || mon_id === '0') {
         swal.fire({
-            title: 'Venta',
+            title: 'Compra',
             text: 'Error. Campos vacíos',
             icon: 'error'
         })
@@ -251,7 +305,9 @@ $(document).on("click","#btnguardar", function(){
                     cli_correo: cli_correo,
                     vent_coment: vent_coment,
                     mon_id: mon_id,
-                    doc_id: doc_id
+                    doc_id: doc_id,
+                    nro_factv: nro_factv, 
+                    fech_factv: fech_factv 
                     }, function(data) {
                         swal.fire({
                             title:'Venta',

@@ -104,7 +104,7 @@
                                                     <div>
                                                         <label for="exampleInputdate" class="form-label">Fecha</label>
                                                         <input type="date" class="form-control" id="fech_fact" name="fech_fact" 
-                                                        value="<?php echo date('Y-m-d'); ?>"> <!-- Aquí asignamos la fecha en formato yyyy-mm-dd -->
+                                                        value="<?php echo date('Y-m-d'); ?>"> 
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-4">
@@ -145,44 +145,40 @@
                                 <div class="card">
                                     <div class="card-header align-items-center d-flex">
                                         <h4 class="card-title mb-0 flex-grow-1">Agregar producto</h4>
-                                    </div><!-- end card header -->
+                                    </div>
                                     <div class="card-body">
                                         <div class="live-preview">
                                             <div class="row align-items-center g-3">
                                                 <div class="col-lg-3">
-                                                    <label for="valueInput" class="form-label">Categoria</label>
-                                                        <select id="cat_id" name="cat_id" class="form-control form-select" aria-label=".form-select-sm example">
-                                                            <option selected>Seleccione</option>
-                                                            
-                                                        </select>
+                                                    <label for="prod_id" class="form-label">Producto</label>
+                                                    <select id="prod_id" name="prod_id" class="form-control form-select">
+                                                    </select>
                                                 </div>
                                                 <div class="col-lg-3">
-                                                    <label for="valueInput" class="form-label">Producto</label>
-                                                    <select id="prod_id" name="prod_id" class="form-control form-select" aria-label=".form-select-sm example">
-                                                            <option selected>Seleccione</option>
-                                                    </select> 
+                                                    <label for="cat_nom" class="form-label">Categoría</label>
+                                                    <input type="text" id="cat_nom" name="cat_nom" class="form-control" readonly>
                                                 </div>
                                                 <div class="col-lg-1">
-                                                    <label for="valueInput" class="form-label">Precio</label>
-                                                    <input type="number" class="form-control" id="prod_pcompra" name="prod_pcompra" placeholder="Precio " >
+                                                    <label for="prod_pcompra" class="form-label">Precio</label>
+                                                    <input type="number" class="form-control" id="prod_pcompra" name="prod_pcompra" placeholder="Precio">
                                                 </div>
                                                 <div class="col-lg-1">
-                                                    <label for="valueInput" class="form-label">Stock</label>
-                                                    <input type="text" class="form-control" id="prod_stock" name="prod_stock" placeholder="Stock " readonly>
+                                                    <label for="prod_stock" class="form-label">Stock</label>
+                                                    <input type="text" class="form-control" id="prod_stock" name="prod_stock" placeholder="Stock" readonly>
                                                 </div>
                                                 <div class="col-lg-2">
-                                                    <label for="valueInput" class="form-label">Unidad de medida</label>
-                                                    <input type="text" class="form-control" id="und_nom" name="und_nom" placeholder="Unidad de Medida " readonly>
+                                                    <label for="und_nom" class="form-label">Unidad</label>
+                                                    <input type="text" class="form-control" id="und_nom" name="und_nom" placeholder="Unidad" readonly>
                                                 </div>
                                                 <div class="col-lg-1">
-                                                    <label for="valueInput" class="form-label">Cantidad</label>
-                                                    <input type="number" class="form-control" id="detc_cant" name="detc_cant" placeholder="Cant. ">
+                                                    <label for="detc_cant" class="form-label">Cantidad</label>
+                                                    <input type="number" class="form-control" id="detc_cant" name="detc_cant" placeholder="Cant.">
                                                 </div>
                                                 <div class="col-lg-1 d-grid gap-0">
-                                                    <label for="valueInput" class="form-label">&nbsp;</label>
-                                                    
+                                                    <label class="form-label">&nbsp;</label>
                                                     <button type="button" id="btnagregar" name="btnagregar" class="btn btn-primary waves-effect waves-light ri-add-circle-line"></button>
                                                 </div>
+
                                             </div>
                                         </div>
                                         <br>
@@ -237,20 +233,6 @@
                             </div> <!-- end col -->
                         </div>
                         <!-- end row -->
-                        <!--TODO: DETALLE DE COMPRA-->
-                        <!-- <div class="row">
-                            <div class="col-lg-12">
-                                <div class="card">
-                                    <div class="card-header align-items-center d-flex">
-                                        <h4 class="card-title mb-0 flex-grow-1">Agregar producto</h4>
-                                    </div>
-                                    <div class="card-body">
-                                        
-                                    </div>
-                                </div>
-                            </div> 
-                        </div> -->
-                        
                     </div>
 
                 </div>

@@ -2,12 +2,25 @@
     class Producto extends Conectar{
         //TODO Listar Registros
         public function get_producto_x_suc_id($suc_id){
-            $conectar=parent::Conexion();
-            $sql="SP_L_PRODUCTO_01 ?";
-            $query=$conectar->prepare($sql);
-            $query->bindValue(1,$suc_id);
-            $query->execute();
-            return $query->fetchAll(PDO::FETCH_ASSOC);
+            try {
+                $conectar = parent::Conexion();
+                $sql = "SELECT 
+                            p.*,
+                            c.CAT_NOM,
+                            u.UND_NOM,
+                            m.MON_NOM
+                        FROM TM_PRODUCTO p
+                        INNER JOIN TM_CATEGORIA c ON p.CAT_ID = c.CAT_ID
+                        INNER JOIN TM_UNIDAD u ON p.UND_ID = u.UND_ID
+                        INNER JOIN TM_MONEDA m ON p.MON_ID = m.MON_ID
+                        WHERE p.SUC_ID = ? AND p.EST = 1";
+                $sql = $conectar->prepare($sql);
+                $sql->bindValue(1, $suc_id);
+                $sql->execute();
+                return $sql->fetchAll(PDO::FETCH_ASSOC);
+            } catch (Exception $e) {
+                return array();
+            }
         }
         //TODO Listar Registro por ID
         public function get_producto_x_prod_id($prod_id){
@@ -99,6 +112,94 @@
                 move_uploaded_file($_FILES['prod_img']['tmp_name'], $destination);
                 return $new_name;
             }
+        }
+
+        public function buscar_producto_nombre($prod_nom = ""){
+            $conectar = parent::Conexion();
+            $sql = "EXEC SP_L_PRODUCTO_BUSCAR ?";
+            $query = $conectar->prepare($sql);
+            $query->bindValue(1, ($prod_nom == "" ? NULL : $prod_nom));
+            $query->execute();
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+        
+        public function update_stock_precio_compra($prod_id, $cantidad, $precio_compra){
+            $conectar = parent::Conexion();
+            
+            try {
+                $sql = "EXEC SP_U_PRODUCTO_COMPRA ?, ?, ?";
+                $stmt = $conectar->prepare($sql);
+                $stmt->bindValue(1, $prod_id, PDO::PARAM_INT);
+                $stmt->bindValue(2, $cantidad, PDO::PARAM_INT);
+                $stmt->bindValue(3, $precio_compra, PDO::PARAM_STR);
+                $stmt->execute();
+                return true;
+            } catch (Exception $e) {
+                return false;
+            }
+        }
+
+        
+        public function buscar_producto_venta($term, $suc_id) {
+            $conectar = parent::Conexion();
+            $sql = "SELECT 
+                        p.PROD_ID,
+                        p.PROD_NOM,
+                        c.CAT_NOM,
+                        p.PROD_PVENTA,
+                        p.PROD_STOCK,
+                        u.UND_NOM
+                    FROM TM_PRODUCTO p
+                    INNER JOIN TM_CATEGORIA c ON p.CAT_ID = c.CAT_ID
+                    INNER JOIN TM_UNIDAD u ON p.UND_ID = u.UND_ID
+                    WHERE p.SUC_ID = ? 
+                    AND (
+                        p.PROD_NOM LIKE ? OR
+                        c.CAT_NOM LIKE ? OR
+                        CAST(p.PROD_ID as VARCHAR) LIKE ?
+                    )
+                    AND p.EST = 1
+                    AND p.PROD_STOCK > 0
+                    ORDER BY p.PROD_NOM ASC";
+            
+            $sql = $conectar->prepare($sql);
+            $sql->bindValue(1, $suc_id);
+            $sql->bindValue(2, "%".$term."%");
+            $sql->bindValue(3, "%".$term."%");
+            $sql->bindValue(4, "%".$term."%");
+            $sql->execute();
+            return $sql->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        public function buscar_productos_venta($term, $suc_id) {
+            $conectar = parent::Conexion();
+            $sql = "SELECT 
+                        p.PROD_ID,
+                        p.PROD_NOM,
+                        p.PROD_PVENTA,
+                        p.PROD_STOCK,
+                        c.CAT_NOM,
+                        u.UND_NOM
+                    FROM TM_PRODUCTO p
+                    INNER JOIN TM_CATEGORIA c ON p.CAT_ID = c.CAT_ID
+                    INNER JOIN TM_UNIDAD u ON p.UND_ID = u.UND_ID
+                    WHERE p.SUC_ID = ? 
+                    AND (
+                        p.PROD_NOM LIKE ? OR 
+                        CAST(p.PROD_ID as VARCHAR) LIKE ? OR
+                        c.CAT_NOM LIKE ?
+                    )
+                    AND p.EST = 1
+                    AND p.PROD_STOCK > 0
+                    ORDER BY p.PROD_NOM ASC";
+            
+            $sql = $conectar->prepare($sql);
+            $sql->bindValue(1, $suc_id);
+            $sql->bindValue(2, "%".$term."%");
+            $sql->bindValue(3, "%".$term."%");
+            $sql->bindValue(4, "%".$term."%");
+            $sql->execute();
+            return $sql->fetchAll(PDO::FETCH_ASSOC);
         }
     }
 ?>

@@ -2,13 +2,15 @@
     class Venta extends Conectar{
 
         //TODO LISTAR REGISTROS POR ID
-        public function insert_venta_x_suc_id($suc_id, $usu_id){
+        public function insert_venta_x_suc_id($suc_id, $usu_id, $nro_factv, $fech_factv){
             $conectar=parent::Conexion();
             $sql="";
-            $sql="SP_I_VENTA_01 ?,?";
+            $sql="SP_I_VENTA_01 ?,?,?,?";
             $query=$conectar->prepare($sql);
             $query->bindValue(1,$suc_id);
             $query->bindValue(2,$usu_id);
+            $query->bindValue(3,$nro_factv);
+            $query->bindValue(4,$fech_factv);
             $query->execute();
             return $query->fetchAll(PDO::FETCH_ASSOC);
         }
@@ -56,10 +58,10 @@
             return $query->fetchAll(PDO::FETCH_ASSOC);
         }
 
-        public function update_venta($vent_id, $pag_id, $cli_id, $cli_ruc, $cli_direcc, $cli_correo, $vent_coment, $mon_id,$doc_id){
+        public function update_venta($vent_id, $pag_id, $cli_id, $cli_ruc, $cli_direcc, $cli_correo, $vent_coment, $mon_id,$doc_id, $nro_factv, $fech_factv){
             $conectar=parent::Conexion();
             $sql="";
-            $sql="SP_U_VENTA_03 ?,?,?,?,?,?,?,?,?";
+            $sql="SP_U_VENTA_03 ?,?,?,?,?,?,?,?,?,?,?";
             $query=$conectar->prepare($sql);
             $query->bindValue(1,$vent_id);
             $query->bindValue(2,$pag_id);
@@ -70,6 +72,8 @@
             $query->bindValue(7,$vent_coment);
             $query->bindValue(8,$mon_id);
             $query->bindValue(9,$doc_id);
+            $query->bindValue(10,$nro_factv);
+            $query->bindValue(11,$fech_factv);
             $query->execute();
             return $query->fetchAll(PDO::FETCH_ASSOC);
         }
@@ -112,6 +116,98 @@
             $query->bindValue(1,$suc_id);
             $query->execute();
             return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        public function insertar_venta_rapida($data) {
+            try {
+                $conectar = parent::Conexion();
+                
+                // Insertar cabecera de venta
+                $sql = "INSERT INTO TM_VENTA (
+                            SUC_ID,
+                            USU_ID,
+                            PAG_ID,
+                            CLI_ID,
+                            CLI_RUC,
+                            CLI_DIRECC,
+                            CLI_CORREO,
+                            NRO_FACTV,
+                            FECH_FACTV,
+                            VENT_SUBTOTAL,
+                            VENT_IGV,
+                            VENT_TOTAL,
+                            VENT_COMENT,
+                            MON_ID,
+                            DOC_ID,
+                            FECH_CREA,
+                            EST
+                        ) VALUES (
+                            ?, -- SUC_ID
+                            ?, -- USU_ID
+                            1, -- PAG_ID (efectivo por defecto)
+                            1, -- CLI_ID (cliente general)
+                            0, -- CLI_RUC
+                            '', -- CLI_DIRECC
+                            '', -- CLI_CORREO
+                            '', -- NRO_FACTV
+                            GETDATE(), -- FECH_FACTV
+                            ?, -- VENT_SUBTOTAL
+                            ?, -- VENT_IGV
+                            ?, -- VENT_TOTAL
+                            'Venta Rápida', -- VENT_COMENT
+                            1, -- MON_ID (moneda por defecto)
+                            1, -- DOC_ID (documento por defecto)
+                            GETDATE(), -- FECH_CREA
+                            1  -- EST
+                        )";
+                
+                // Calcular IGV y subtotal
+                $total = $data['total'];
+                $igv = $total * 0.18; // 18% de IGV
+                $subtotal = $total - $igv;
+    
+                $stmt = $conectar->prepare($sql);
+                $stmt->bindValue(1, $data['suc_id']);
+                $stmt->bindValue(2, $data['usu_id']);
+                $stmt->bindValue(3, $subtotal);
+                $stmt->bindValue(4, $igv);
+                $stmt->bindValue(5, $total);
+                $stmt->execute();
+                
+                $venta_id = $conectar->lastInsertId();
+                
+                // Insertar detalle de venta
+                foreach ($data['productos'] as $producto) {
+                    $sql = "INSERT INTO TD_VENTA (
+                                VENT_ID, 
+                                PROD_ID, 
+                                DETV_CANT, 
+                                DETV_PRECIO
+                            ) VALUES (?, ?, ?, ?)";
+                    
+                    $stmt = $conectar->prepare($sql);
+                    $stmt->bindValue(1, $venta_id);
+                    $stmt->bindValue(2, $producto['prod_id']);
+                    $stmt->bindValue(3, $producto['cantidad']);
+                    $stmt->bindValue(4, $producto['precio']);
+                    $stmt->execute();
+                    
+                    // Actualizar stock
+                    $sql = "UPDATE TM_PRODUCTO 
+                            SET PROD_STOCK = PROD_STOCK - ?
+                            WHERE PROD_ID = ?";
+
+                    $stmt = $conectar->prepare($sql);
+                    $stmt->bindValue(1, $producto['cantidad']);
+                    $stmt->bindValue(2, $producto['prod_id']);
+                    $stmt->execute();
+                }
+                
+                return $venta_id;
+                
+            } catch (Exception $e) {
+                throw new Exception("Error al registrar la venta: " . $e->getMessage());
+            }
         }
     }
 ?>

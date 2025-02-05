@@ -59,7 +59,11 @@ $(document).ready(function(){
         "ajax":{
             url:"../../controller/producto.php?op=listar",
             type:"post",
-            data:{suc_id:suc_id}
+            data:{suc_id:suc_id},
+            error: function (xhr, error, thrown) {
+                console.log('Error en DataTable:', error);
+                console.log('Respuesta del servidor:', xhr.responseText);
+            }
         },
         "bDestroy": true,
         "responsive": true,
@@ -76,7 +80,7 @@ $(document).ready(function(){
             "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
             "sInfoPostFix":    "",
             "sSearch":         "Buscar:",
-            "sUrl":            "",
+            "sUrl":           "",
             "sInfoThousands":  ",",
             "sLoadingRecords": "Cargando...",
             "oPaginate": {
@@ -84,12 +88,8 @@ $(document).ready(function(){
                 "sLast":     "Último",
                 "sNext":     "Siguiente",
                 "sPrevious": "Anterior"
-            },
-            "oAria": {
-                "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
-                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
             }
-        },
+        }
     });
 
 });

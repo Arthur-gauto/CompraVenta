@@ -122,14 +122,53 @@ switch($_GET["op"]){
     break;
 
     case "guardar":
-        $compr_id = $_POST["compr_id"];
-        $nro_fact = $_POST["nro_fact"];  // Nuevo campo
-        $fech_fact = $_POST["fech_fact"]; // Nuevo campo
-        $datos = $compra->update_compra($compr_id, $_POST["pag_id"], $_POST["prov_id"],
-                                        $_POST["prov_ruc"], $_POST["prov_direcc"],
-                                        $_POST["prov_correo"], $_POST["compr_coment"],
-                                        $_POST["mon_id"], $_POST["doc_id"], $nro_fact, $fech_fact);
-    break;
+        try {
+            /* TODO: Actualizar Stock y Precio */
+            $datos = $compra->get_compra_detalle($_POST["compr_id"]);
+            
+            /* Llamar al modelo producto */
+            require_once("../models/Producto.php");
+            $producto = new Producto();
+            
+            foreach($datos as $row){
+                $resultado = $producto->update_stock_precio_compra(
+                    $row["PROD_ID"],
+                    $row["DETC_CANT"],
+                    $row["PROD_PCOMPRA"]
+                );
+                
+                if(!$resultado) {
+                    throw new Exception("Error al actualizar producto ID: " . $row["PROD_ID"]);
+                }
+            }
+    
+            /* TODO: Actualizar Cabecera */
+            $compra->update_compra(
+                $_POST["compr_id"],
+                $_POST["pag_id"],
+                $_POST["prov_id"],
+                $_POST["prov_ruc"],
+                $_POST["prov_direcc"],
+                $_POST["prov_correo"],
+                $_POST["compr_coment"],
+                $_POST["mon_id"],
+                $_POST["doc_id"],
+                $_POST["nro_fact"],
+                $_POST["fech_fact"]
+            );
+    
+            echo json_encode([
+                "status" => "success",
+                "message" => "Compra registrada correctamente"
+            ]);
+            
+        } catch (Exception $e) {
+            echo json_encode([
+                "status" => "error",
+                "message" => $e->getMessage()
+            ]);
+        }
+        break;
     
 
     case "mostrar":
@@ -182,7 +221,7 @@ switch($_GET["op"]){
             $sub_array[] = "C-" . $row["COMPR_ID"];
             $sub_array[] = $row["DOC_NOM"];
             $sub_array[] = $row["PROV_RUC"];
-            $sub_array[] = $row["NRO_FACT"];  // Nuevo campo NRO_FACT
+            $sub_array[] = $row["NRO_FACT"];  
             $sub_array[] = $row["PROV_NOM"];
             $sub_array[] = $row["PAG_NOM"];
             $sub_array[] = $row["MON_NOM"];
@@ -360,5 +399,7 @@ switch($_GET["op"]){
         }
         echo json_encode($data);
     break;
+
+    
 }
 ?>

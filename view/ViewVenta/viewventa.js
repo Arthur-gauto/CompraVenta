@@ -10,6 +10,8 @@ $(document).ready(function(){
         $("#txtweb").html(data.EMP_PAG);
         $("#vent_id").html(data.VENT_ID);
         $("#fech_crea").html(data.FECH_CREA);
+        $("#nro_factv").html(data.NRO_FACTV);
+        $("#fech_factv").html(data.FECH_FACTV);
         $("#pag_nom").html(data.PAG_NOM);
         $("#txt_total").html(data.VENT_TOTAL);
         $("#txtruc").html(data.EMP_RUC);
@@ -23,6 +25,8 @@ $(document).ready(function(){
         $("#cli_ruc").html("<b>RUC: </b>&nbsp;&nbsp;&nbsp;"+data.CLI_RUC);
         $("#cli_direcc").html("<b>Dirección: </b>&nbsp;&nbsp;&nbsp;" + data.CLI_DIRECC);
         $("#cli_correo").html("<b>Correo: </b>&nbsp;&nbsp;&nbsp;"+data.CLI_CORREO);
+        $("#nro_factv").html("<b>Nro de Factura: </b>&nbsp;&nbsp;&nbsp;" + data.NRO_FACTV);
+        $("#fech_factv").html("<b>Fecha Facturación: </b>&nbsp;&nbsp;&nbsp;"+data.FECH_FACTV);
 
     });
 

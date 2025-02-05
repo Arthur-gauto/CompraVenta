@@ -99,11 +99,13 @@
                                         <div class="card-body p-4 border-top border-top-dashed">
                                             <div class="row g-3">
                                                 <div class="col-6">
-                                                    <h6 class="text-muted text-uppercase fw-semibold mb-3">Datos del Proveedor</h6>
-                                                    <p class="fw-medium mb-2" id="prov_nom"></p>
-                                                    <p class="fw-medium mb-2" id="prov_ruc"></p>
-                                                    <p class="fw-medium mb-2" id="prov_direcc"></p>
-                                                    <p class="fw-medium mb-2" id="prov_correo"></p>
+                                                    <h6 class="text-muted text-uppercase fw-semibold mb-3">Datos del Cliente</h6>
+                                                    <p class="fw-medium mb-2" id="cli_nom"></p>
+                                                    <p class="fw-medium mb-2" id="cli_ruc"></p>
+                                                    <p class="fw-medium mb-2" id="cli_direcc"></p>
+                                                    <p class="fw-medium mb-2" id="cli_correo"></p>
+                                                    <p class="fw-medium mb-2" id="nro_factv"></p>
+                                                    <p class="fw-medium mb-2" id="fech_factv"></p>
                                                 </div>
                                             </div>
                                             <!--end row-->
@@ -138,7 +140,7 @@
                                                             <th scope="col">Categoria</th>
                                                             <th scope="col">Producto</th>
                                                             <th scope="col" style="width: 50px;">Und</th>
-                                                            <th scope="col">P.Venta</th>
+                                                            <th scope="col">P.Compra</th>
                                                             <th scope="col">Cant.</th>
                                                             <th scope="col" class="text-end">Total</th>
                                                         </tr>

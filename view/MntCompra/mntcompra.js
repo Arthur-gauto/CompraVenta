@@ -2,10 +2,10 @@ var emp_id= $('#EMP_IDx').val();
 var suc_id= $('#SUC_IDx').val();
 var usu_id= $('#USU_IDx').val();
 
-
 $(document).ready(function(){
-    var nro_fact = $('#nro_fact').val();  // Captura el valor de nro_fact
-    var fech_fact = $('#fech_fact').val(); // Captura el valor de fech_fact
+    var nro_fact = $('#nro_fact').val();  
+    var fech_fact = $('#fech_fact').val(); 
+    cargarProductos("");
     $.post("../../controller/compra.php?op=registrar", {suc_id: suc_id, usu_id:usu_id,nro_fact: nro_fact,fech_fact: fech_fact}, function(data) {
         data=JSON.parse(data);
         $("#compr_id").val(data.COMPR_ID);
@@ -22,6 +22,7 @@ $(document).ready(function(){
     $('#mon_id').select2();
 
     $('#doc_id').select2();
+
 
     $.post("../../controller/documento.php?op=combo", {doc_tipo: "compra"}, function(data) {
         $("#doc_id").html(data);
@@ -48,6 +49,46 @@ $(document).ready(function(){
         $("#mon_id").val(1).trigger('change');
     });
 
+
+    $("#buscar_prod").on("input", function () {
+        var prod_nom = $(this).val();
+        cargarProductos(prod_nom);
+    });
+
+    function cargarProductos(prod_nom) {
+        $.post("../../controller/producto.php?op=buscar_producto", { prod_nom: prod_nom }, function (data) {
+            $("#prod_id").html(data);
+        });
+    }
+
+    $('#prod_id').change(function () {
+        var prod_id = $(this).val();
+        if (prod_id === '') {
+            $("#cat_nom").val('');
+            $("#prod_pcompra").val('');
+            $("#prod_stock").val('');
+            $("#und_nom").val('');
+            $("#cat_id").val('');
+            return;
+        }
+        $.post("../../controller/producto.php?op=mostrar", { prod_id: prod_id }, function (data) {
+            data = JSON.parse(data);
+            if (data.error) {
+                swal.fire({
+                    title: 'Error',
+                    text: data.error,
+                    icon: 'error'
+                });
+            } else {
+                // Completar campos automáticamente
+                $("#cat_nom").val(data.CAT_NOM);
+                $("#prod_pcompra").val(data.PROD_PCOMPRA);
+                $("#prod_stock").val(data.PROD_STOCK);
+                $("#und_nom").val(data.UND_NOM);
+                $("#cat_id").val(data.CAT_ID);
+            }
+        });
+    });
 
     $("#prov_id").change(function(){
         $("#prov_id").each(function(){
@@ -233,10 +274,11 @@ $(document).on("click", "#btnguardar", function(){
     var prov_correo = $("#prov_correo").val();
     var compr_coment = $("#compr_coment").val();
     var mon_id = $("#mon_id").val();
-    var nro_fact = $("#nro_fact").val(); // Captura el valor de nro_fact
-    var fech_fact = $("#fech_fact").val(); // Captura el valor de fech_fact
+    var nro_fact = $("#nro_fact").val(); 
+    var fech_fact = $("#fech_fact").val(); 
 
-    if ($("#doc_id").val() == '0' || $("#pag_id").val() == '0' || $("#prov_id").val() == '0' || $("#mon_id").val() == '0') {
+    // Verificación de campos vacíos
+    if (nro_fact.trim() === '' || fech_fact.trim() === '' || doc_id === '0' || pag_id === '0' || prov_id === '0' || mon_id === '0') {
         swal.fire({
             title: 'Compra',
             text: 'Error. Campos vacíos',
@@ -262,8 +304,8 @@ $(document).on("click", "#btnguardar", function(){
                     compr_coment: compr_coment,
                     mon_id: mon_id,
                     doc_id: doc_id,
-                    nro_fact: nro_fact, // Envía nro_fact al servidor
-                    fech_fact: fech_fact // Envía fech_fact al servidor
+                    nro_fact: nro_fact, 
+                    fech_fact: fech_fact 
                 }, function(data) {
                     swal.fire({
                         title: 'Compra',
@@ -281,3 +323,4 @@ $(document).on("click", "#btnguardar", function(){
 $(document).on("click","#btnlimpiar", function(){
     location.reload();
 });
+

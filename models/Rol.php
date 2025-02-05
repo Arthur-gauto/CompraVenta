@@ -56,5 +56,20 @@
             $query->execute();
             return $query->fetchAll(PDO::FETCH_ASSOC);
         }
+
+        public function validar_menu_x_rol($rol_id, $men_identi){
+            $conectar = parent::Conexion();
+            $sql = "SELECT * FROM TM_MENU m 
+                    INNER JOIN TD_MENU td ON m.MEN_ID = td.MEN_ID 
+                    WHERE td.ROL_ID = ? 
+                    AND m.MEN_IDENTI = ? 
+                    AND td.MEND_PERMI = 'Si'
+                    AND td.EST = 1";
+            $sql = $conectar->prepare($sql);
+            $sql->bindValue(1, $rol_id);
+            $sql->bindValue(2, $men_identi);
+            $sql->execute();
+            return $sql->fetchAll(PDO::FETCH_ASSOC);
+        }
     }
 ?>
