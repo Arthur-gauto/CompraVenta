@@ -1,141 +1,135 @@
 <?php
+    //todo Llamando Clases
     require_once("../config/conexion.php");
     require_once("../models/Caja.php");
-    $caja = new Caja();
+    //todo Iniciando Clase
+    $caja=new Caja();
 
     switch($_GET["op"]){
-        case "listar":
+        //todo Guardar y editar, guardar cuando el ID este vacio, y Actualizar cuando se envie el Id
+        case "guardaryeditar":
+            error_log("caj_id: " . $_POST["caj_id"]);
+        
             try {
-                $datos = $caja->get_caja($_POST["suc_id"]);
-                $data = Array();
-                foreach($datos as $row){
-                    $sub_array = array();
-                    $sub_array[] = $row["CAJA_ID"];
-                    $sub_array[] = $row["SUC_NOM"];
-                    $sub_array[] = $row["USU_NOM"];
-                    $sub_array[] = $row["CAJA_FECHA"];
-                    $sub_array[] = $row["CAJA_INGRESO"];
-                    $sub_array[] = $row["CAJA_EGRESO"];
-                    $sub_array[] = $row["CAJA_SALDO"];
-                    $sub_array[] = $row["FECH_CREA"];
+                if (empty($_POST["caj_id"])) {
+                    // Verificar si hay una caja abierta
+                    $caja_abierta = $caja->verificar_caja_abierta($_POST["suc_id"]);
                     
-                    if ($row["EST"]==1){
-                        $sub_array[] = '<span class="badge bg-success">ABIERTA</span>';
-                    }else{
-                        $sub_array[] = '<span class="badge bg-danger">CERRADA</span>';
+                    if ($caja_abierta) {
+                        echo json_encode(["status" => "error", "message" => "Ya existe una caja abierta."]);
+                        exit();
                     }
-
-                    $sub_array[] = '<button type="button" onClick="ver('.$row["CAJA_ID"].')" id="'.$row["CAJA_ID"].'" class="btn btn-info btn-icon waves-effect waves-light"><i class="ri-eye-fill"></i></button>';
-                    $sub_array[] = '<button type="button" onClick="eliminar('.$row["CAJA_ID"].')" id="'.$row["CAJA_ID"].'" class="btn btn-danger btn-icon waves-effect waves-light"><i class="ri-delete-bin-5-line"></i></button>';
-                    $data[] = $sub_array;
+        
+                    // Si no hay caja abierta, crear una nueva
+                    $caja->insert_caja($_POST["suc_id"], $_POST["usu_id"], $_POST["caj_ini"]);
+                    echo json_encode(["status" => "success", "message" => "Caja abierta correctamente."]);
+                } else {
+                    // Actualizar caja existente
+                    $caja->update_caja($_POST["caj_id"], $_POST["caj_ing"], $_POST["caj_egr"], $_POST["caj_fin"]);
+                    echo json_encode(["status" => "success", "message" => "Caja actualizada correctamente."]);
                 }
-
-                $results = array(
-                    "sEcho"=>1,
-                    "iTotalRecords"=>count($data),
-                    "iTotalDisplayRecords"=>count($data),
-                    "aaData"=>$data);
-                echo json_encode($results);
-            } catch (Exception $e) {
-                error_log("Error en listar: " . $e->getMessage());
-                echo json_encode(["error" => $e->getMessage()]);
+            } catch (PDOException $e) {
+                echo json_encode(["status" => "error", "message" => $e->getMessage()]);
             }
-            break;
+        break;
+        
 
-            case "guardaryeditar":
-                try {
-                    // Log de datos recibidos
-                    error_log("Datos recibidos: " . json_encode($_POST));
-                    
-                    if(empty($_POST["caja_id"])){
-                        $datos = $caja->insert_caja(
-                            $_POST["suc_id"],
-                            $_POST["usu_id"],
-                            $_POST["caja_fecha"]
-                        );
-                        // Log del resultado
-                        error_log("Resultado insert: " . json_encode($datos));
-                        echo json_encode($datos);
-                    }
-                } catch (Exception $e) {
-                    // Log de error
-                    error_log("Error en guardaryeditar: " . $e->getMessage());
-                    echo json_encode(["error" => $e->getMessage()]);
+        //todo Listado de registros formato JSON para datable JS
+        case "listar":
+            $datos=$caja->get_caja_x_suc_id($_POST["suc_id"]);
+            $data=Array();
+            foreach($datos as $row){
+                $sub_array = array();
+                $sub_array[] = $row["FECH_CREA"];
+                if ($row["USU_IMG"] != '') {
+                    $sub_array[] =
+                    "<div class='d-flex align-items-center'>" .
+                        "<div class='flex-shrink-0 me-2'>" .
+                            "<img src='../../assets/usuario/" . $row["USU_IMG"] . "' alt='' class='avatar-xs rounded-circle'>" .
+                        "</div>" .
+                    "</div>";
+                } else {
+                    $sub_array[] =
+                    "<div class='d-flex align-items-center'>" .
+                        "<div class='flex-shrink-0 me-2'>" .
+                            "<img src='../../assets/usuario/no_imagen.png' alt='' class='avatar-xs rounded-circle'>" .
+                        "</div>" .
+                    "</div>";
                 }
-                break;
+                $sub_array[] = $row["USU_NOM"];
+                $sub_array[] = $row["CAJ_INI"];
+                $sub_array[] = $row["CAJ_FIN"];
+                if ($row["EST"]==1){
+                    $sub_array[]='<span class="badge bg-success">ABIERTA</span>';
+                }else{
+                    $sub_array[]='<span class="badge bg-danger">CERRADA</span>';
+                }
+                $sub_array[] = '<button type="button"  onClick="ver('.$row["CAJ_ID"].')" id="'.$row["CAJ_ID"].'" class="btn btn-info btn-icon waves-effect waves-light"><i class="ri-eye-fill"></i></button>';
+                $sub_array[] = '<button type="button" onClick="eliminar('.$row["CAJ_ID"].')" id="'.$row["CAJ_ID"].'" class="btn btn-danger btn-icon waves-effect waves-light"><i class="ri-delete-bin-5-line"></i></button>';
+                $data[] = $sub_array;
+            }
 
+            $results = array(
+                "sEcho"=>1,
+                "iTotalRecords"=>count($data),
+                "iTotalDisplayRecords"=>count($data),
+                "aaData"=>$data);
+            echo json_encode($results);
+            break;
+        //todo Mostrar información de registro según su ID
         case "mostrar":
-            $datos=$caja->get_caja_x_id($_POST["caja_id"]);  
+            $datos=$caja->get_caja_x_suc_id($_POST["suc_id"]);
             if(is_array($datos)==true and count($datos)>0){
                 foreach($datos as $row){
-                    $output["CAJA_ID"] = $row["CAJA_ID"];
+                    $output["CAJ_ID"] = $row["CAJ_ID"];
                     $output["SUC_ID"] = $row["SUC_ID"];
                     $output["USU_ID"] = $row["USU_ID"];
-                    $output["CAJA_FECHA"] = $row["CAJA_FECHA"];
-                    $output["CAJA_INGRESO"] = $row["CAJA_INGRESO"];
-                    $output["CAJA_EGRESO"] = $row["CAJA_EGRESO"];
-                    $output["CAJA_SALDO"] = $row["CAJA_SALDO"];
+                    $output["SUC_NOM"] = $row["SUC_NOM"];
+                    $output["USU_NOM"] = $row["USU_NOM"];
+                    $output["CAJ_ING"] = $row["CAJ_ING"];
+                    $output["CAJ_EGR"] = $row["CAJ_EGR"];
+                    $output["CAJ_FIN"] = $row["CAJ_FIN"];
+                    $output["FECH_CREA"] = $row["FECH_CREA"];
                 }
                 echo json_encode($output);
             }
             break;
-
+        case "mostrarcaj":
+            $datos=$caja->get_caja_x_caj_id($_POST["caj_id"]);
+            if(is_array($datos)==true and count($datos)>0){
+                foreach($datos as $row){
+                    $output["CAJ_ID"] = $row["CAJ_ID"];
+                    $output["SUC_ID"] = $row["SUC_ID"];
+                    $output["USU_ID"] = $row["USU_ID"];
+                    $output["SUC_NOM"] = $row["SUC_NOM"];
+                    $output["USU_NOM"] = $row["USU_NOM"];
+                    $output["CAJ_ING"] = $row["CAJ_ING"];
+                    $output["CAJ_EGR"] = $row["CAJ_EGR"];
+                    $output["CAJ_FIN"] = $row["CAJ_FIN"];
+                    $output["FECH_CREA"] = $row["FECH_CREA"];
+                }
+                echo json_encode($output);
+            }
+            break;
+        //todo Cambiar estado a 0 del Registro
         case "eliminar":
-            $caja->delete_caja($_POST["caja_id"]);
+            $caja->delete_caja($_POST["caj_id"]);
             break;
-
-
-            case "listar_detalle":
-                try {
-                    $datos = $caja->get_caja_detalle($_POST["caja_id"]);
-                    $data = Array();
-                    foreach($datos as $row){
-                        $sub_array = array();
-                        $sub_array[] = $row["ID"];
-                        $sub_array[] = $row["TIPO"] == 'I' ? 
-                            '<span class="badge bg-success">INGRESO</span>' : 
-                            '<span class="badge bg-danger">EGRESO</span>';
-                        $sub_array[] = $row["REFERENCIA"];
-                        $sub_array[] = $row["FECHA"];
-                        $sub_array[] = $row["PAG_NOM"];
-                        $sub_array[] = $row["MON_NOM"];
-                        $sub_array[] = $row["MONTO"];
-                        $sub_array[] = $row["COMENTARIO"];
-                        $sub_array[] = $row["EST"] == 1 ? 
-                            '<span class="badge bg-success">ACTIVO</span>' : 
-                            '<span class="badge bg-danger">ANULADO</span>';
-                        $data[] = $sub_array;
-                    }
-            
-                    $results = array(
-                        "sEcho"=>1,
-                        "iTotalRecords"=>count($data),
-                        "iTotalDisplayRecords"=>count($data),
-                        "aaData"=>$data);
-                    echo json_encode($results);
-                } catch (Exception $e) {
-                    error_log("Error en listar_detalle: " . $e->getMessage());
-                    echo json_encode(["error" => $e->getMessage()]);
+        
+        case "combo":
+            $datos = $caja->get_caja_x_suc_id($_POST["suc_id"]);
+            if(is_array($datos)== true and count($datos) > 0){
+                $html = "";
+                $html .= "<option selected>Seleccionar</option>";
+                foreach($datos as $row){
+                    $html .= "<option value='".$row["CAJ_ID"]."'>".$row["CAT_NOM"]."</option>";
                 }
-            break;
-    
-            case "mostrar_detalle":
-                $datos=$caja->get_caja_x_id($_POST["caja_id"]);  
-                if(is_array($datos)==true and count($datos)>0){
-                    foreach($datos as $row){
-                        $output["CAJA_ID"] = $row["CAJA_ID"];
-                        $output["SUC_ID"] = $row["SUC_ID"];
-                        $output["SUC_NOM"] = $row["SUC_NOM"];
-                        $output["USU_ID"] = $row["USU_ID"];
-                        $output["USU_NOM"] = $row["USU_NOM"];
-                        $output["CAJA_FECHA"] = $row["CAJA_FECHA"];
-                        $output["CAJA_INGRESO"] = $row["CAJA_INGRESO"];
-                        $output["CAJA_EGRESO"] = $row["CAJA_EGRESO"];
-                        $output["CAJA_SALDO"] = $row["CAJA_SALDO"];
-                    }
-                    echo json_encode($output);
-                }
-                break;
+                echo $html;
+            }
+        break;
+
+        
+        
+
     }
-
 ?>

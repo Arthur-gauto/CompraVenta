@@ -2,7 +2,7 @@
     require_once("../../config/conexion.php");
     require_once("../../models/Rol.php");
     $rol = new Rol();
-    $datos = $rol->validar_menu_x_rol($_SESSION["ROL_ID"], "MntCaja");
+    $datos = $rol->validar_acceso_rol($_SESSION["ROL_ID"], "MntCaja");
     if (isset($_SESSION["USU_ID"]) AND count($datos) > 0) {
 ?>
 
@@ -46,13 +46,13 @@
                                         <div class="col-md-3">
                                             <div class="mb-3">
                                                 <label class="form-label">ID Caja:</label>
-                                                <input type="text" class="form-control" id="caja_id" name="caja_id" readonly>
+                                                <input type="text" class="form-control" id="caj_id" name="caj_id" readonly>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="mb-3">
                                                 <label class="form-label">Fecha:</label>
-                                                <input type="text" class="form-control" id="caja_fecha" name="caja_fecha" readonly>
+                                                <input type="text" class="form-control" id="fech_crea" name="fech_crea" readonly>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
@@ -73,19 +73,19 @@
                                         <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label class="form-label">Ingresos:</label>
-                                                <input type="text" class="form-control" id="caja_ingreso" name="caja_ingreso" readonly>
+                                                <input type="text" class="form-control" id="caj_ing" name="caj_ing" readonly>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label class="form-label">Egresos:</label>
-                                                <input type="text" class="form-control" id="caja_egreso" name="caja_egreso" readonly>
+                                                <input type="text" class="form-control" id="caj_egr" name="caj_egr" readonly>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label class="form-label">Saldo:</label>
-                                                <input type="text" class="form-control" id="caja_saldo" name="caja_saldo" readonly>
+                                                <input type="text" class="form-control" id="caj_fin" name="caj_fin" readonly>
                                             </div>
                                         </div>
                                     </div>

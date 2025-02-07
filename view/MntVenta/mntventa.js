@@ -307,8 +307,9 @@ $(document).on("click","#btnguardar", function(){
                     mon_id: mon_id,
                     doc_id: doc_id,
                     nro_factv: nro_factv, 
-                    fech_factv: fech_factv 
-                    }, function(data) {
+                    fech_factv: fech_factv
+                    
+                }, function(data) {
                         swal.fire({
                             title:'Venta',
                             text: 'Registrado correctamente con Nro: V-' + vent_id,
