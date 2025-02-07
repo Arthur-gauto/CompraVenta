@@ -20,7 +20,7 @@
 
     <div id="layout-wrapper">
 
-    <?php require_once("../html/header.php"); ?>
+        <?php require_once("../html/header.php"); ?>
         
         <?php require_once("../html/menu.php"); ?>
 
