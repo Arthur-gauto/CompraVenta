@@ -47,18 +47,10 @@ switch($_GET["op"]){
             $sub_array = array();
             if ($row["PROD_IMG"] != ''){
                 $sub_array[] = 
-                "<div class='d-flex align-items-center'>" .
-                    "<div class='flex-shrink-0 me-2'>" .
-                        "<img src='../../assets/producto/".$row["PROD_IMG"]."' alt='' class='avatar-xs rounded-circle'>".
-                    "</div>".
-                "</div>";   
-            }else{
+                    "<img src='ruta_a_tu_imagen' alt='Imagen Producto'>";
+            } else {
                 $sub_array[] = 
-                "<div class='d-flex align-items-center'>" .
-                    "<div class='flex-shrink-0 me-2'>" .
-                        "<img src='../../assets/producto/no_imagen.png' alt='' class='avatar-xs rounded-circle'>".
-                    "</div>".
-                "</div>";   
+                    "<img src='ruta_a_tu_imagen_default' alt='Imagen Producto Default'>";
             }
             $sub_array[] = $row["CAT_NOM"];
             $sub_array[] = $row["PROD_NOM"];
@@ -66,18 +58,16 @@ switch($_GET["op"]){
             $sub_array[] = $row["PROD_PCOMPRA"];
             $sub_array[] = $row["DETC_CANT"];
             $sub_array[] = $row["DETC_TOTAL"];
-            $sub_array[] = '<button type="button" onClick="eliminar('.$row["DETC_ID"].','.$row["COMPR_ID"].')" id="'.$row["DETC_ID"].'" class="btn btn-danger btn-icon waves-effect waves-light"><i class="ri-delete-bin-5-line"></i></button>';
+            $sub_array[] = '';
             $data[]=$sub_array;
         }
-
         $results = array(
             "sEcho"=>1,
             "iTotalRecords" =>count($data),
-            "iTotalDislpayRecords"=>count($data),
+            "iTotalDisplayRecords"=>count($data),
             "aaData"=>$data);
         echo json_encode($results);
-    
-    break;
+        break;
 
     case "listardetalleformato";
         $datos=$compra->get_compra_detalle($_POST["compr_id"]);
@@ -123,28 +113,54 @@ switch($_GET["op"]){
 
     case "guardar":
         try {
-            /* TODO: Actualizar Stock y Precio */
-            $datos = $compra->get_compra_detalle($_POST["compr_id"]);
-            
-            /* Llamar al modelo producto */
+            // Imprimir los datos recibidos para verificar
+            echo "<pre>";
+            print_r($_POST);
+            echo "</pre>";
+
+            // Preparar los datos necesarios
+            $data = array(
+                'SUC_ID' => $_POST["suc_id"],
+                'PAG_ID' => $_POST["pag_id"],
+                'PROV_ID' => $_POST["prov_id"],
+                'PROV_RUC' => $_POST["prov_ruc"],
+                'PROV_DIRECC' => $_POST["prov_direcc"],
+                'PROV_CORREO' => $_POST["prov_correo"],
+                'NRO_FACT' => $_POST["nro_fact"],
+                'FECH_FACT' => $_POST["fech_fact"],
+                'COMPR_SUBTOTAL' => $_POST["compr_subtotal"],
+                'COMPR_IGV' => $_POST["compr_igv"],
+                'COMPR_TOTAL' => $_POST["compr_total"],
+                'COMPR_COMENT' => $_POST["compr_coment"],
+                'USU_ID' => $_POST["usu_id"],
+                'MON_ID' => $_POST["mon_id"],
+                'DOC_ID' => $_POST["doc_id"],
+                'FECH_CREA' => date('Y-m-d H:i:s'),
+                'EST' => 1,
+                'CAJA_ID' => $_POST["caja_id"],
+                'detalle' => $_POST["detalle"]
+            );
+
+            // Registrar la compra con detalle
+            $compra_id = $compra->insert_compra_con_detalle($data);
+
+            // Actualizar stock y precio de los productos
             require_once("../models/Producto.php");
             $producto = new Producto();
-            
-            foreach($datos as $row){
+            foreach ($_POST["detalle"] as $row) {
                 $resultado = $producto->update_stock_precio_compra(
-                    $row["PROD_ID"],
-                    $row["DETC_CANT"],
-                    $row["PROD_PCOMPRA"]
+                    $row["prod_id"],
+                    $row["detc_cant"],
+                    $row["prod_pcompra"]
                 );
-                
-                if(!$resultado) {
-                    throw new Exception("Error al actualizar producto ID: " . $row["PROD_ID"]);
+                if (!$resultado) {
+                    throw new Exception("Error al actualizar producto ID: " . $row["prod_id"]);
                 }
             }
-    
-            /* TODO: Actualizar Cabecera */
+
+            // Actualizar cabecera de la compra
             $compra->update_compra(
-                $_POST["compr_id"],
+                $compra_id,
                 $_POST["pag_id"],
                 $_POST["prov_id"],
                 $_POST["prov_ruc"],
@@ -156,12 +172,11 @@ switch($_GET["op"]){
                 $_POST["nro_fact"],
                 $_POST["fech_fact"]
             );
-    
+
             echo json_encode([
                 "status" => "success",
                 "message" => "Compra registrada correctamente"
             ]);
-            
         } catch (Exception $e) {
             echo json_encode([
                 "status" => "error",

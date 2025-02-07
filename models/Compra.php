@@ -149,5 +149,33 @@
             return $query->fetchAll(PDO::FETCH_ASSOC);
         }
 
+        public function insert_compra_con_detalle($data) {
+            $conectar = parent::Conexion();
+            $sql = "EXEC SP_I_COMPRA_03 ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
+            $query = $conectar->prepare($sql);
+            $query->bindValue(1, $data['SUC_ID']);
+            $query->bindValue(2, $data['PAG_ID']);
+            $query->bindValue(3, $data['PROV_ID']);
+            $query->bindValue(4, $data['PROV_RUC']);
+            $query->bindValue(5, $data['PROV_DIRECC']);
+            $query->bindValue(6, $data['PROV_CORREO']);
+            $query->bindValue(7, $data['NRO_FACT']);
+            $query->bindValue(8, $data['FECH_FACT']);
+            $query->bindValue(9, $data['COMPR_SUBTOTAL']);
+            $query->bindValue(10, $data['COMPR_IGV']);
+            $query->bindValue(11, $data['COMPR_TOTAL']);
+            $query->bindValue(12, $data['COMPR_COMENT']);
+            $query->bindValue(13, $data['USU_ID']);
+            $query->bindValue(14, $data['MON_ID']);
+            $query->bindValue(15, $data['DOC_ID']);
+            $query->bindValue(16, $data['FECH_CREA']);
+            $query->bindValue(17, $data['EST']);
+            $query->bindValue(18, $data['CAJA_ID']);
+            $query->bindValue(19, json_encode($data['detalle']));
+    
+            $query->execute();
+    
+            return $conectar->lastInsertId();
+        }
     }
 ?>
