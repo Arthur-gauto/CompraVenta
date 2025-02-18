@@ -105,11 +105,29 @@
                     $output["USU_NOM"] = $row["USU_NOM"];
                     $output["CAJ_ING"] = $row["CAJ_ING"];
                     $output["CAJ_EGR"] = $row["CAJ_EGR"];
+                    $output["CAJ_INI"] = $row["CAJ_INI"];
                     $output["CAJ_FIN"] = $row["CAJ_FIN"];
                     $output["FECH_CREA"] = $row["FECH_CREA"];
                 }
                 echo json_encode($output);
             }
+            break;
+        case "datoscaja":
+            $datos=$caja->datos_caja($_POST["suc_id"]);
+
+            if ($datos) {
+                $output = [
+                    "CAJ_ID"    => $datos["CAJ_ID"],
+                    "SUC_ID"    => $datos["SUC_ID"],
+                    "USU_ID"    => $datos["USU_ID"],
+                    "CAJ_ING"   => $datos["CAJ_ING"],
+                    "CAJ_EGR"   => $datos["CAJ_EGR"],
+                    "CAJ_FIN"   => $datos["CAJ_FIN"],
+                    "FECH_CREA" => $datos["FECH_CREA"]
+                ];
+                echo json_encode($output);
+            }
+            
             break;
         //todo Cambiar estado a 0 del Registro
         case "eliminar":
@@ -128,7 +146,65 @@
             }
         break;
 
+        case "editaregr":
+            error_log("caj_id: " . $_POST["caj_id"]);
+
+            $caja->update_caja_egr($_POST["caj_id"],$_POST["caj_egr"]);
+            
+        break;
+
+        case "calculoegr":
+            $datos=$caja->calculo_egr($_POST["caj_id"]);
+
+            if ($datos) {
+                $output = [
+                    "COMPR_TOTAL"    => $datos["COMPR_TOTAL"]
+                ];
+                echo json_encode($output);
+            }
+        break;
         
+        case "editaring":
+            error_log("caj_id: " . $_POST["caj_id"]);
+
+            $caja->update_caja_ing($_POST["caj_id"],$_POST["caj_ing"]);
+            
+        break;
+
+
+        case "calculoing":
+            $datos=$caja->calculo_ing($_POST["caj_id"]);
+
+            if ($datos) {
+                $output = [
+                    "VENT_TOTAL"    => $datos["VENT_TOTAL"]
+                ];
+                echo json_encode($output);
+        }
+
+        break;
+
+        case "listardetalle":
+            $datos=$caja->get_caja_detalle($_POST["caj_id"]);
+            $data=Array();
+            foreach($datos as $row){
+                $sub_array = array();
+                $sub_array[] = $row["ID"];
+                $sub_array[] = $row["ORIGEN"];
+                $sub_array[] = $row["DOC_NOM"];
+                $sub_array[] = $row["NRO_FACT"];
+                $sub_array[] = $row["PAG_NOM"];
+                $sub_array[] = $row["TOTAL"];
+                $data[] = $sub_array;
+            }
+
+            $results = array(
+                "sEcho"=>1,
+                "iTotalRecords"=>count($data),
+                "iTotalDisplayRecords"=>count($data),
+                "aaData"=>$data);
+            echo json_encode($results);
+        break;
         
 
     }

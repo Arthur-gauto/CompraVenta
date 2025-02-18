@@ -58,9 +58,9 @@
             return $query->fetchAll(PDO::FETCH_ASSOC);
         }
 
-        public function update_compra($compr_id, $pag_id, $prov_id, $prov_ruc, $prov_direcc, $prov_correo, $compr_coment, $mon_id, $doc_id, $nro_fact, $fech_fact){
+        public function update_compra($compr_id, $pag_id, $prov_id, $prov_ruc, $prov_direcc, $prov_correo, $compr_coment, $mon_id, $doc_id, $nro_fact, $fech_fact, $caj_id){
             $conectar = parent::Conexion();
-            $sql = "SP_U_COMPRA_03 ?,?,?,?,?,?,?,?,?,?,?";
+            $sql = "SP_U_COMPRA_03 ?,?,?,?,?,?,?,?,?,?,?,?";
             $query = $conectar->prepare($sql);
             $query->bindValue(1, $compr_id);
             $query->bindValue(2, $pag_id);
@@ -73,6 +73,7 @@
             $query->bindValue(9, $doc_id);
             $query->bindValue(10, $nro_fact);
             $query->bindValue(11, $fech_fact);
+            $query->bindValue(12, $caj_id);
             $query->execute();
             return $query->fetchAll(PDO::FETCH_ASSOC);
         }

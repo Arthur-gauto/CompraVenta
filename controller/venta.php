@@ -2,8 +2,10 @@
 //TODO Llamando clase
 require_once("../config/conexion.php");
 require_once("../models/Venta.php");
+require_once("../models/Caja.php");
 //TODO Inicializando clase
 $venta=new Venta();
+$caja=new Caja();
 switch($_GET["op"]){
     //TODO Guardar y editar, guardar cuando el cat_id esté vacío, actualizar cuando se reciba el id
     case "registrar":
@@ -121,12 +123,12 @@ switch($_GET["op"]){
     break;
     case "guardar":
         $nro_factv = $_POST["nro_factv"];  // Nuevo campo
-        $fech_factv = $_POST["fech_factv"]; // Nuevo campo
+        $fech_factv = $_POST["fech_factv"]; // Nuevo campos
         $datos=$venta->update_venta($_POST["vent_id"],$_POST["pag_id"],$_POST["cli_id"],
                                         $_POST["cli_ruc"],$_POST["cli_direcc"],
                                         $_POST["cli_correo"],$_POST["vent_coment"],
                                         $_POST["mon_id"],
-                                        $_POST["doc_id"], $nro_factv, $fech_factv);
+                                        $_POST["doc_id"], $nro_factv, $fech_factv, $_POST["caj_id"]);
         
         break;
 
@@ -275,5 +277,16 @@ switch($_GET["op"]){
         }
         echo json_encode($data);
     break;
+
+    case "verificarcaja":
+        $suc_id = $_POST["suc_id"];
+        $datos = $caja->verificar_caja($suc_id);
+        if ($datos == 0) {
+            echo json_encode([
+                "status" => "success",
+                "message" => "No hay caja abierta. Puedes proceder a abrir una nueva caja."
+            ]);
+        } 
+        break;    
 }
 ?>

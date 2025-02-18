@@ -2,13 +2,19 @@
 //TODO Llamando clase
 require_once("../config/conexion.php");
 require_once("../models/Compra.php");
+require_once("../models/Caja.php");
 //TODO Inicializando clase
 $compra=new Compra();
+$caja=new Caja();
 switch($_GET["op"]){
     //TODO Guardar y editar, guardar cuando el cat_id esté vacío, actualizar cuando se reciba el id
     case "registrar":
         $nro_fact = $_POST["nro_fact"];  // Nuevo campo
-        $fech_fact = $_POST["fech_fact"]; // Nuevo campo
+        $fech_fact = $_POST["fech_fact"]; 
+        
+        
+        
+        // Nuevo campo
         $datos = $compra->insert_compra_x_suc_id($_POST["suc_id"], $_POST["usu_id"], $nro_fact, $fech_fact);
         foreach ($datos as $row) {
             $output["COMPR_ID"] = $row["COMPR_ID"];
@@ -125,7 +131,6 @@ switch($_GET["op"]){
         try {
             /* TODO: Actualizar Stock y Precio */
             $datos = $compra->get_compra_detalle($_POST["compr_id"]);
-            
             /* Llamar al modelo producto */
             require_once("../models/Producto.php");
             $producto = new Producto();
@@ -154,7 +159,8 @@ switch($_GET["op"]){
                 $_POST["mon_id"],
                 $_POST["doc_id"],
                 $_POST["nro_fact"],
-                $_POST["fech_fact"]
+                $_POST["fech_fact"],
+                $_POST["caj_id"]
             );
     
             echo json_encode([
@@ -400,6 +406,16 @@ switch($_GET["op"]){
         echo json_encode($data);
     break;
 
+    case "verificarcaja":
+        $suc_id = $_POST["suc_id"];
+        $datos = $caja->verificar_caja($suc_id);
+        if ($datos == 0) {
+            echo json_encode([
+                "status" => "success",
+                "message" => "No hay caja abierta. Puedes proceder a abrir una nueva caja."
+            ]);
+        } 
+        break;    
     
 }
 ?>

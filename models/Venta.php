@@ -58,10 +58,10 @@
             return $query->fetchAll(PDO::FETCH_ASSOC);
         }
 
-        public function update_venta($vent_id, $pag_id, $cli_id, $cli_ruc, $cli_direcc, $cli_correo, $vent_coment, $mon_id,$doc_id, $nro_factv, $fech_factv){
+        public function update_venta($vent_id, $pag_id, $cli_id, $cli_ruc, $cli_direcc, $cli_correo, $vent_coment, $mon_id,$doc_id, $nro_factv, $fech_factv, $caj_id){
             $conectar=parent::Conexion();
             $sql="";
-            $sql="SP_U_VENTA_03 ?,?,?,?,?,?,?,?,?,?,?";
+            $sql="SP_U_VENTA_03 ?,?,?,?,?,?,?,?,?,?,?,?";
             $query=$conectar->prepare($sql);
             $query->bindValue(1,$vent_id);
             $query->bindValue(2,$pag_id);
@@ -74,6 +74,7 @@
             $query->bindValue(9,$doc_id);
             $query->bindValue(10,$nro_factv);
             $query->bindValue(11,$fech_factv);
+            $query->bindValue(12,$caj_id);
             $query->execute();
             return $query->fetchAll(PDO::FETCH_ASSOC);
         }

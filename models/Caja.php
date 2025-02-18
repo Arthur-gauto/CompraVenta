@@ -68,6 +68,87 @@
             $stmt->execute();
             return $stmt->fetch(PDO::FETCH_ASSOC); // Devuelve la caja si existe, o false si no
         }
+
+        public function datos_caja($suc_id) {
+            $conectar = parent::conexion();
+            $sql = "SP_L_CAJA_03 ?";
+            $stmt = $conectar->prepare($sql);
+            $stmt->bindValue(1, $suc_id);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC); 
+        }
+
+        public function get_caja_abierta(){
+            $conectar=parent::Conexion();
+            $sql="";
+            $sql="SP_L_CAJA_03";
+            $query=$conectar->prepare($sql);
+            $query->execute();
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+            
+        }
+
+        public function verificar_caja($suc_id) {
+            $conectar = parent::Conexion();  
+            $sql = "SP_V_VERIFICAR";  
+            $query = $conectar->prepare($sql);
+            $query->execute();
+            $row = $query->fetch(PDO::FETCH_ASSOC);
+            return $row['CajaAbierta'];
+        }
+
+        public function calculo_egr($caj_id){
+            $conectar=parent::Conexion();
+            $sql="";
+            $sql="SP_L_CAJA_04 ?";
+            $query=$conectar->prepare($sql);
+            $query->bindValue(1,$caj_id);
+            $query->execute();
+            return $query->fetch(PDO::FETCH_ASSOC); 
+
+
+        }
+        public function update_caja_egr($caj_id,$caj_egr){
+            $conectar=parent::Conexion();
+            $sql="";
+            $sql="SP_U_CAJA_02 ?,?";
+            $query=$conectar->prepare($sql);
+            $query->bindValue(1,$caj_id);
+            $query->bindValue(2,$caj_egr);
+            $query->execute();
+        }
+
+        public function update_caja_ing($caj_id,$caj_ing){
+            $conectar=parent::Conexion();
+            $sql="";
+            $sql="SP_U_CAJA_03 ?,?";
+            $query=$conectar->prepare($sql);
+            $query->bindValue(1,$caj_id);
+            $query->bindValue(2,$caj_ing);
+            $query->execute();
+        }
+
+        public function calculo_ing($caj_id){
+            $conectar=parent::Conexion();
+            $sql="";
+            $sql="SP_L_CAJA_05 ?";
+            $query=$conectar->prepare($sql);
+            $query->bindValue(1,$caj_id);
+            $query->execute();
+            return $query->fetch(PDO::FETCH_ASSOC); 
+
+
+        }
+
+        public function get_caja_detalle($caj_id){
+            $conectar=parent::Conexion();
+            $sql="";
+            $sql="SP_L_CAJA_06 ?";
+            $query=$conectar->prepare($sql);
+            $query->bindValue(1,$caj_id);
+            $query->execute();
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
         
     }
 ?>

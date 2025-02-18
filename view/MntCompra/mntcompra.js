@@ -23,6 +23,13 @@ $(document).ready(function(){
 
     $('#doc_id').select2();
 
+    $.post("../../controller/caja.php?op=datoscaja", {suc_id: suc_id}, function(data) {
+        data = JSON.parse(data);
+        $("#caj_id").val(data.CAJ_ID);
+        console.log();
+    });
+
+    
 
     $.post("../../controller/documento.php?op=combo", {doc_tipo: "compra"}, function(data) {
         $("#doc_id").html(data);
@@ -33,6 +40,7 @@ $(document).ready(function(){
     $.post("../../controller/proveedor.php?op=combo", {emp_id: emp_id}, function(data) {
         $("#prov_id").html(data);
     });
+    
     
 
     $.post("../../controller/categoria.php?op=combo", {suc_id: suc_id}, function(data) {
@@ -128,8 +136,12 @@ $(document).ready(function(){
     });
     
     
+    
 
 });
+
+
+
 
 function mostrarDiv() {
     let div = document.getElementById("tipoPagoDiv");
@@ -264,6 +276,69 @@ function listar(compr_id){
     });
 }
 
+document.addEventListener("DOMContentLoaded", function() {
+    verificarCajaAbierta();
+});
+
+function verificarCajaAbierta() {
+    var suc_id = $('#SUC_IDx').val();  // Obtener el valor dinámicamente del campo de sucursal
+    fetch('../../controller/compra.php?op=verificarcaja', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: `accion=verificarcaja&suc_id=${suc_id}`  // Enviar el suc_id obtenido dinámicamente
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            swal.fire({
+                title: 'Atención',
+                text: data.message,
+                icon: 'info',
+                confirmButtonText: 'Ok',
+                customClass: {
+                    confirmButton: 'btn-info'  
+                },
+                buttonsStyling: false,
+                confirmButtonClass: 'btn btn-info',
+                allowOutsideClick: false,  // Bloquea el cierre fuera del modal
+                allowEscapeKey: false  // Bloquea el cierre con la tecla Escape
+            }).then(function(result) {
+                if (result.isConfirmed) {
+                    // Redirigir a otra sección
+                    window.location.href = '../MntCaja/index.php';
+                }
+            });
+        } else {
+            swal.fire({
+                title: 'Error',
+                text: data.message,
+                icon: 'error',
+                confirmButtonText: 'Ok',
+                customClass: {
+                    confirmButton: 'btn-danger'
+                },
+                buttonsStyling: false,
+                confirmButtonClass: 'btn btn-danger',
+                allowOutsideClick: false,  // Bloquea el cierre fuera del modal
+                allowEscapeKey: false  // Bloquea el cierre con la tecla Escape
+            }).then(function(result) {
+                if (result.isConfirmed) {
+                    // Bloquear cualquier acción adicional
+                    event.preventDefault();  // Evita cualquier acción de redirección
+                    return false;  // Detiene el flujo
+                }
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        return false;  // Detiene la ejecución en caso de error
+    });
+}
+
+
 $(document).on("click", "#btnguardar", function(){
     var compr_id = $("#compr_id").val();
     var doc_id = $("#doc_id").val();
@@ -276,7 +351,13 @@ $(document).on("click", "#btnguardar", function(){
     var mon_id = $("#mon_id").val();
     var nro_fact = $("#nro_fact").val(); 
     var fech_fact = $("#fech_fact").val(); 
+    var caj_id = $("#caj_id").val(); 
+    var caj_egr = $("#caj_egr").val(); 
+    
 
+    
+
+    console.log($("#caj_id").val());
     // Verificación de campos vacíos
     if (nro_fact.trim() === '' || fech_fact.trim() === '' || doc_id === '0' || pag_id === '0' || prov_id === '0' || mon_id === '0') {
         swal.fire({
@@ -305,7 +386,8 @@ $(document).on("click", "#btnguardar", function(){
                     mon_id: mon_id,
                     doc_id: doc_id,
                     nro_fact: nro_fact, 
-                    fech_fact: fech_fact 
+                    fech_fact: fech_fact, 
+                    caj_id: caj_id
                 }, function(data) {
                     swal.fire({
                         title: 'Compra',
@@ -313,6 +395,14 @@ $(document).on("click", "#btnguardar", function(){
                         icon: 'success',
                         footer: "<a href='../ViewCompra/?c=" + compr_id + "' target='_blank'>Desea ver el documento</a>"
                     })
+                    $.post("../../controller/caja.php?op=editaregr", {
+                        caj_id: caj_id,
+                        caj_egr: caj_egr
+                        
+                    }, function(data){
+                        console.log(caj_id,caj_egr);
+                        console.log("Correcto");
+                    });
                 });
             }
         });

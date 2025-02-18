@@ -70,21 +70,27 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <div class="mb-3">
                                                 <label class="form-label">Ingresos:</label>
                                                 <input type="text" class="form-control" id="caj_ing" name="caj_ing" readonly>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <div class="mb-3">
                                                 <label class="form-label">Egresos:</label>
                                                 <input type="text" class="form-control" id="caj_egr" name="caj_egr" readonly>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <div class="mb-3">
-                                                <label class="form-label">Saldo:</label>
+                                                <label class="form-label">Saldo Inicial:</label>
+                                                <input type="text" class="form-control" id="caj_ini" name="caj_ini" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="mb-3">
+                                                <label class="form-label">Saldo Final:</label>
                                                 <input type="text" class="form-control" id="caj_fin" name="caj_fin" readonly>
                                             </div>
                                         </div>
@@ -105,12 +111,9 @@
                                             <th>ID</th>
                                             <th>Tipo</th>
                                             <th>Referencia</th>
-                                            <th>Fecha</th>
+                                            <th>Nro. Factura</th>
                                             <th>Método Pago</th>
-                                            <th>Moneda</th>
                                             <th>Monto</th>
-                                            <th>Comentario</th>
-                                            <th>Estado</th>
                                         </tr>
                                     </thead>
                                     <tbody>

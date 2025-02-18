@@ -23,9 +23,15 @@ $(document).ready(function(){
 
     $('#doc_id').select2();
 
+    $.post("../../controller/caja.php?op=datoscaja", {suc_id: suc_id}, function(data) {
+        data = JSON.parse(data);
+        $("#caj_id").val(data.CAJ_ID);
+        console.log();
+    });
+
     $.post("../../controller/documento.php?op=combo", {doc_tipo: "Venta"}, function(data) {
         $("#doc_id").html(data);
-        $("#doc_id").val(1).trigger('change');
+        $("#doc_id").val(4).trigger('change');
     });
 
     $.post("../../controller/cliente.php?op=combo", {emp_id: emp_id}, function(data) {
@@ -263,6 +269,68 @@ function listar(vent_id){
     });
 }
 
+document.addEventListener("DOMContentLoaded", function() {
+    verificarCajaAbierta();
+});
+
+function verificarCajaAbierta() {
+    var suc_id = $('#SUC_IDx').val();  // Obtener el valor dinámicamente del campo de sucursal
+    fetch('../../controller/venta.php?op=verificarcaja', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: `accion=verificarcaja&suc_id=${suc_id}`  // Enviar el suc_id obtenido dinámicamente
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            swal.fire({
+                title: 'Atención',
+                text: data.message,
+                icon: 'info',
+                confirmButtonText: 'Ok',
+                customClass: {
+                    confirmButton: 'btn-info'  
+                },
+                buttonsStyling: false,
+                confirmButtonClass: 'btn btn-info',
+                allowOutsideClick: false,  // Bloquea el cierre fuera del modal
+                allowEscapeKey: false  // Bloquea el cierre con la tecla Escape
+            }).then(function(result) {
+                if (result.isConfirmed) {
+                    // Redirigir a otra sección
+                    window.location.href = '../MntCaja/index.php';
+                }
+            });
+        } else {
+            swal.fire({
+                title: 'Error',
+                text: data.message,
+                icon: 'error',
+                confirmButtonText: 'Ok',
+                customClass: {
+                    confirmButton: 'btn-danger'
+                },
+                buttonsStyling: false,
+                confirmButtonClass: 'btn btn-danger',
+                allowOutsideClick: false,  // Bloquea el cierre fuera del modal
+                allowEscapeKey: false  // Bloquea el cierre con la tecla Escape
+            }).then(function(result) {
+                if (result.isConfirmed) {
+                    // Bloquear cualquier acción adicional
+                    event.preventDefault();  // Evita cualquier acción de redirección
+                    return false;  // Detiene el flujo
+                }
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        return false;  // Detiene la ejecución en caso de error
+    });
+}
+
 $(document).on("click","#btnguardar", function(){
     var vent_id = $("#vent_id").val();
     var doc_id = $("#doc_id").val();
@@ -275,10 +343,13 @@ $(document).on("click","#btnguardar", function(){
     var mon_id = $("#mon_id").val();
     var nro_factv = $("#nro_factv").val(); 
     var fech_factv = $("#fech_factv").val(); 
+    var caj_id = $("#caj_id").val(); 
+
+    console.log($("#caj_id").val());
 
     if (nro_factv.trim() === '' || fech_factv.trim() === '' || doc_id === '0' || pag_id === '0' || cli_id === '0' || mon_id === '0') {
         swal.fire({
-            title: 'Compra',
+            title: 'Venta',
             text: 'Error. Campos vacíos',
             icon: 'error'
         })
@@ -307,7 +378,8 @@ $(document).on("click","#btnguardar", function(){
                     mon_id: mon_id,
                     doc_id: doc_id,
                     nro_factv: nro_factv, 
-                    fech_factv: fech_factv
+                    fech_factv: fech_factv,
+                    caj_id: caj_id
                     
                 }, function(data) {
                         swal.fire({

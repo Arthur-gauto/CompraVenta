@@ -127,6 +127,10 @@
                                                 <div class="col-lg-4">
                                                 <label for="valueInput" class="form-label">RUC: </label>
                                                 <input type="text" class="form-control" id="prov_ruc" name="prov_ruc" readonly>
+                                                
+                                                <input type="text" class="form-control" id="caj_id" name="caj_id" hidden>
+                                                <input type="text" class="form-control" id="caj_egr" name="caj_egr" hidden>
+                                                
                                                 </div>
                                                 <div class="col-lg-4">
                                                 <label for="valueInput" class="form-label">Dirección: </label>

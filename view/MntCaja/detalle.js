@@ -10,8 +10,54 @@ $(document).ready(function(){
         $('#suc_nom').val(data.SUC_NOM);
         $('#caj_ing').val(data.CAJ_ING);
         $('#caj_egr').val(data.CAJ_EGR);
+        $('#caj_ini').val(data.CAJ_INI);
         $('#caj_fin').val(data.CAJ_FIN);
     });
+
+    $.post("../../controller/caja.php?op=calculoegr", {caj_id: caj_id}, function(data) {
+        data = JSON.parse(data);
+        $("#caj_egr").val(data.COMPR_TOTAL);
+        console.log($("#caj_egr").val());
+        var caj_egr = $("#caj_egr").val(); 
+        $.post("../../controller/caja.php?op=editaregr", {
+            caj_id: caj_id,
+            caj_egr: caj_egr
+            
+        }, function(data){
+            console.log(caj_id,caj_egr);
+            console.log("Correcto");
+            calcularCajFin()
+        });
+    });
+
+    
+
+    $.post("../../controller/caja.php?op=calculoing", {caj_id: caj_id}, function(data) {
+        data = JSON.parse(data);
+        $("#caj_ing").val(data.VENT_TOTAL);
+        console.log($("#caj_ing").val());
+        var caj_ing = $("#caj_ing").val(); 
+        $.post("../../controller/caja.php?op=editaring", {
+            caj_id: caj_id,
+            caj_ing: caj_ing
+            
+        }, function(data){
+            console.log(caj_id,caj_ing);
+            console.log("Correcto");
+            calcularCajFin()
+        });
+    });
+    
+
+    function calcularCajFin() {
+        let caj_ini = parseFloat($("#caj_ini").val()) || 0;
+        let caj_ing = parseFloat($("#caj_ing").val()) || 0;
+        let caj_egr = parseFloat($("#caj_egr").val()) || 0;
+
+        let caj_fin = caj_ini + caj_ing - caj_egr;
+        $("#caj_fin").val(caj_fin);
+
+    }
 
     // Inicializar DataTable
     $('#table_data').DataTable({
@@ -24,7 +70,7 @@ $(document).ready(function(){
             'csvHtml5',
         ],
         "ajax":{
-            url: "../../controller/caja.php?op=listar_detalle",
+            url: "../../controller/caja.php?op=listardetalle",
             type: "post",
             data: { caj_id: caj_id },
             error: function(xhr, error, thrown){
