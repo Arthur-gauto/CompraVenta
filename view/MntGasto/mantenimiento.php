@@ -13,12 +13,13 @@
                     <div class="row gy-2">
                         <div class="col-md-12">
                             <div>
-                                <label for="valueInput" class="form-label">Descripcion del Gasto</label>
+                                <label for="valueInput" class="form-label">Descripción del Gasto</label>
                                 <input type="text" class="form-control" id="gas_descrip" name="gas_descrip" required>
                             </div>
                             <div>
                                 <label for="valueInput" class="form-label">Monto del Gasto</label>
-                                <input type="text" class="form-control" id="gas_mon" name="gas_mon" required>
+                                <input type="number" class="form-control" id="gas_mon" name="gas_mon" required>
+                                <input type="number" class="form-control" id="caj_id" name="caj_id" hidden>
                             </div>
                             <div>
                                 <label for="valueInput" class="form-label">Tipo de Gasto</label>

@@ -2,8 +2,10 @@
     //todo Llamando Clases
     require_once("../config/conexion.php");
     require_once("../models/Gasto.php");
+    require_once("../models/Caja.php");
     //todo Iniciando Clase
     $gasto=new Gasto();
+    $caja=new Caja();
 
     switch($_GET["op"]){
         //todo Guardar y editar, guardar cuando el ID este vacio, y Actualizar cuando se envie el Id
@@ -11,9 +13,12 @@
             error_log("gas_id: " . $_POST["gas_id"]);
 
             if(empty($_POST["gas_id"])){
-                $gasto->insert_gasto($_POST["suc_id"],$_POST["gas_descrip"],$_POST["gas_tipo"],$_POST["gas_mon"]);
+                $caj_id = ($_POST["gas_tipo"] === "FIJO") ? NULL : $_POST["caj_id"];
+                $gasto->insert_gasto($_POST["suc_id"],$caj_id,
+                                    $_POST["gas_descrip"],$_POST["gas_tipo"],$_POST["gas_mon"]);
             }else{
-                $gasto->update_gasto($_POST["gas_id"],$_POST["suc_id"],$_POST["gas_descrip"],$_POST["gas_tipo"],$_POST["gas_mon"]);
+                $gasto->update_gasto($_POST["gas_id"],$_POST["suc_id"],
+                $_POST["gas_descrip"],$_POST["gas_tipo"], $_POST["gas_mon"]);
             }
             break;
 
@@ -24,9 +29,9 @@
             foreach($datos as $row){
                 $sub_array = array();
                 $sub_array[] = $row["GAS_DESCRIP"];
+                $sub_array[] = $row["GAS_TIPO"];
                 $sub_array[] = $row["GAS_MON"];
                 $sub_array[] = $row["FECH_CREA"];
-                $sub_array[] = $row["GAS_TIPO"];
                 $sub_array[] = '<button type="button" onClick="editar('.$row["GAS_ID"].')" id="'.$row["GAS_ID"].'" class="btn btn-warning btn-icon waves-effect waves-light"><i class="ri-edit-2-line"></i></button>';
                 $sub_array[] = '<button type="button" onClick="eliminar('.$row["GAS_ID"].')" id="'.$row["GAS_ID"].'" class="btn btn-danger btn-icon waves-effect waves-light"><i class="ri-delete-bin-5-line"></i></button>';
                 $data[] = $sub_array;
@@ -48,7 +53,7 @@
                     $output["SUC_ID"] = $row["SUC_ID"];
                     $output["GAS_DESCRIP"] = $row["GAS_DESCRIP"];
                     $output["GAS_TIPO"] = $row["GAS_TIPO"];
-                    $output["GAS_MON"] = $row["GAS_MON"];
+                    $output["GAS_TIPO"] = $row["GAS_MON"];
                 }
                 echo json_encode($output);
             }
@@ -70,16 +75,7 @@
             }
         break;
 
-        case "wombocombo":
-            $datos = $gasto->get_gasto_total_stock($_POST["suc_id"]);
-            foreach($datos as $row){
-                ?>
-                    <li class="py-1">
-                        <a href="#" class="text-muted"><?php echo $row["GAS_DESCRIP"];?> <span class="float-end">(<?php echo $row["STOCK"];?>)</span></a>
-                    </li>
-                <?php
-            }
-        break;
+        
         
 
     }

@@ -1491,6 +1491,38 @@ function scrollFunction() {
 function topFunction() {
   (document.body.scrollTop = 0), (document.documentElement.scrollTop = 0);
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+
+  // Obtén el elemento del offcanvas
+  
+  var offcanvasElement = document.querySelector('#theme-settings-offcanvas');
+  
+  var offcanvasInstance = bootstrap.Offcanvas.getInstance(offcanvasElement);
+  
+  // Si no hay una instancia, crea una
+  
+  if (!offcanvasInstance) {
+  
+  offcanvasInstance = new bootstrap.Offcanvas(offcanvasElement);
+  
+  }
+  
+  // Añade un evento de clic al botón para abrir/cerrar el offcanvas
+  
+  var toggleButton = document.querySelector('.btn-info[data-bs-target="#theme-settings-offcanvas"]');
+  
+  if (toggleButton) {
+  
+  toggleButton.addEventListener('click', function () {
+  
+  offcanvasInstance.toggle();
+  
+  });
+  
+  }
+  
+  });
 window.onscroll = function () {
   scrollFunction();
 };

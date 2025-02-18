@@ -45,15 +45,16 @@
                             <div class="card">
                                 <div class="card-header">
                                 <button type="button" id="btnnuevo" class="btn btn-primary btn-label waves-effect right waves-light"><i class="ri-user-smile-line label-icon align-middle fs-16 ms-2"></i> Nuevo Registro</button>
-                                </div>
+                                <input type="number" class="form-control" id="caj_id" name="caj_id" hidden>
+                            </div>
                                 <div class="card-body">
                                     <table id="table_data" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
                                         <thead>
                                             <tr>
-                                                <th>Descripcion</th>
+                                                <th>Descripción</th>
+                                                <th>Tipo</th>
                                                 <th>Monto</th>
                                                 <th>FechaCreacion</th>
-                                                <th>Tipo</th>
                                                 <th></th>
                                                 <th></th>
                                             </tr>

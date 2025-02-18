@@ -1,5 +1,5 @@
 <?php
-    class gasto extends Conectar{
+    class Gasto extends Conectar{
 
         //TODO LISTAR REGISTROS
         public function get_gasto_x_suc_id($suc_id){
@@ -35,15 +35,16 @@
         }
 
         //TODO REGISTRAR DATOS
-        public function insert_gasto($suc_id,$gas_descrip,$gas_tipo,$gas_mon){
+        public function insert_gasto($suc_id,$caj_id,$gas_descrip,$gas_tipo,$gas_mon){
             $conectar=parent::Conexion();
             $sql="";
-            $sql="SP_I_GASTO_01 ?,?,?,?";
+            $sql="SP_I_GASTO_01 ?,?,?,?,?";
             $query=$conectar->prepare($sql);
             $query->bindValue(1,$suc_id);
-            $query->bindValue(2,$gas_descrip);
-            $query->bindValue(3,$gas_tipo);
-            $query->bindValue(4,$gas_mon);
+            $query->bindValue(2,$caj_id);
+            $query->bindValue(3,$gas_descrip);
+            $query->bindValue(4,$gas_tipo);
+            $query->bindValue(5,$gas_mon);
             $query->execute();
         }
 
@@ -61,14 +62,5 @@
             $query->execute();
         }
 
-        public function get_gasto_total_stock($suc_id){
-            $conectar=parent::Conexion();
-            $sql="";
-            $sql="SP_L_GASTO_03 ?";
-            $query=$conectar->prepare($sql);
-            $query->bindValue(1,$suc_id);
-            $query->execute();
-            return $query->fetchAll(PDO::FETCH_ASSOC);
-        }
     }
 ?>

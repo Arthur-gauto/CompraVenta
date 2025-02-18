@@ -11,6 +11,8 @@ function guardaryeditar(e){
     var formData = new FormData( $("#mantenimiento_form")[0]);
     console.log("Datos enviados:", Array.from(formData.entries()));
 
+    formData.set('caj_id', $("#caj_id").val());
+
     formData.append('suc_id',$("#SUC_IDx").val())
     $.ajax({
         url:"../../controller/gasto.php?op=guardaryeditar",
@@ -85,6 +87,12 @@ $(document).ready(function(){
         },
     });
 
+    $.post("../../controller/caja.php?op=datoscaja", {suc_id: suc_id}, function(data) {
+        data = JSON.parse(data);
+        $("#caj_id").val(data.CAJ_ID);
+        console.log($("#caj_id").val());
+    });
+
 });
 
 function editar(gas_id){
@@ -96,7 +104,6 @@ function editar(gas_id){
         console.log("Datos cargados desde el servidor:", data);
         $("#gas_id").val(data.GAS_ID);
         $("#gas_descrip").val(data.GAS_DESCRIP);
-        $("#gas_tipo").val(data.GAS_TIPO);
         $("#gas_mon").val(data.GAS_MON);
         
     });
