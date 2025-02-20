@@ -1,105 +1,110 @@
-var emp_id= $('#EMP_IDx').val();
-var suc_id= $('#SUC_IDx').val();
-var usu_id= $('#USU_IDx').val();
+var emp_id = $('#EMP_IDx').val();
+var suc_id = $('#SUC_IDx').val();
+var usu_id = $('#USU_IDx').val();
+var originalPrice = 0;  // Variable para almacenar el precio original
 
 $(document).ready(function(){
-    var nro_factv = $('#nro_factv').val();  
-    var fech_factv = $('#fech_factv').val(); 
+    var nro_factv = $('#nro_factv').val();
+    var fech_factv = $('#fech_factv').val();
     cargarProductos("");
-    $.post("../../controller/venta.php?op=registrar", {suc_id: suc_id, usu_id:usu_id,nro_factv: nro_factv,fech_factv: fech_factv}, function(data) {
-        data=JSON.parse(data);
+
+    // Registrar nueva venta y obtener vent_id
+    $.post("../../controller/venta.php?op=registrar", {suc_id: suc_id, usu_id: usu_id, nro_factv: nro_factv, fech_factv: fech_factv}, function(data) {
+        data = JSON.parse(data);
         $("#vent_id").val(data.VENT_ID);
     });
-    
+
+    // Inicializar select2 para varios campos
     $('#cli_id').select2();
-    
     $('#cat_id').select2();
-
     $('#prod_id').select2();
-    
     $('#pag_id').select2();
-
     $('#mon_id').select2();
-
     $('#doc_id').select2();
 
+    // Obtener datos de caja
     $.post("../../controller/caja.php?op=datoscaja", {suc_id: suc_id}, function(data) {
         data = JSON.parse(data);
         $("#caj_id").val(data.CAJ_ID);
-        console.log();
     });
 
+    // Cargar combo de documentos
     $.post("../../controller/documento.php?op=combo", {doc_tipo: "Venta"}, function(data) {
         $("#doc_id").html(data);
         $("#doc_id").val(4).trigger('change');
     });
 
+    // Cargar combo de clientes
     $.post("../../controller/cliente.php?op=combo", {emp_id: emp_id}, function(data) {
         $("#cli_id").html(data);
     });
 
+    // Cargar combo de categorías
     $.post("../../controller/categoria.php?op=combo", {suc_id: suc_id}, function(data) {
         $("#cat_id").html(data);
     });
 
-    $.post("../../controller/pago.php?op=combo",  function(data) {
+    // Cargar combo de pagos
+    $.post("../../controller/pago.php?op=combo", function(data) {
         $("#pag_id").html(data);
         $("#pag_id").val(1).trigger('change');
     });
 
+    // Cargar combo de monedas
     $.post("../../controller/moneda.php?op=combo", {suc_id: suc_id}, function(data) {
         $("#mon_id").html(data);
         $("#mon_id").val(1).trigger('change');
     });
 
-
-    $("#cli_id").change(function(){
-        $("#cli_id").each(function(){
-            cli_id= $(this).val();
+    // Cambiar datos del cliente al seleccionar uno
+    $("#cli_id").change(function() {
+        $("#cli_id").each(function() {
+            cli_id = $(this).val();
             $.post("../../controller/cliente.php?op=mostrar", {cli_id: cli_id}, function(data) {
-                data=JSON.parse(data);
+                data = JSON.parse(data);
                 $("#cli_ruc").val(data.CLI_RUC);
                 $("#cli_direcc").val(data.CLI_DIRECC);
                 $("#cli_telf").val(data.CLI_TELF);
                 $("#cli_correo").val(data.CLI_CORREO);
-
             });
         });
     });
 
-    $("#cat_id").change(function(){
-        $("#cat_id").each(function(){
-            cat_id= $(this).val();
+    // Cambiar datos de subcategorías al seleccionar una categoría
+    $("#cat_id").change(function() {
+        $("#cat_id").each(function() {
+            cat_id = $(this).val();
             $.post("../../controller/producto.php?op=combo", {cat_id: cat_id}, function(data) {
-                
                 $("#prod_id").html(data);
             });
         });
     });
 
-    $("#buscar_prod").on("input", function () {
+    // Buscar productos por nombre
+    $("#buscar_prod").on("input", function() {
         var prod_nom = $(this).val();
         cargarProductos(prod_nom);
     });
 
+    // Función para cargar productos
     function cargarProductos(prod_nom) {
-        $.post("../../controller/producto.php?op=buscar_producto", { prod_nom: prod_nom }, function (data) {
+        $.post("../../controller/producto.php?op=buscar_producto", { prod_nom: prod_nom }, function(data) {
             $("#prod_id").html(data);
         });
     }
 
-
-    $('#prod_id').change(function () {
+    // Cambiar datos del producto al seleccionar uno
+    $('#prod_id').change(function() {
         var prod_id = $(this).val();
         if (prod_id === '') {
             $("#cat_nom").val('');
-            $("#prod_pventa").val('');
+            $("#prod_pcompra").val('');
             $("#prod_stock").val('');
             $("#und_nom").val('');
             $("#cat_id").val('');
             return;
         }
-        $.post("../../controller/producto.php?op=mostrar", { prod_id: prod_id }, function (data) {
+        $.post("../../controller/producto.php?op=mostrar", { prod_id: prod_id }, function(data) {
             data = JSON.parse(data);
             if (data.error) {
                 swal.fire({
@@ -110,7 +115,9 @@ $(document).ready(function(){
             } else {
                 // Completar campos automáticamente
                 $("#cat_nom").val(data.CAT_NOM);
-                $("#prod_pventa").val(data.PROD_PVOMPRA);
+                originalPrice = parseFloat(data.PROD_PCOMPRA);  // Guardar el precio original
+                var precioVenta = originalPrice * 1.50;  // Calcular el precio de venta con el 50%
+                $("#prod_pventa").val(precioVenta.toFixed(0));  // Mostrar el precio de compra más el 50%
                 $("#prod_stock").val(data.PROD_STOCK);
                 $("#und_nom").val(data.UND_NOM);
                 $("#cat_id").val(data.CAT_ID);
@@ -118,100 +125,93 @@ $(document).ready(function(){
         });
     });
 
+    // Evento para actualizar el precio de venta basado en el descuento seleccionado
+    $("#pro_list").change(function() {
+        var pro_list = parseFloat($(this).val());
 
-    $("#prod_id").change(function(){
-        $("#prod_id").each(function(){
-            prod_id= $(this).val();
-            $.post("../../controller/producto.php?op=mostrar", {prod_id: prod_id}, function(data) {
-                
-                data=JSON.parse(data);
-                $("#prod_pventa").val(data.PROD_PVENTA);
-                $("#prod_stock").val(data.PROD_STOCK);
-                $("#und_nom").val(data.UND_NOM);
-            });
-        });
+        if (!isNaN(originalPrice) && !isNaN(pro_list)) {
+            var newPrice = originalPrice * (1 + (pro_list / 100));
+            $("#prod_pventa").val(newPrice.toFixed(0));
+        }
     });
-    
-    
+
+    // Evento para actualizar el precio original si el usuario lo cambia manualmente
+    $("#prod_pventa").on('input', function() {
+        originalPrice = parseFloat($(this).val());
+    });
 
 });
 
+// Función para mostrar u ocultar el div de tipo de pago
 function mostrarDiv() {
     let div = document.getElementById("tipoPagoDiv");
     div.hidden = !div.hidden; // Alterna entre oculto y visible
 }
 
-$(document).on("click","#btnagregar", function(){
+// Evento para agregar un producto a la venta
+$(document).on("click", "#btnagregar", function() {
     var vent_id = $("#vent_id").val();
     var prod_id = $("#prod_id").val();
     var prod_pventa = $("#prod_pventa").val();
     var detv_cant = $("#detv_cant").val();
 
-    if($("#prod_id").val()=='' || $("#prod_pventa").val()=='' || $("#detv_cant").val()==''){
-
+    if ($("#prod_id").val() == '' || $("#prod_pventa").val() == '' || $("#detv_cant").val() == '') {
         swal.fire({
             title: 'Venta',
             text: 'Error. Campos vacíos',
             icon: 'error'
         })
-
-    }else {
+    } else {
         $.post("../../controller/venta.php?op=guardardetalle", {
             vent_id: vent_id, 
-            prod_id:prod_id,
-            prod_pventa:prod_pventa,
-            detv_cant:detv_cant}, function(data) {
-                console.log(data);
-                
-                
-        });
-        
-        
-        $.post("../../controller/venta.php?op=calculo",{vent_id:vent_id}, function(data)  {
+            prod_id: prod_id,
+            prod_pventa: prod_pventa,
+            detv_cant: detv_cant
+        }, function(data) {
             console.log(data);
-            data=JSON.parse(data);
+        });
+
+        $.post("../../controller/venta.php?op=calculo", {vent_id: vent_id}, function(data) {
+            console.log(data);
+            data = JSON.parse(data);
             $("#txtsubtotal").html(data.VENT_SUBTOTAL);
             $("#txtigv").html(data.VENT_IGV);
             $("#txttotal").html(data.VENT_TOTAL);
-    
         });
-        $("#prod_pventa").val();
-        $("#detv_cant").val();
+
+        $("#prod_pventa").val('');
+        $("#detv_cant").val('');
         listar(vent_id);
     }
-
-    
-
 });
 
-function eliminar(detv_id, vent_id){
+// Función para eliminar un detalle de venta
+function eliminar(detv_id, vent_id) {
     swal.fire({
-        title:"ELIMINAR",
-        text:"¿Desea eliminar el registro?",
+        title: "ELIMINAR",
+        text: "¿Desea eliminar el registro?",
         icon: "question",
         confirmButtonText: "Si",
         showCancelButton: true,
         cancelButtonText: "No",
-    }).then((result)=>{
-        if (result.value){
-            $.post("../../controller/venta.php?op=eliminardetalle",{detv_id:detv_id}, function(data)  {
+    }).then((result) => {
+        if (result.value) {
+            $.post("../../controller/venta.php?op=eliminardetalle", {detv_id: detv_id}, function(data) {
                 console.log(data);
             });
-            
 
-            $.post("../../controller/venta.php?op=calculo",{vent_id:vent_id}, function(data)  {
+            $.post("../../controller/venta.php?op=calculo", {vent_id: vent_id}, function(data) {
                 console.log(data);
-                data=JSON.parse(data);
+                data = JSON.parse(data);
                 $("#txtsubtotal").html(data.VENT_SUBTOTAL);
                 $("#txtigv").html(data.VENT_IGV);
                 $("#txttotal").html(data.VENT_TOTAL);
-        
             });
 
             listar(vent_id);
 
             swal.fire({
-                title:'Venta',
+                title: 'Venta',
                 text: 'Registro eliminado',
                 icon: 'success',
                 customClass: {
@@ -222,7 +222,8 @@ function eliminar(detv_id, vent_id){
     });
 }
 
-function listar(vent_id){
+// Función para listar detalles de venta
+function listar(vent_id) {
     $('#table_data').DataTable({
         "aProcessing": true,
         "aServerSide": true,
@@ -232,47 +233,49 @@ function listar(vent_id){
             'excelHtml5',
             'csvHtml5',
         ],
-        "ajax":{
-            url:"../../controller/venta.php?op=listardetalle",
-            type:"post",
-            data:{vent_id:vent_id}
+        "ajax": {
+            url: "../../controller/venta.php?op=listardetalle",
+            type: "post",
+            data: {vent_id: vent_id}
         },
         "bDestroy": true,
         "responsive": true,
-        "bInfo":true,
+        "bInfo": true,
         "iDisplayLength": 10,
         "order": [[ 0, "desc" ]],
         "language": {
-            "sProcessing":     "Procesando...",
-            "sLengthMenu":     "Mostrar MENU registros",
-            "sZeroRecords":    "No se encontraron resultados",
-            "sEmptyTable":     "Ningún dato disponible en esta tabla",
-            "sInfo":           "Mostrando registros del START al END de un total de TOTAL registros",
-            "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
-            "sInfoFiltered":   "(filtrado de un total de MAX registros)",
-            "sInfoPostFix":    "",
-            "sSearch":         "Buscar:",
-            "sUrl":            "",
-            "sInfoThousands":  ",",
+            "sProcessing": "Procesando...",
+            "sLengthMenu": "Mostrar MENU registros",
+            "sZeroRecords": "No se encontraron resultados",
+            "sEmptyTable": "Ningún dato disponible en esta tabla",
+            "sInfo": "Mostrando registros del START al END de un total de TOTAL registros",
+            "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered": "(filtrado de un total de MAX registros)",
+            "sInfoPostFix": "",
+            "sSearch": "Buscar:",
+            "sUrl": "",
+            "sInfoThousands": ",",
             "sLoadingRecords": "Cargando...",
             "oPaginate": {
-                "sFirst":    "Primero",
-                "sLast":     "Último",
-                "sNext":     "Siguiente",
+                "sFirst": "Primero",
+                "sLast": "Último",
+                "sNext": "Siguiente",
                 "sPrevious": "Anterior"
             },
             "oAria": {
-                "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
                 "sSortDescending": ": Activar para ordenar la columna de manera descendente"
             }
         },
     });
 }
 
+// Verificar si la caja está abierta al cargar la página
 document.addEventListener("DOMContentLoaded", function() {
     verificarCajaAbierta();
 });
 
+// Función para verificar si la caja está abierta
 function verificarCajaAbierta() {
     var suc_id = $('#SUC_IDx').val();  // Obtener el valor dinámicamente del campo de sucursal
     fetch('../../controller/venta.php?op=verificarcaja', {
@@ -331,6 +334,7 @@ function verificarCajaAbierta() {
     });
 }
 
+// Evento para guardar la venta
 $(document).on("click","#btnguardar", function(){
     var vent_id = $("#vent_id").val();
     var doc_id = $("#doc_id").val();
@@ -341,11 +345,9 @@ $(document).on("click","#btnguardar", function(){
     var cli_correo = $("#cli_correo").val();
     var vent_coment = $("#vent_coment").val();
     var mon_id = $("#mon_id").val();
-    var nro_factv = $("#nro_factv").val(); 
-    var fech_factv = $("#fech_factv").val(); 
-    var caj_id = $("#caj_id").val(); 
-
-    console.log($("#caj_id").val());
+    var nro_factv = $("#nro_factv").val();
+    var fech_factv = $("#fech_factv").val();
+    var caj_id = $("#caj_id").val();
 
     if (nro_factv.trim() === '' || fech_factv.trim() === '' || doc_id === '0' || pag_id === '0' || cli_id === '0' || mon_id === '0') {
         swal.fire({
@@ -353,20 +355,18 @@ $(document).on("click","#btnguardar", function(){
             text: 'Error. Campos vacíos',
             icon: 'error'
         })
-    }else{
+    } else {
+        $.post("../../controller/venta.php?op=calculo", {vent_id: vent_id}, function(data) {
+            data = JSON.parse(data);
 
-        $.post("../../controller/venta.php?op=calculo",{vent_id:vent_id}, function(data)  {
-            
-            data=JSON.parse(data);
-           
-            /* TODO: Validación existencia detalle*/
-            if(data.VENT_TOTAL==null){
+            /* Validación existencia detalle */
+            if(data.VENT_TOTAL == null) {
                 swal.fire({
                     title: 'Venta',
                     text: 'Error. No existe detalle',
                     icon: 'error'
                 })
-            }else{
+            } else {
                 $.post("../../controller/venta.php?op=guardar", {
                     vent_id: vent_id,
                     pag_id: pag_id,
@@ -377,30 +377,23 @@ $(document).on("click","#btnguardar", function(){
                     vent_coment: vent_coment,
                     mon_id: mon_id,
                     doc_id: doc_id,
-                    nro_factv: nro_factv, 
+                    nro_factv: nro_factv,
                     fech_factv: fech_factv,
                     caj_id: caj_id
-                    
                 }, function(data) {
-                        swal.fire({
-                            title:'Venta',
-                            text: 'Registrado correctamente con Nro: V-' + vent_id,
-                            icon: 'success',
-                            footer: "<a href='../ViewVenta/?v="+vent_id+"' target='_blank'>Desea ver el documento</a>"
-                        })
-                    });
+                    swal.fire({
+                        title: 'Venta',
+                        text: 'Registrado correctamente con Nro: V-' + vent_id,
+                        icon: 'success',
+                        footer: "<a href='../ViewVenta/?v="+vent_id+"' target='_blank'>Desea ver el documento</a>"
+                    })
+                });
             }
-    
         });
-        
-        
-
-        
     }
-
-    
 });
 
+// Evento para limpiar el formulario
 $(document).on("click","#btnlimpiar", function(){
     location.reload();
 });

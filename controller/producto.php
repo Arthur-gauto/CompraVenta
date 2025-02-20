@@ -166,7 +166,68 @@
             }
         break;
             
-            
+        case "precio":
+            try {
+                // Obtener los productos según la sucursal
+                $datos = $producto->get_producto_x_suc_id($_POST["suc_id"]);
+                $data = array();
+                foreach ($datos as $row) {
+                    $sub_array = array();
+                    if ($row["PROD_IMG"] != ''){
+                        $sub_array[] = 
+                        "<div class='d-flex align-items-center'>" .
+                            "<div class='flex-shrink-0 me-2'>" .
+                                "<img src='../../assets/producto/".$row["PROD_IMG"]."' alt='' class='avatar-xs rounded-circle'>".
+                            "</div>".
+                        "</div>";   
+                    } else {
+                        $sub_array[] = 
+                        "<div class='d-flex align-items-center'>" .
+                            "<div class='flex-shrink-0 me-2'>".
+                                "<img src='../../assets/producto/no_imagen.png' alt='' class='avatar-xs rounded-circle'>".
+                            "</div>".
+                        "</div>";  
+                    }
+                    $sub_array[] = $row["CAT_NOM"];
+                    $sub_array[] = $row["SCAT_NOM"];
+                    $sub_array[] = $row["PROD_NOM"];
+                    $sub_array[] = $row["PROD_PCOMPRA"];
+                    
+                    // Calcular precios de venta A, B y C basados en el precio de compra
+                    $precio_venta_a = $row["PROD_PCOMPRA"] * 1.50;
+                    $precio_venta_b = $row["PROD_PCOMPRA"] * 1.30;
+                    $precio_venta_c = $row["PROD_PCOMPRA"] * 1.20;
+        
+                    // Formatear los precios de venta con dos decimales
+                    $sub_array[] = number_format($precio_venta_a);
+                    $sub_array[] = number_format($precio_venta_b);
+                    $sub_array[] = number_format($precio_venta_c);
+        
+                    $data[] = $sub_array;
+                }
+        
+                // Preparar la respuesta para DataTables
+                $results = array(
+                    "sEcho" => 1,
+                    "iTotalRecords" => count($data),
+                    "iTotalDisplayRecords" => count($data),
+                    "aaData" => $data
+                );
+                
+                header('Content-Type: application/json');
+                echo json_encode($results, JSON_PRETTY_PRINT);
+                
+            } catch (Exception $e) {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    "sEcho" => 1,
+                    "iTotalRecords" => 0,
+                    "iTotalDisplayRecords" => 0,
+                    "aaData" => [],
+                    "error" => $e->getMessage()
+                ]);
+            }
+            break;
 
     }
 ?>
