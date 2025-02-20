@@ -39,7 +39,9 @@ function guardaryeditar(e){
 }
 
 $(document).ready(function(){
-
+    $.post("../../controller/categoria.php?op=combo",{suc_id:suc_id},function(data){
+        $("#cat_id").html(data);
+    });
     $('#table_data').DataTable({
         "aProcessing": true,
         "aServerSide": true,
@@ -52,7 +54,7 @@ $(document).ready(function(){
         "ajax":{
             url:"../../controller/subcategoria.php?op=listar",
             type:"post",
-            data:{cat_id:cat_id,suc_id:suc_id}
+            data:{suc_id:suc_id}
         },
         "bDestroy": true,
         "responsive": true,

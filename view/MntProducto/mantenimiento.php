@@ -23,6 +23,16 @@
                     <div class="row gy-2">
                         <div class="col-md-12">
                             <div>
+                                <label for="valueInput" class="form-label">Categoria</label>
+                                <select type="text" class="form-control form-select" name="scat_id" id="scat_id" aria-label="Seleccionar">
+                                    <option selected>Seleccionar </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row gy-2">
+                        <div class="col-md-12">
+                            <div>
                                 <label for="valueInput" class="form-label">Nombre</label>
                                 <input type="text" class="form-control" id="prod_nom" name="prod_nom" required>
                             </div>

@@ -19,10 +19,11 @@
 
         //todo Listado de registros formato JSON para datable JS
         case "listar":
-            $datos=$subcategoria->get_subcategoria_x_suc_id($_POST["suc_id"],$_POST["cat_id"]);
+            $datos=$subcategoria->get_subcategoria_x_suc_id($_POST["suc_id"]);
             $data=Array();
             foreach($datos as $row){
                 $sub_array = array();
+                $sub_array[] = $row["CAT_NOM"];
                 $sub_array[] = $row["SCAT_NOM"];
                 $sub_array[] = $row["FECH_CREA"];
                 $sub_array[] = '<button type="button" onClick="editar('.$row["SCAT_ID"].')" id="'.$row["SCAT_ID"].'" class="btn btn-warning btn-icon waves-effect waves-light"><i class="ri-edit-2-line"></i></button>';
@@ -55,7 +56,7 @@
             break;
         
         case "combo":
-            $datos = $subcategoria->get_subcategoria_x_suc_id($_POST["suc_id"],$_POST["cat_id"]);
+            $datos = $subcategoria->get_subcategoria_x_cat_id($_POST["cat_id"]);
             if(is_array($datos)== true and count($datos) > 0){
                 $html = "";
                 $html .= "<option selected>Seleccionar</option>";

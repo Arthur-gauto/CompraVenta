@@ -47,6 +47,19 @@ $(document).ready(function(){
         $("#und_id").html(data);
     });
 
+    $("#cat_id").change(function () {
+        var cat_id = $(this).val(); // Obtener la categoría seleccionada
+
+        if (cat_id) {
+            $.post("../../controller/subcategoria.php?op=combo", { cat_id: cat_id }, function (data) {
+                $("#scat_id").html(data);
+            });
+        } else {
+            // Si no hay categoría seleccionada, limpiar subcategorías
+            $("#scat_id").html('<option value="">Seleccione una subcategoría</option>');
+        }
+    });
+
     $('#table_data').DataTable({
         "aProcessing": true,
         "aServerSide": true,
@@ -106,6 +119,7 @@ function editar(prod_id){
         $("#prod_pventa").val(data.PROD_PVENTA);
         $("#prod_stock").val(data.PROD_STOCK);
         $("#cat_id").val(data.CAT_ID).trigger('change');
+        $("#scat_id").val(data.SCAT_ID).trigger('change');
         $("#und_id").val(data.UND_ID).trigger('change');
         $("#mon_id").val(data.MON_ID).trigger('change');
         $("#pre_imagen").html(data.PROD_IMG);
@@ -150,6 +164,7 @@ $(document).on("click","#btnnuevo", function(){
     $("#prod_pventa").val('');
     $("#prod_stock").val('');
     $("#cat_id").val('').trigger('change');
+    $("#scat_id").val('').trigger('change');
     $("#und_id").val('').trigger('change');
     $("#mon_id").val('').trigger('change');
     $('#lbltitulo').html('Nuevo Registro');

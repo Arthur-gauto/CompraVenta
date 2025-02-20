@@ -9,12 +9,18 @@
             </div>
             <form method="post" id="mantenimiento_form" >
                 <div class="modal-body">
-                    <input type="hidden" name="cat_id" id="cat_id">
+                    <input type="hidden" name="scat_id" id="scat_id">
                     <div class="row gy-2">
                         <div class="col-md-12">
                             <div>
-                                <label for="valueInput" class="form-label">Nombre de Categoria</label>
-                                <input type="text" class="form-control" id="cat_nom" name="cat_nom" required>
+                                <label for="valueInput" class="form-label">Nombre de Subcategoria</label>
+                                <input type="text" class="form-control" id="scat_nom" name="scat_nom" required>
+                            </div>
+                            <div>
+                                <label for="valueInput" class="form-label">Categoria</label>
+                                <select type="text" class="form-control form-select" name="cat_id" id="cat_id" aria-label="Seleccionar">
+                                    <option selected>Seleccionar </option>
+                                </select>
                             </div>
                         </div>
                     </div>

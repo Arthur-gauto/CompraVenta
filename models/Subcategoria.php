@@ -2,13 +2,22 @@
     class Subcategoria extends Conectar{
 
         //TODO LISTAR REGISTROS
-        public function get_subcategoria_x_suc_id($suc_id,$cat_id){
+        public function get_subcategoria_x_suc_id($suc_id){
             $conectar=parent::Conexion();
             $sql="";
-            $sql="SP_L_SUBCATEGORIA_01 ?,?";
+            $sql="SP_L_SUBCATEGORIA_01 ?";
             $query=$conectar->prepare($sql);
             $query->bindValue(1,$suc_id);
-            $query->bindValue(2,$cat_id);
+            $query->execute();
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        public function get_subcategoria_x_cat_id($cat_id){
+            $conectar=parent::Conexion();
+            $sql="";
+            $sql="SP_L_SUBCATEGORIA_03 ?";
+            $query=$conectar->prepare($sql);
+            $query->bindValue(1,$cat_id);
             $query->execute();
             return $query->fetchAll(PDO::FETCH_ASSOC);
         }

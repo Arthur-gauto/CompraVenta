@@ -12,6 +12,7 @@
                 $producto->insert_producto(
                     $_POST["suc_id"],
                     $_POST["cat_id"],
+                    $_POST["scat_id"],
                     $_POST["prod_nom"],
                     $_POST["prod_descrip"],      
                     $_POST["und_id"],
@@ -26,6 +27,7 @@
                 $_POST["prod_id"],
                 $_POST["suc_id"],
                 $_POST["cat_id"],
+                $_POST["scat_id"],
                 $_POST["prod_nom"],
                 $_POST["prod_descrip"],
                 $_POST["und_id"],

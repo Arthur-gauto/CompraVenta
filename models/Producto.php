@@ -1,18 +1,20 @@
 <?php
     class Producto extends Conectar{
         //TODO Listar Registros
-        public function get_producto_x_suc_id($suc_id){
+        public function get_producto_x_suc_id($suc_id) {
             try {
                 $conectar = parent::Conexion();
                 $sql = "SELECT 
                             p.*,
                             c.CAT_NOM,
                             u.UND_NOM,
-                            m.MON_NOM
+                            m.MON_NOM,
+                            s.SCAT_NOM
                         FROM TM_PRODUCTO p
                         INNER JOIN TM_CATEGORIA c ON p.CAT_ID = c.CAT_ID
                         INNER JOIN TM_UNIDAD u ON p.UND_ID = u.UND_ID
                         INNER JOIN TM_MONEDA m ON p.MON_ID = m.MON_ID
+                        INNER JOIN TM_SUBCATEGORIA s ON p.SCAT_ID = s.SCAT_ID
                         WHERE p.SUC_ID = ? AND p.EST = 1";
                 $sql = $conectar->prepare($sql);
                 $sql->bindValue(1, $suc_id);
@@ -49,7 +51,7 @@
             $query->execute();
         }
         //TODO Registro de datos
-        public function insert_producto($suc_id,$cat_id,$prod_nom,$prod_descrip,$und_id,$mon_id,$prod_pcompra,$prod_pventa,$prod_stock,$prod_fechaven,$prod_img){
+        public function insert_producto($suc_id,$cat_id,$scat_id,$prod_nom,$prod_descrip,$und_id,$mon_id,$prod_pcompra,$prod_pventa,$prod_stock,$prod_fechaven,$prod_img){
             $conectar=parent::Conexion();
 
             require_once("Producto.php");
@@ -59,23 +61,24 @@
                 $prod_img=$prod->upload_image();
             }
 
-            $sql="SP_I_PRODUCTO_01 ?,?,?,?,?,?,?,?,?,?,?";
+            $sql="SP_I_PRODUCTO_01 ?,?,?,?,?,?,?,?,?,?,?,?";
             $query=$conectar->prepare($sql);
             $query->bindValue(1,$suc_id);
             $query->bindValue(2,$cat_id);
-            $query->bindValue(3,$prod_nom);
-            $query->bindValue(4,$prod_descrip);
-            $query->bindValue(5,$und_id);
-            $query->bindValue(6,$mon_id);
-            $query->bindValue(7,$prod_pcompra);
-            $query->bindValue(8,$prod_pventa);
-            $query->bindValue(9,$prod_stock);
-            $query->bindValue(10,$prod_fechaven);
-            $query->bindValue(11,$prod_img);
+            $query->bindValue(3,$scat_id);
+            $query->bindValue(4,$prod_nom);
+            $query->bindValue(5,$prod_descrip);
+            $query->bindValue(6,$und_id);
+            $query->bindValue(7,$mon_id);
+            $query->bindValue(8,$prod_pcompra);
+            $query->bindValue(9,$prod_pventa);
+            $query->bindValue(10,$prod_stock);
+            $query->bindValue(11,$prod_fechaven);
+            $query->bindValue(12,$prod_img);
             $query->execute();
         }
         //TODO Actualizar Datos
-        public function update_producto($prod_id,$suc_id,$cat_id,$prod_nom,$prod_descrip,$und_id,$mon_id,$prod_pcompra,$prod_pventa,$prod_stock,$prod_fechaven,$prod_img){
+        public function update_producto($prod_id,$suc_id,$cat_id,$scat_id,$prod_nom,$prod_descrip,$und_id,$mon_id,$prod_pcompra,$prod_pventa,$prod_stock,$prod_fechaven,$prod_img){
             $conectar=parent::Conexion();
 
             require_once("Producto.php");
@@ -87,20 +90,21 @@
                 $prod_img = $POST["hidden_producto_imagen"];
             }
 
-            $sql="SP_U_PRODUCTO_01 ?,?,?,?,?,?,?,?,?,?,?,?";
+            $sql="SP_U_PRODUCTO_01 ?,?,?,?,?,?,?,?,?,?,?,?,?";
             $query=$conectar->prepare($sql);
             $query->bindValue(1,$prod_id);
             $query->bindValue(2,$suc_id);
             $query->bindValue(3,$cat_id);
-            $query->bindValue(4,$prod_nom);
-            $query->bindValue(5,$prod_descrip);
-            $query->bindValue(6,$und_id);
-            $query->bindValue(7,$mon_id);
-            $query->bindValue(8,$prod_pcompra);
-            $query->bindValue(9,$prod_pventa);
-            $query->bindValue(10,$prod_stock);
-            $query->bindValue(11,$prod_fechaven);
-            $query->bindValue(12,$prod_img);
+            $query->bindValue(4,$scat_id);
+            $query->bindValue(5,$prod_nom);
+            $query->bindValue(6,$prod_descrip);
+            $query->bindValue(7,$und_id);
+            $query->bindValue(8,$mon_id);
+            $query->bindValue(9,$prod_pcompra);
+            $query->bindValue(10,$prod_pventa);
+            $query->bindValue(11,$prod_stock);
+            $query->bindValue(12,$prod_fechaven);
+            $query->bindValue(13,$prod_img);
             $query->execute();
         }
 

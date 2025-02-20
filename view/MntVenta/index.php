@@ -174,16 +174,16 @@
                                                     <input type="number" class="form-control" id="prod_pventa" name="prod_pventa" placeholder="Precio">
                                                 </div>
                                                 <div class="col-lg-1">
+                                                    <label for="detv_cant" class="form-label">Cantidad</label>
+                                                    <input type="number" class="form-control" id="detv_cant" name="detv_cant" placeholder="Cant.">
+                                                </div>
+                                                <div class="col-lg-1">
                                                     <label for="prod_stock" class="form-label">Stock</label>
                                                     <input type="text" class="form-control" id="prod_stock" name="prod_stock" placeholder="Stock" readonly>
                                                 </div>
                                                 <div class="col-lg-2">
                                                     <label for="und_nom" class="form-label">Unidad</label>
                                                     <input type="text" class="form-control" id="und_nom" name="und_nom" placeholder="Unidad" readonly>
-                                                </div>
-                                                <div class="col-lg-1">
-                                                    <label for="detv_cant" class="form-label">Cantidad</label>
-                                                    <input type="number" class="form-control" id="detv_cant" name="detv_cant" placeholder="Cant.">
                                                 </div>
                                                 <div class="col-lg-1 d-grid gap-0">
                                                     <label class="form-label">&nbsp;</label>
