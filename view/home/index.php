@@ -53,12 +53,12 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                                <h4 class="mb-sm-0">Dashboard</h4>
+                                <h4 class="mb-sm-0">Inicio</h4>
 
                                 <div class="page-title-right">
                                     <ol class="breadcrumb m-0">
                                         <li class="breadcrumb-item"><a href="javascript: void(0);">Menu</a></li>
-                                        <li class="breadcrumb-item active">Dashboard</li>
+                                        <li class="breadcrumb-item active">Inicio</li>
                                     </ol>
                                 </div>
 
@@ -75,7 +75,7 @@
                                         <div class="d-flex align-items-lg-center flex-lg-row flex-column">
                                             <div class="flex-grow-1">
                                                 <h4 class="fs-16 mb-1">Buen dia, <?php echo $_SESSION["USU_NOM"]?>!</h4>
-                                                <p class="text-muted mb-0">Here's what's happening with your store today.</p>
+                                                <p class="text-muted mb-0">Esto es lo que está sucediendo con tu tienda hoy.</p>
                                             </div>
                                             <div class="mt-3 mt-lg-0">
                                                 <form action="javascript:void(0);">

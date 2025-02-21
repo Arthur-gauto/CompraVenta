@@ -14,6 +14,7 @@
 
     <title>Página inicial | Venta</title>
     <?php require_once("../html/head.php"); ?>
+    <?php require_once("../../assets/css/venta.css"); ?> 
 
 </head>
 
@@ -96,51 +97,50 @@
                                             <div class="row align-items-center g-3">
                                                 <div class="col-lg-4">
                                                     <div>
-                                                        <label for="exampleInputdate" class="form-label">Fecha</label>
+                                                        <label for="exampleInputdate" class="form-label fw-bold">Fecha</label>
                                                         <input type="date" class="form-control" id="fech_factv" name="fech_factv" 
                                                         value="<?php echo date('Y-m-d'); ?>"> 
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-4">
-                                                    <label for="valueInput" class="form-label">Nro Factura</label>
+                                                    <label for="valueInput" class="form-label fw-bold">Nro Factura</label>
                                                     <input type="text" class="form-control" id="nro_factv" name="nro_factv" placeholder="Número Factura.">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                        <!--TODO: DATOS DEL PROVEEDOR-->
+                        <!--TODO: DATOS DEL Cliente-->
                         <div class="row">
                             <div class="col-lg-12">
-                                <div class="card">
+                                <div class="card section-spacer">
                                     <div class="card-header align-items-center d-flex">
-                                        <h4 class="card-title mb-0 flex-grow-1">Datos del Cliente</h4>
+                                        <h4 class="card-title mb-0 flex-grow-1 title-bold"><strong>Datos del Cliente</strong></h4>
                                     </div><!-- end card header -->
                                     <div class="card-body">
                                         <div class="live-preview">
                                             <div class="row align-items-center g-3">
                                                 <div class="col-lg-4">
-                                                <label for="valueInput" class="form-label">Cliente </label>
-                                                    <select id="cli_id" name="cli_id" class="form-control form-select" aria-label=".form-select-sm example">
-                                                        <option value="0" selected>Seleccione</option>
-                                                        
+                                                <label for="valueInput" class="form-label fw-bold">Cliente </label>
+                                                    <select id="cli_id" name="cli_id" class="form-control form-select" aria-label="Selecciona un cliente">
+                                                        <option value="0">Elige un cliente</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-lg-4">
-                                                <label for="valueInput" class="form-label">RUC: </label>
+                                                <label for="valueInput" class="form-label fw-bold">RUC: </label>
                                                 <input type="text" class="form-control" id="cli_ruc" name="cli_ruc" readonly>
                                                 <input type="text" class="form-control" id="caj_id" name="caj_id" hidden>
                                                 <input type="text" class="form-control" id="caj_ing" name="caj_ing" hidden>
                                                 </div>
                                                 <div class="col-lg-4">
-                                                <label for="valueInput" class="form-label">Dirección: </label>
+                                                <label for="valueInput" class="form-label fw-bold">Dirección: </label>
                                                 <input type="text" class="form-control" id="cli_direcc" name="cli_direcc" readonly>
                                                 </div>
                                                 <div class="col-lg-4">
-                                                <label for="valueInput" class="form-label">Teléfono: </label>
+                                                <label for="valueInput" class="form-label fw-bold">Teléfono: </label>
                                                 <input type="text" class="form-control" id="cli_telf" name="cli_telf" readonly>
                                                 </div>
                                                 <div class="col-lg-4">
-                                                <label for="valueInput" class="form-label">Correo: </label>
+                                                <label for="valueInput" class="form-label fw-bold">Correo: </label>
                                                 <input type="text" class="form-control" id="cli_correo" name="cli_correo" readonly>
                                                 </div>
                                             </div>
@@ -153,28 +153,28 @@
                         <!--TODO: DATOS DEL PRODUCTO-->
                         <div class="row">
                             <div class="col-lg-12">
-                                <div class="card">
+                                <div class="card section-spacer">
                                     <div class="card-header align-items-center d-flex">
-                                        <h4 class="card-title mb-0 flex-grow-1">Agregar producto</h4>
+                                        <h4 class="card-title mb-0 flex-grow-1 title-bold">Agregar producto</h4>
                                     </div>
                                     <div class="card-body">
                                         <div class="live-preview">
                                             <div class="row align-items-center g-3">
                                                 <div class="col-lg-3">
-                                                    <label for="prod_id" class="form-label">Producto</label>
+                                                    <label for="prod_id" class="form-label fw-bold">Producto</label>
                                                     <select id="prod_id" name="prod_id" class="form-control form-select">
                                                     </select>
                                                 </div>
                                                 <div class="col-lg-3">
-                                                    <label for="cat_nom" class="form-label">Categoría</label>
+                                                    <label for="cat_nom" class="form-label fw-bold">Categoría</label>
                                                     <input type="text" id="cat_nom" name="cat_nom" class="form-control" readonly>
                                                 </div>
                                                 <div class="col-lg-1">
-                                                    <label for="prod_pventa" class="form-label">Precio</label>
+                                                    <label for="prod_pventa" class="form-label fw-bold">Precio</label>
                                                     <input type="number" class="form-control" id="prod_pventa" name="prod_pventa" placeholder="Precio">
                                                 </div>
                                                 <div class="col-lg-1">
-                                                    <label for="cat_nom" class="form-label">List.</label>
+                                                    <label for="cat_nom" class="form-label fw-bold">List.</label>
                                                     <select type="text" class="form-control form-select" name="pro_list" id="pro_list" aria-label="Seleccionar">
                                                         <option selected>Seleccionar </option>
                                                         <option value=50>A-50%</option>
@@ -183,20 +183,22 @@
                                                     </select>
                                                 </div>
                                                 <div class="col-lg-1">
-                                                    <label for="detv_cant" class="form-label">Cantidad</label>
+                                                    <label for="detv_cant" class="form-label fw-bold">Cantidad</label>
                                                     <input type="number" class="form-control" id="detv_cant" name="detv_cant" placeholder="Cant.">
                                                 </div>
                                                 <div class="col-lg-1">
-                                                    <label for="prod_stock" class="form-label">Stock</label>
+                                                    <label for="prod_stock" class="form-label fw-bold">Stock</label>
                                                     <input type="text" class="form-control" id="prod_stock" name="prod_stock" placeholder="Stock" readonly>
                                                 </div>
                                                 <div class="col-lg-1">
-                                                    <label for="und_nom" class="form-label">Unidad</label>
+                                                    <label for="und_nom" class="form-label fw-bold">Unidad</label>
                                                     <input type="text" class="form-control" id="und_nom" name="und_nom" placeholder="Unidad" readonly>
                                                 </div>
                                                 <div class="col-lg-1 d-grid gap-0">
-                                                    <label class="form-label">&nbsp;</label>
-                                                    <button type="button" id="btnagregar" name="btnagregar" class="btn btn-primary waves-effect waves-light ri-add-circle-line"></button>
+                                                    <label class="form-label"> </label>
+                                                    <button type="button" id="btnagregar" name="btnagregar" class="btn btn-primary btn-primary-custom">
+                                                        <i class="ri-add-circle-line"></i>
+                                                    </button>
                                                 </div>
 
                                             </div>
@@ -238,16 +240,14 @@
                                                             </tr>
                                                         </tbody>
                                         </table>
-                                        <div class="mt-4">
-                                                <label for="compr_coment" class="form-label text-muted text-uppercase fw-semibold">Comentario</label>
-                                                <textarea class="form-control alert alert-info" id="compr_coment" placeholder="Comentario" rows="2" required=""></textarea>
-                                        </div>
                                         <div class="hstack gap-2 left-content-end d-print-none mt-4">
-                                                <button type="submit" id= "btnguardar" class="btn btn-success"><i class="ri-save-line align-bottom me-1"></i> Guardar</button>
-                                                <a id="btnlimpiar" class="btn btn-warning"><i class="ri-brush-2-line align-bottom me-1"></i> Limpiar</a>
+                                            <button type="submit" id="btnguardar" class="btn btn-success btn-success-custom">
+                                                <i class="ri-save-line align-bottom me-1"></i> Guardar
+                                            </button>
+                                            <a id="btnlimpiar" class="btn btn-warning btn-warning-custom">
+                                                <i class="ri-brush-2-line align-bottom me-1"></i> Limpiar
+                                            </a>
                                         </div>
-
-
                                     </div>
                                 </div>
                             </div> <!-- end col -->

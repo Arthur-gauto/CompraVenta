@@ -28,7 +28,6 @@
 
     <div id="scrollbar">
         <div class="container-fluid">
-
             <div id="two-column-menu">
             </div>
             <ul class="navbar-nav" id="navbar-nav">
@@ -50,7 +49,7 @@
                 
                 <li class="menu-title"><span data-key="t-menu">Mantenimiento</span></li>
                 
-
+                <!-- Mantenimiento -->
                 <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarLayouts" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarLayouts">
                                 <i class="ri-layout-3-line"></i> <span data-key="t-layouts">Mantenimiento</span>
@@ -72,9 +71,10 @@
                                 ?>
                                 </ul>
                             </div>
-                </li> <!-- end Dashboard Menu -->
-
-
+                </li> 
+                
+                <li class="menu-title"><span data-key="t-menu">Compra</span></li>
+                <!-- compra -->                   
                 <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarAuth" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarAuth">
                                 <i class="ri-layout-3-line"></i> <span data-key="t-authentication">Compra</span>
@@ -96,8 +96,10 @@
                                 ?>
                                 </ul>
                             </div>
-                </li> <!-- end Dashboard Menu -->
+                </li> 
 
+                <li class="menu-title"><span data-key="t-menu">Venta</span></li>
+                <!-- venta -->
                 <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarLanding" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarLanding">
                                 <i class="ri-layout-3-line"></i> <span data-key="t-authentication">Venta</span>
@@ -119,7 +121,7 @@
                                 ?>
                                 </ul>
                             </div>
-                </li> <!-- end Dashboard Menu -->
+                </li> 
             </ul>
         </div>
         <!-- Sidebar -->
