@@ -6,35 +6,37 @@ function init (){
     });
 }
 
-function guardaryeditar(e){
+function guardaryeditar(e) {
     e.preventDefault();
-    var formData = new FormData( $("#mantenimiento_form")[0]);
 
-    formData.append('suc_id',$("#SUC_IDx").val())
+    var formData = new FormData($("#mantenimiento_form")[0]);  
+    formData.append('suc_id', $("#SUC_IDx").val());
+
+    // Primera petición AJAX
     $.ajax({
-        url:"../../controller/producto.php?op=guardaryeditar",
-        type:"POST",
-        data:formData,
-        contentType:false,
-        processData:false,
-        success:function(data){
-            $('#modalmantenimiento').modal('hide');  // Cierra el modal
+        url: "../../controller/producto.php?op=guardaryeditar",
+        type: "POST",
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function(data) {
+            $('#modalmantenimiento').modal('hide'); // Cierra el modal
+            $('#table_data').DataTable().ajax.reload(); // Recargar tabla
 
-            // Opcional: Recargar la tabla de datos (si es necesario)
-            $('#table_data').DataTable().ajax.reload();
-
-            // Opcional: Mensaje de éxito (puedes personalizarlo)
             swal.fire({
                 title: 'Producto',
                 text: 'El registro se guardó correctamente.',
                 icon: 'success',
                 customClass: {
-                    confirmButton: 'btn-success'  // Personalización del botón de confirmación
+                    confirmButton: 'btn-success'
                 }
             });
+
+            
         }
     });
 }
+
 
 $(document).ready(function(){
     $.post("../../controller/categoria.php?op=combo",{suc_id:suc_id},function(data){

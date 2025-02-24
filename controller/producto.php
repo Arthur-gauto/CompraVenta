@@ -8,37 +8,53 @@
     switch($_GET["op"]){
         //todo Guardar y editar, guardar cuando el ID este vacio, y Actualizar cuando se envie el Id
         case "guardaryeditar":
-            if(empty($_POST["prod_id"])){
-                $producto->insert_producto(
+            if (empty($_POST["prod_id"])) {
+                // Insertar el producto y obtener el nuevo ID
+                $nuevo_prod_id = $producto->insert_producto(
                     $_POST["suc_id"],
                     $_POST["cat_id"],
                     $_POST["scat_id"],
                     $_POST["prod_nom"],
-                    $_POST["prod_descrip"],      
+                    $_POST["prod_descrip"],
                     $_POST["und_id"],
                     $_POST["mon_id"],
                     $_POST["prod_pcompra"],
                     $_POST["prod_pventa"],
                     $_POST["prod_stock"],
                     $_POST["prod_fechaven"],
-                    $_POST["prod_img"]);
-            }else{
+                    $_POST["prod_img"]
+                );
+        
+                if ($nuevo_prod_id > 0) {
+                    // Insertar la lista de precios dentro del mismo flujo
+                    $producto->insert_lista_precio($nuevo_prod_id, $_POST["prod_pcompra"]);
+        
+                    echo json_encode(["success" => true, "prod_id" => $nuevo_prod_id]); // Devolver ID
+                } else {
+                    echo json_encode(["success" => false, "error" => "No se pudo insertar el producto."]);
+                }
+            } else {
+                // Actualizar producto si ya existe
                 $producto->update_producto(
-                $_POST["prod_id"],
-                $_POST["suc_id"],
-                $_POST["cat_id"],
-                $_POST["scat_id"],
-                $_POST["prod_nom"],
-                $_POST["prod_descrip"],
-                $_POST["und_id"],
-                $_POST["mon_id"],
-                $_POST["prod_pcompra"],
-                $_POST["prod_pventa"],
-                $_POST["prod_stock"],
-                $_POST["prod_fechaven"],
-                $_POST["prod_img"]);
+                    $_POST["prod_id"],
+                    $_POST["suc_id"],
+                    $_POST["cat_id"],
+                    $_POST["scat_id"],
+                    $_POST["prod_nom"],
+                    $_POST["prod_descrip"],
+                    $_POST["und_id"],
+                    $_POST["mon_id"],
+                    $_POST["prod_pcompra"],
+                    $_POST["prod_pventa"],
+                    $_POST["prod_stock"],
+                    $_POST["prod_fechaven"],
+                    $_POST["prod_img"]
+                );
+        
+                echo json_encode(["success" => true, "prod_id" => $_POST["prod_id"]]);
             }
             break;
+        
 
         //todo Listado de registros formato JSON para datable JS
         case "listar":
@@ -228,6 +244,8 @@
                 ]);
             }
             break;
+
+            
 
     }
 ?>
