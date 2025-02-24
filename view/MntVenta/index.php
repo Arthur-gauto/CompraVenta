@@ -9,271 +9,221 @@
 
 <!doctype html>
 <html lang="en" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg" data-sidebar-image="none">
-
 <head>
-
-    <title>Página inicial | Venta</title>
+    <title>Venta | Sistema Profesional</title>
     <?php require_once("../html/head.php"); ?>
-    <?php require_once("../../assets/css/venta.css"); ?> 
-
+    <link rel="stylesheet" href="../../assets/css/venta.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
 </head>
-
 <body>
-
     <div id="layout-wrapper">
-
-    <?php require_once("../html/header.php"); ?>
-        
+        <?php require_once("../html/header.php"); ?>
         <?php require_once("../html/menu.php"); ?>
 
         <div class="main-content">
+            <div class="page-content container-fluid">
+                <div class="header-section d-flex align-items-center justify-content-between mb-2">
+                    <h1 class="title">Nueva Venta</h1>
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="javascript: void(0);">Ventas</a></li>
+                        <li class="breadcrumb-item active">Crear</li>
+                    </ol>
+                </div>
 
-            <div class="page-content">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                                <h4 class="mb-sm-0">Nueva Venta</h4>
+                <!--TODO: ID DE VENTA-->
+                <input type="hidden" name="vent_id" id="vent_id">
 
-                                <div class="page-title-right">
-                                    <ol class="breadcrumb m-0">
-                                        <li class="breadcrumb-item"><a href="javascript: void(0);">Venta</a></li>
-                                        <li class="breadcrumb-item active">Nueva venta</li>
-                                    </ol>
-                                </div>
-
+                <div class="row g-2">
+                    <!--TODO: DATOS DEL PAGO Y FACTURA-->
+                    <div class="col-md-4">
+                        <div class="card card-compact">
+                            <div class="card-header">
+                                <h4 class="card-title">Detalles Generales</h4>
                             </div>
-                        </div>
-                        <!--TODO: ID DE VENTA-->
-                        <input type="hidden" name="vent_id" id="vent_id">
-
-                        <!--TODO: DATOS DEL PAGO-->
-                        <div>
-                        <button onclick="mostrarDiv()" class="btn btn-success waves-effect waves-light ri-money-dollar-circle-line"></button>
-                        </div>
-                        <div class="row" id="tipoPagoDiv" hidden>
-                            <div class="col-lg-12">
-                                <div class="card">
-                                    <div class="card-header align-items-center d-flex">
-                                        <h4 class="card-title mb-0 flex-grow-1">Tipo de pago</h4>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="live-preview">
-                                            <div class="row align-items-center g-3">
-                                                
-                                                <div class="col-lg-4">
-                                                    <label for="doc_id" class="form-label">Documento</label>
-                                                        <select id="doc_id" name="doc_id" class="form-control form-select" aria-label=".form-select-sm example">
-                                                            <option value="1" selected>Seleccione</option>
-                                                            
-                                                        </select>
-                                                </div>                                    
-
-                                                <div class="col-lg-4">
-                                                    <label for="valueInput" class="form-label">Pago</label>
-                                                        <select id="pag_id" name="pag_id" class="form-control form-select" aria-label=".form-select-sm example">
-                                                            <option value="1" selected>Seleccione</option>
-                                                            
-                                                        </select>
-                                                </div>
-                                                
-                                                <div class="col-lg-4">
-                                                    <label for="valueInput" class="form-label">Moneda</label>
-                                                        <select id="mon_id" name="mon_id" class="form-control form-select" aria-label=".form-select-sm example">
-                                                            <option value="1" selected>Seleccione</option>
-                                                            
-                                                        </select>
-                                                </div>
-
-                                            </div>
+                            <div class="card-body p-3">
+                                <div class="mb-2">
+                                    <label for="fech_factv" class="form-label">Fecha</label>
+                                    <input type="date" class="form-control" id="fech_factv" name="fech_factv" value="<?php echo date('Y-m-d'); ?>">
+                                </div>
+                                <div class="mb-2">
+                                    <label for="nro_factv" class="form-label">Nro Factura</label>
+                                    <input type="text" class="form-control" id="nro_factv" name="nro_factv" placeholder="Número Factura">
+                                </div>
+                                <button onclick="mostrarDiv()" class="btn btn-primary btn-sm w-100">
+                                    <i class="ri-money-dollar-circle-line"></i> Configurar Pago
+                                </button>
+                                <div class="payment-options mt-2" id="tipoPagoDiv" hidden>
+                                    <div class="row g-2">
+                                        <div class="col-12">
+                                            <label for="doc_id" class="form-label">Documento</label>
+                                            <select id="doc_id" name="doc_id" class="form-select"></select>
                                         </div>
-                                        
+                                        <div class="col-12">
+                                            <label for="pag_id" class="form-label">Pago</label>
+                                            <select id="pag_id" name="pag_id" class="form-select"></select>
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="mon_id" class="form-label">Moneda</label>
+                                            <select id="mon_id" name="mon_id" class="form-select"></select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="card-body">
-                                        <div class="live-preview">
-                                            <div class="row align-items-center g-3">
-                                                <div class="col-lg-4">
-                                                    <div>
-                                                        <label for="exampleInputdate" class="form-label fw-bold">Fecha</label>
-                                                        <input type="date" class="form-control" id="fech_factv" name="fech_factv" 
-                                                        value="<?php echo date('Y-m-d'); ?>"> 
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <label for="valueInput" class="form-label fw-bold">Nro Factura</label>
-                                                    <input type="text" class="form-control" id="nro_factv" name="nro_factv" placeholder="Número Factura.">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                        <!--TODO: DATOS DEL Cliente-->
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="card section-spacer">
-                                    <div class="card-header align-items-center d-flex">
-                                        <h4 class="card-title mb-0 flex-grow-1 title-bold"><strong>Datos del Cliente</strong></h4>
-                                    </div><!-- end card header -->
-                                    <div class="card-body">
-                                        <div class="live-preview">
-                                            <div class="row align-items-center g-3">
-                                                <div class="col-lg-4">
-                                                <label for="valueInput" class="form-label fw-bold">Cliente </label>
-                                                    <select id="cli_id" name="cli_id" class="form-control form-select" aria-label="Selecciona un cliente">
-                                                        <option value="0">Elige un cliente</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-lg-4">
-                                                <label for="valueInput" class="form-label fw-bold">RUC: </label>
-                                                <input type="text" class="form-control" id="cli_ruc" name="cli_ruc" readonly>
-                                                <input type="text" class="form-control" id="caj_id" name="caj_id" hidden>
-                                                <input type="text" class="form-control" id="caj_ing" name="caj_ing" hidden>
-                                                </div>
-                                                <div class="col-lg-4">
-                                                <label for="valueInput" class="form-label fw-bold">Dirección: </label>
-                                                <input type="text" class="form-control" id="cli_direcc" name="cli_direcc" readonly>
-                                                </div>
-                                                <div class="col-lg-4">
-                                                <label for="valueInput" class="form-label fw-bold">Teléfono: </label>
-                                                <input type="text" class="form-control" id="cli_telf" name="cli_telf" readonly>
-                                                </div>
-                                                <div class="col-lg-4">
-                                                <label for="valueInput" class="form-label fw-bold">Correo: </label>
-                                                <input type="text" class="form-control" id="cli_correo" name="cli_correo" readonly>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                    </div>
-                                </div>
-                            </div> <!-- end col -->
-                        </div>
-                        <!--TODO: DATOS DEL PRODUCTO-->
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="card section-spacer">
-                                    <div class="card-header align-items-center d-flex">
-                                        <h4 class="card-title mb-0 flex-grow-1 title-bold">Agregar producto</h4>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="live-preview">
-                                            <div class="row align-items-center g-3">
-                                                <div class="col-lg-3">
-                                                    <label for="prod_id" class="form-label fw-bold">Producto</label>
-                                                    <select id="prod_id" name="prod_id" class="form-control form-select">
-                                                    </select>
-                                                </div>
-                                                <div class="col-lg-3">
-                                                    <label for="cat_nom" class="form-label fw-bold">Categoría</label>
-                                                    <input type="text" id="cat_nom" name="cat_nom" class="form-control" readonly>
-                                                </div>
-                                                <div class="col-lg-1">
-                                                    <label for="prod_pventa" class="form-label fw-bold">Precio</label>
-                                                    <input type="number" class="form-control" id="prod_pventa" name="prod_pventa" placeholder="Precio">
-                                                </div>
-                                                <div class="col-lg-1">
-                                                    <label for="cat_nom" class="form-label fw-bold">List.</label>
-                                                    <select type="text" class="form-control form-select" name="pro_list" id="pro_list" aria-label="Seleccionar">
-                                                        <option selected>Seleccionar </option>
-                                                        <option value=50>A-50%</option>
-                                                        <option value=30>B-30%</option>
-                                                        <option value=20>B-20%</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-lg-1">
-                                                    <label for="detv_cant" class="form-label fw-bold">Cantidad</label>
-                                                    <input type="number" class="form-control" id="detv_cant" name="detv_cant" placeholder="Cant.">
-                                                </div>
-                                                <div class="col-lg-1">
-                                                    <label for="prod_stock" class="form-label fw-bold">Stock</label>
-                                                    <input type="text" class="form-control" id="prod_stock" name="prod_stock" placeholder="Stock" readonly>
-                                                </div>
-                                                <div class="col-lg-1">
-                                                    <label for="und_nom" class="form-label fw-bold">Unidad</label>
-                                                    <input type="text" class="form-control" id="und_nom" name="und_nom" placeholder="Unidad" readonly>
-                                                </div>
-                                                <div class="col-lg-1 d-grid gap-0">
-                                                    <label class="form-label"> </label>
-                                                    <button type="button" id="btnagregar" name="btnagregar" class="btn btn-primary btn-primary-custom">
-                                                        <i class="ri-add-circle-line"></i>
-                                                    </button>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <br>
-                                        <br>
-                                        <table id="table_data" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
-                                            <thead>
-                                                <tr>
-                                                    <th></th>
-                                                    <th>Categoria</th>
-                                                    <th>Producto</th>
-                                                    <th>Und</th>
-                                                    <th>P. Compra</th>
-                                                    <th>Cantidad</th>
-                                                    <th>Total</th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                
-                                            </tbody>
-                                        </table>
-                                        <table id="table_data2" class="table table-borderless table-nowrap align-middle mb-0 ms-auto" style="width:250px">
-                                                        <tbody>
-                                                            <tr>
-                                                                <td>Sub Total</td>
-                                                                <td class="text-end" id="txtsubtotal">0</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>IVA (10%)</td>
-                                                                <td class="text-end" id="txtigv">0</td>
-                                                            </tr>
-                                                            
-                                                            
-                                                            <tr class="border-top border-top-dashed fs-15">
-                                                                <th scope="row">Total </th>
-                                                                <th class="text-end" id="txttotal">0</th>
-                                                            </tr>
-                                                        </tbody>
-                                        </table>
-                                        <div class="hstack gap-2 left-content-end d-print-none mt-4">
-                                            <button type="submit" id="btnguardar" class="btn btn-success btn-success-custom">
-                                                <i class="ri-save-line align-bottom me-1"></i> Guardar
-                                            </button>
-                                            <a id="btnlimpiar" class="btn btn-warning btn-warning-custom">
-                                                <i class="ri-brush-2-line align-bottom me-1"></i> Limpiar
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> <!-- end col -->
-                        </div>
-                        <!-- end row -->
-                        
-                        
                     </div>
 
+                    <!--TODO: DATOS DEL CLIENTE-->
+                    <div class="col-md-8">
+                        <div class="card card-compact">
+                            <div class="card-header">
+                                <h4 class="card-title">Cliente</h4>
+                            </div>
+                            <div class="card-body p-3">
+                                <div class="row g-2">
+                                    <div class="col-md-6">
+                                        <label for="cli_id" class="form-label">Cliente</label>
+                                        <select id="cli_id" name="cli_id" class="form-select">
+                                            <option value="0">Seleccionar cliente</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="cli_ruc" class="form-label">RUC</label>
+                                        <input type="text" class="form-control" id="cli_ruc" name="cli_ruc" readonly>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="cli_direcc" class="form-label">Dirección</label>
+                                        <input type="text" class="form-control" id="cli_direcc" name="cli_direcc" readonly>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="cli_telf" class="form-label">Teléfono</label>
+                                        <input type="text" class="form-control" id="cli_telf" name="cli_telf" readonly>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="cli_correo" class="form-label">Correo</label>
+                                        <input type="text" class="form-control" id="cli_correo" name="cli_correo" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--TODO: DATOS DEL PRODUCTO-->
+                <div class="card card-compact mt-2">
+                    <div class="card-header">
+                        <h4 class="card-title">Productos</h4>
+                    </div>
+                    <div class="card-body p-3">
+                        <div class="row g-2 mb-2 align-items-end">
+                            <div class="col-md-3">
+                                <label for="prod_id" class="form-label">Producto</label>
+                                <select id="prod_id" name="prod_id" class="form-select"></select>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="cat_nom" class="form-label">Categoría</label>
+                                <input type="text" id="cat_nom" name="cat_nom" class="form-control" readonly>
+                            </div>
+                            <div class="col-md-1">
+                                <label for="prod_pventa" class="form-label">Precio</label>
+                                <input type="number" class="form-control" id="prod_pventa" name="prod_pventa" placeholder="0.00">
+                            </div>
+                            <div class="col-md-1">
+                                <label for="pro_list" class="form-label">Lista</label>
+                                <select class="form-select" name="pro_list" id="pro_list">
+                                    <option selected value="50">A-50%</option>
+                                    <option value="30">B-30%</option>
+                                    <option value="20">B-20%</option>
+                                </select>
+                            </div>
+                            <div class="col-md-1">
+                                <label for="detv_cant" class="form-label">Cant.</label>
+                                <input type="number" class="form-control" id="detv_cant" name="detv_cant" placeholder="1">
+                            </div>
+                            <div class="col-md-1">
+                                <label for="prod_stock" class="form-label">Stock</label>
+                                <input type="text" class="form-control" id="prod_stock" name="prod_stock" readonly>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="und_nom" class="form-label">Unidad</label>
+                                <input type="text" class="form-control" id="und_nom" name="und_nom" readonly>
+                            </div>
+                            <div class="col-md-1 d-grid">
+                                <button type="button" id="btnagregar" name="btnagregar" class="btn btn-primary btn-agregar">
+                                    <i class="ri-add-line"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Tabla con paginación -->
+                        <table id="table_data" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th style="width: 5%;"></th>
+                                    <th>Categoría</th>
+                                    <th>Producto</th>
+                                    <th>Unidad</th>
+                                    <th>P. Compra</th>
+                                    <th>Cantidad</th>
+                                    <th>Total</th>
+                                    <th style="width: 5%;"></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+
+                        <!-- Comentario y totales/botones más integrados -->
+                        <div class="row g-2 mt-1 align-items-end">
+                            <div class="col-md-7">
+                                <label for="vent_coment" class="form-label">Comentario</label>
+                                <textarea class="form-control" id="vent_coment" name="vent_coment" placeholder="Notas sobre la venta"></textarea>
+                            </div>
+                            <div class="col-md-5 d-flex align-items-end">
+                                <div class="total-box me-2 p-3 bg-light rounded">
+                                    <div class="total-item text-muted"><span>Sub Total:</span> <strong id="txtsubtotal" class="text-dark">0</strong></div>
+                                    <div class="total-item text-muted"><span>IVA (10%):</span> <strong id="txtigv" class="text-dark">0</strong></div>
+                                    <div class="total-item total fw-bold"><span>Total:</span> <strong id="txttotal" class="text-success fs-5">0</strong></div>
+                                </div>
+                                <div class="d-flex flex-column gap-1">
+                                    <button type="submit" id="btnguardar" class="btn btn-success">
+                                        <i class="ri-save-line"></i> Guardar
+                                    </button>
+                                    <a id="btnlimpiar" class="btn btn-outline-secondary">
+                                        <i class="ri-refresh-line"></i> Limpiar
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <?php require_once("../html/footer.php"); ?>
         </div>
-
     </div>
 
-
     <?php require_once("../html/js.php"); ?>
-    
-    <script type="text/javascript" src = "mntventa.js"></script>
-    
-
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script type="text/javascript" src="mntventa.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#table_data').DataTable({
+                "pageLength": 5,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": false,
+                "info": false,
+                "language": {
+                    "paginate": {
+                        "previous": "Anterior",
+                        "next": "Siguiente"
+                    }
+                }
+            });
+        });
+    </script>
 </body>
-
 </html>
+
 
 <?php
         }else{

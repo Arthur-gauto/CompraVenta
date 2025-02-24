@@ -113,11 +113,10 @@ $(document).ready(function(){
                     icon: 'error'
                 });
             } else {
-                // Completar campos automáticamente
                 $("#cat_nom").val(data.CAT_NOM);
-                originalPrice = parseFloat(data.PROD_PCOMPRA);  // Guardar el precio original
-                var precioVenta = originalPrice * 1.50;  // Calcular el precio de venta con el 50%
-                $("#prod_pventa").val(precioVenta.toFixed(0));  // Mostrar el precio de compra más el 50%
+                originalPrice = parseFloat(data.PROD_PCOMPRA);
+                var precioVenta = originalPrice * 1.50;
+                $("#prod_pventa").val(precioVenta.toFixed(0));
                 $("#prod_stock").val(data.PROD_STOCK);
                 $("#und_nom").val(data.UND_NOM);
                 $("#cat_id").val(data.CAT_ID);
@@ -128,7 +127,6 @@ $(document).ready(function(){
     // Evento para actualizar el precio de venta basado en el descuento seleccionado
     $("#pro_list").change(function() {
         var pro_list = parseFloat($(this).val());
-
         if (!isNaN(originalPrice) && !isNaN(pro_list)) {
             var newPrice = originalPrice * (1 + (pro_list / 100));
             $("#prod_pventa").val(newPrice.toFixed(0));
@@ -139,7 +137,6 @@ $(document).ready(function(){
     $("#prod_pventa").on('input', function() {
         originalPrice = parseFloat($(this).val());
     });
-
 });
 
 // Función para mostrar u ocultar el div de tipo de pago
@@ -160,7 +157,7 @@ $(document).on("click", "#btnagregar", function() {
             title: 'Venta',
             text: 'Error. Campos vacíos',
             icon: 'error'
-        })
+        });
     } else {
         $.post("../../controller/venta.php?op=guardardetalle", {
             vent_id: vent_id, 
@@ -174,9 +171,10 @@ $(document).on("click", "#btnagregar", function() {
         $.post("../../controller/venta.php?op=calculo", {vent_id: vent_id}, function(data) {
             console.log(data);
             data = JSON.parse(data);
-            $("#txtsubtotal").html(data.VENT_SUBTOTAL);
-            $("#txtigv").html(data.VENT_IGV);
-            $("#txttotal").html(data.VENT_TOTAL);
+            $("#txtsubtotal").html(data.VENT_SUBTOTAL).addClass('highlight');
+            $("#txtigv").html(data.VENT_IGV).addClass('highlight');
+            $("#txttotal").html(data.VENT_TOTAL).addClass('highlight');
+            setTimeout(() => { $("#txtsubtotal, #txtigv, #txttotal").removeClass('highlight'); }, 1000);
         });
 
         $("#prod_pventa").val('');
@@ -191,7 +189,7 @@ function eliminar(detv_id, vent_id) {
         title: "ELIMINAR",
         text: "¿Desea eliminar el registro?",
         icon: "question",
-        confirmButtonText: "Si",
+        confirmButtonText: "Sí",
         showCancelButton: true,
         cancelButtonText: "No",
     }).then((result) => {
@@ -203,9 +201,10 @@ function eliminar(detv_id, vent_id) {
             $.post("../../controller/venta.php?op=calculo", {vent_id: vent_id}, function(data) {
                 console.log(data);
                 data = JSON.parse(data);
-                $("#txtsubtotal").html(data.VENT_SUBTOTAL);
-                $("#txtigv").html(data.VENT_IGV);
-                $("#txttotal").html(data.VENT_TOTAL);
+                $("#txtsubtotal").html(data.VENT_SUBTOTAL).addClass('highlight');
+                $("#txtigv").html(data.VENT_IGV).addClass('highlight');
+                $("#txttotal").html(data.VENT_TOTAL).addClass('highlight');
+                setTimeout(() => { $("#txtsubtotal, #txtigv, #txttotal").removeClass('highlight'); }, 1000);
             });
 
             listar(vent_id);
@@ -215,9 +214,9 @@ function eliminar(detv_id, vent_id) {
                 text: 'Registro eliminado',
                 icon: 'success',
                 customClass: {
-                    confirmButton: 'btn-danger'  // Personalización del botón de confirmación para el error
+                    confirmButton: 'btn-danger'
                 }
-            })
+            });
         }
     });
 }
@@ -227,12 +226,7 @@ function listar(vent_id) {
     $('#table_data').DataTable({
         "aProcessing": true,
         "aServerSide": true,
-        dom: 'Bfrtip',
-        buttons: [
-            'copyHtml5',
-            'excelHtml5',
-            'csvHtml5',
-        ],
+        dom: 'frtip', // Sin botones de exportación
         "ajax": {
             url: "../../controller/venta.php?op=listardetalle",
             type: "post",
@@ -240,8 +234,8 @@ function listar(vent_id) {
         },
         "bDestroy": true,
         "responsive": true,
-        "bInfo": true,
-        "iDisplayLength": 10,
+        "bInfo": false,
+        "iDisplayLength": 5,
         "order": [[ 0, "desc" ]],
         "language": {
             "sProcessing": "Procesando...",
@@ -266,7 +260,7 @@ function listar(vent_id) {
                 "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
                 "sSortDescending": ": Activar para ordenar la columna de manera descendente"
             }
-        },
+        }
     });
 }
 
@@ -277,13 +271,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // Función para verificar si la caja está abierta
 function verificarCajaAbierta() {
-    var suc_id = $('#SUC_IDx').val();  // Obtener el valor dinámicamente del campo de sucursal
+    var suc_id = $('#SUC_IDx').val();
     fetch('../../controller/venta.php?op=verificarcaja', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         },
-        body: `accion=verificarcaja&suc_id=${suc_id}`  // Enviar el suc_id obtenido dinámicamente
+        body: `accion=verificarcaja&suc_id=${suc_id}`
     })
     .then(response => response.json())
     .then(data => {
@@ -294,15 +288,14 @@ function verificarCajaAbierta() {
                 icon: 'info',
                 confirmButtonText: 'Ok',
                 customClass: {
-                    confirmButton: 'btn-info'  
+                    confirmButton: 'btn-info'
                 },
                 buttonsStyling: false,
                 confirmButtonClass: 'btn btn-info',
-                allowOutsideClick: false,  // Bloquea el cierre fuera del modal
-                allowEscapeKey: false  // Bloquea el cierre con la tecla Escape
+                allowOutsideClick: false,
+                allowEscapeKey: false
             }).then(function(result) {
                 if (result.isConfirmed) {
-                    // Redirigir a otra sección
                     window.location.href = '../MntCaja/index.php';
                 }
             });
@@ -317,20 +310,19 @@ function verificarCajaAbierta() {
                 },
                 buttonsStyling: false,
                 confirmButtonClass: 'btn btn-danger',
-                allowOutsideClick: false,  // Bloquea el cierre fuera del modal
-                allowEscapeKey: false  // Bloquea el cierre con la tecla Escape
+                allowOutsideClick: false,
+                allowEscapeKey: false
             }).then(function(result) {
                 if (result.isConfirmed) {
-                    // Bloquear cualquier acción adicional
-                    event.preventDefault();  // Evita cualquier acción de redirección
-                    return false;  // Detiene el flujo
+                    event.preventDefault();
+                    return false;
                 }
             });
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        return false;  // Detiene la ejecución en caso de error
+        return false;
     });
 }
 
@@ -354,18 +346,16 @@ $(document).on("click","#btnguardar", function(){
             title: 'Venta',
             text: 'Error. Campos vacíos',
             icon: 'error'
-        })
+        });
     } else {
         $.post("../../controller/venta.php?op=calculo", {vent_id: vent_id}, function(data) {
             data = JSON.parse(data);
-
-            /* Validación existencia detalle */
             if(data.VENT_TOTAL == null) {
                 swal.fire({
                     title: 'Venta',
                     text: 'Error. No existe detalle',
                     icon: 'error'
-                })
+                });
             } else {
                 $.post("../../controller/venta.php?op=guardar", {
                     vent_id: vent_id,
@@ -386,7 +376,7 @@ $(document).on("click","#btnguardar", function(){
                         text: 'Registrado correctamente con Nro: V-' + vent_id,
                         icon: 'success',
                         footer: "<a href='../ViewVenta/?v="+vent_id+"' target='_blank'>Desea ver el documento</a>"
-                    })
+                    });
                 });
             }
         });
