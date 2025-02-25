@@ -4,22 +4,7 @@
         public function get_producto_x_suc_id($suc_id) {
             try {
                 $conectar = parent::Conexion();
-                $sql = "SELECT 
-                            p.*,
-                            c.CAT_NOM,
-                            u.UND_NOM,
-                            m.MON_NOM,
-                            s.SCAT_NOM,
-                            lp.LISTP_A,
-                            lp.LISTP_B,
-                            lp.LISTP_C
-                        FROM TM_PRODUCTO p
-                        INNER JOIN TM_CATEGORIA c ON p.CAT_ID = c.CAT_ID
-                        INNER JOIN TM_UNIDAD u ON p.UND_ID = u.UND_ID
-                        INNER JOIN TM_MONEDA m ON p.MON_ID = m.MON_ID
-                        INNER JOIN TM_SUBCATEGORIA s ON p.SCAT_ID = s.SCAT_ID
-                        INNER JOIN TM_LISTA_PRECIO lp on p.PROD_ID = lp.PROD_ID
-                        WHERE p.SUC_ID = ? AND p.EST = 1";
+                $sql = "SP_L_PRODUCTO_01 ?";
                 $sql = $conectar->prepare($sql);
                 $sql->bindValue(1, $suc_id);
                 $sql->execute();
@@ -56,19 +41,20 @@
         }
         //TODO Registro de datos
         
-        public function insert_producto($suc_id, $cat_id, $scat_id, $prod_nom, $prod_descrip, $und_id, $mon_id, $prod_pcompra, $listp_a, $listp_b, $listp_c, $prod_stock, $prod_fechaven, $prod_img) {
+        public function insert_producto($suc_id, $cat_id, $scat_id, $prod_nom, $prod_descrip, $und_id, $mon_id, $prod_pcompra, $prod_pventa, $prod_stock, $prod_fechaven, $prod_img){
             $conectar = parent::Conexion();
         
+            // Subir imagen si existe
             require_once("Producto.php");
             $prod = new Producto();
             $prod_img = '';
-            if ($_FILES["prod_img"]["name"] != '') {
+            if ($_FILES["prod_img"]["name"] != ' ') {
                 $prod_img = $prod->upload_image();
-            } else {
-                $prod_img = $_POST["hidden_producto_imagen"];
             }
         
-            $sql = "SP_I_PRODUCTO_01 ?,?,?,?,?,?,?,?,?,?,?,?,?,?";
+            // Preparar la consulta
+            $sql="SP_I_PRODUCTO_01 ?,?,?,?,?,?,?,?,?,?,?,?";
+
             $query = $conectar->prepare($sql);
             $query->bindValue(1, $suc_id);
             $query->bindValue(2, $cat_id);
@@ -78,56 +64,44 @@
             $query->bindValue(6, $und_id);
             $query->bindValue(7, $mon_id);
             $query->bindValue(8, $prod_pcompra);
-            $query->bindValue(9, $listp_a);  // Reemplaza prod_pventa
-            $query->bindValue(10, $listp_b); // Nuevo
-            $query->bindValue(11, $listp_c); // Nuevo
-            $query->bindValue(12, $prod_stock);
-            $query->bindValue(13, $prod_fechaven);
-            $query->bindValue(14, $prod_img);
+            $query->bindValue(9, $prod_pventa);
+            $query->bindValue(10, $prod_stock);
+            $query->bindValue(11, $prod_fechaven);
+            $query->bindValue(12, $prod_img);
             $query->execute();
         
-            // Obtener el PROD_ID devuelto por el procedimiento
-            $result = $query->fetch(PDO::FETCH_ASSOC);
-            return $result['PROD_ID'];
+            // Obtener el ID insertado
+            return $conectar->lastInsertId();
         }
         //TODO Actualizar Datos
-        public function update_producto($prod_id, $suc_id, $cat_id, $scat_id, $prod_nom, $prod_descrip, $und_id, $mon_id, $prod_pcompra, $listp_a, $listp_b, $listp_c, $prod_stock, $prod_fechaven, $prod_img) {
-            $conectar = parent::Conexion();
-            
+        public function update_producto($prod_id,$suc_id,$cat_id,$scat_id,$prod_nom,$prod_descrip,$und_id,$mon_id,$prod_pcompra,$prod_pventa,$prod_stock,$prod_fechaven,$prod_img){
+            $conectar=parent::Conexion();
+
             require_once("Producto.php");
-            require_once("Precio.php"); // Añadimos el modelo Precio
-            $prod = new Producto();
-            $precio = new Precio();
-            
-            $prod_img = '';
-            if ($_FILES["prod_img"]["name"] != '') {
-                $prod_img = $prod->upload_image();
-            } else {
-                $prod_img = $_POST["hidden_producto_imagen"];
+            $prod=new Producto();
+            $prod_img='';
+            if($_FILES["prod_img"]["name"]!=' '){
+                $prod_img=$prod->upload_image();
+            }else{
+                $prod_img = $POST["hidden_producto_imagen"];
             }
-            
-            // Actualizar TM_PRODUCTO
-            $sql = "SP_U_PRODUCTO_01 ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?";
-            $query = $conectar->prepare($sql);
-            $query->bindValue(1, $prod_id);
-            $query->bindValue(2, $suc_id);
-            $query->bindValue(3, $cat_id);
-            $query->bindValue(4, $scat_id);
-            $query->bindValue(5, $prod_nom);
-            $query->bindValue(6, $prod_descrip);
-            $query->bindValue(7, $und_id);
-            $query->bindValue(8, $mon_id);
-            $query->bindValue(9, $prod_pcompra);
-            $query->bindValue(10, $listp_a);
-            $query->bindValue(11, $listp_b);
-            $query->bindValue(12, $listp_c);
-            $query->bindValue(13, $prod_stock);
-            $query->bindValue(14, $prod_fechaven);
-            $query->bindValue(15, $prod_img);
+
+            $sql="SP_U_PRODUCTO_01 ?,?,?,?,?,?,?,?,?,?,?,?,?";
+            $query=$conectar->prepare($sql);
+            $query->bindValue(1,$prod_id);
+            $query->bindValue(2,$suc_id);
+            $query->bindValue(3,$cat_id);
+            $query->bindValue(4,$scat_id);
+            $query->bindValue(5,$prod_nom);
+            $query->bindValue(6,$prod_descrip);
+            $query->bindValue(7,$und_id);
+            $query->bindValue(8,$mon_id);
+            $query->bindValue(9,$prod_pcompra);
+            $query->bindValue(10,$prod_pventa);
+            $query->bindValue(11,$prod_stock);
+            $query->bindValue(12,$prod_fechaven);
+            $query->bindValue(13,$prod_img);
             $query->execute();
-            
-            // Actualizar TM_LISTA_PRECIO
-            $precio->guardar_precios($prod_id, $listp_a, $listp_b, $listp_c);
         }
 
         public function upload_image(){
@@ -236,6 +210,15 @@
             $query->bindValue(2,$prod_pcompra);
             $query->execute();
             return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        public function get_lista_precio($prod_id) {
+            $conectar = parent::Conexion();
+            $sql = "SELECT LISTP_A, LISTP_B, LISTP_C FROM TM_LISTA_PRECIO WHERE PROD_ID = ?";
+            $query = $conectar->prepare($sql);
+            $query->bindValue(1, $prod_id);
+            $query->execute();
+            return $query->fetch(PDO::FETCH_ASSOC);
         }
     }
 ?>

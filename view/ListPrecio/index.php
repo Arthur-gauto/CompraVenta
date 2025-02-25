@@ -55,6 +55,7 @@
                                                 <th>P.Venta A</th>
                                                 <th>P.Venta B</th>
                                                 <th>P.Venta C</th>
+                                                
                                             </tr>
                                         </thead>
                                         <tbody>

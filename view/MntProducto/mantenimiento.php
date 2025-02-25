@@ -77,24 +77,13 @@
                     <div class="row gy-2">
                         <div class="col-md-12">
                             <div>
-                                <label for="listp_a" class="form-label">Precio Lista A</label>
-                                <input type="text" class="form-control" id="listp_a" name="listp_a" required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row gy-2">
-                        <div class="col-md-12">
-                            <div>
-                                <label for="listp_b" class="form-label">Precio Lista B</label>
-                                <input type="text" class="form-control" id="listp_b" name="listp_b" required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row gy-2">
-                        <div class="col-md-12">
-                            <div>
-                                <label for="listp_c" class="form-label">Precio Lista C</label>
-                                <input type="text" class="form-control" id="listp_c" name="listp_c" required>
+                                <label for="valueInput" class="form-label">Lista Precio</label>
+                                <button type="button" 
+                                        class="btn btn-warning btn-icon waves-effect waves-light btn-editar">
+                                    <i class="ri-edit-2-line"></i>
+                                </button>
+
+
                             </div>
                         </div>
                     </div>

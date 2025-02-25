@@ -56,3 +56,4 @@ $(document).ready(function() {
     // Inicializar la tabla al cargar la página
     init();
 });
+
