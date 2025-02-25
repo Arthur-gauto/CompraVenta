@@ -9,49 +9,32 @@
         //todo Guardar y editar, guardar cuando el ID este vacio, y Actualizar cuando se envie el Id
         case "guardaryeditar":
             if (empty($_POST["prod_id"])) {
-                // Insertar el producto y obtener el nuevo ID
+                // Insertar
                 $nuevo_prod_id = $producto->insert_producto(
-                    $_POST["suc_id"],
-                    $_POST["cat_id"],
-                    $_POST["scat_id"],
-                    $_POST["prod_nom"],
-                    $_POST["prod_descrip"],
-                    $_POST["und_id"],
-                    $_POST["mon_id"],
-                    $_POST["prod_pcompra"],
-                    $_POST["prod_pventa"],
-                    $_POST["prod_stock"],
-                    $_POST["prod_fechaven"],
-                    $_POST["prod_img"]
+                    $_POST["suc_id"], $_POST["cat_id"], $_POST["scat_id"], $_POST["prod_nom"],
+                    $_POST["prod_descrip"], $_POST["und_id"], $_POST["mon_id"], $_POST["prod_pcompra"],
+                    $_POST["listp_a"], $_POST["listp_b"], $_POST["listp_c"], $_POST["prod_stock"],
+                    $_POST["prod_fechaven"], $_POST["prod_img"]
                 );
-        
                 if ($nuevo_prod_id > 0) {
-                    // Insertar la lista de precios dentro del mismo flujo
-                    $producto->insert_lista_precio($nuevo_prod_id, $_POST["prod_pcompra"]);
-        
-                    echo json_encode(["success" => true, "prod_id" => $nuevo_prod_id]); // Devolver ID
+                    echo json_encode(["success" => true, "prod_id" => $nuevo_prod_id]);
                 } else {
                     echo json_encode(["success" => false, "error" => "No se pudo insertar el producto."]);
                 }
             } else {
-                // Actualizar producto si ya existe
+                // Actualizar
                 $producto->update_producto(
-                    $_POST["prod_id"],
-                    $_POST["suc_id"],
-                    $_POST["cat_id"],
-                    $_POST["scat_id"],
-                    $_POST["prod_nom"],
-                    $_POST["prod_descrip"],
-                    $_POST["und_id"],
-                    $_POST["mon_id"],
-                    $_POST["prod_pcompra"],
-                    $_POST["prod_pventa"],
-                    $_POST["prod_stock"],
-                    $_POST["prod_fechaven"],
-                    $_POST["prod_img"]
+                    $_POST["prod_id"], $_POST["suc_id"], $_POST["cat_id"], $_POST["scat_id"],
+                    $_POST["prod_nom"], $_POST["prod_descrip"], $_POST["und_id"], $_POST["mon_id"],
+                    $_POST["prod_pcompra"], $_POST["listp_a"], $_POST["listp_b"], $_POST["listp_c"],
+                    $_POST["prod_stock"], $_POST["prod_fechaven"], $_POST["prod_img"]
                 );
-        
                 echo json_encode(["success" => true, "prod_id" => $_POST["prod_id"]]);
+                
+                // Agregar depuración antes de llamar a la función
+                error_log("Llamando a guardar_precios con prod_id: " . $_POST["prod_id"]);
+                $precio->guardar_precios($_POST["prod_id"], $_POST["listp_a"], $_POST["listp_b"], $_POST["listp_c"]);
+                
             }
             break;
         
@@ -115,21 +98,27 @@
         //todo Mostrar información de registro según su ID
         case "mostrar":
             $datos = $producto->get_producto_x_prod_id($_POST["prod_id"]);
-            if (is_array($datos) == true and count($datos) > 0) {
+            $output = [];
+            if (is_array($datos) && count($datos) > 0) {
                 foreach ($datos as $row) {
                     $output["PROD_ID"] = $row["PROD_ID"];
-                    $output["CAT_ID"]  = $row["CAT_ID"];
-                    $output["CAT_NOM"] = $row["CAT_NOM"]; 
-                    $output["UND_ID"]  = $row["UND_ID"];
+                    $output["CAT_ID"] = $row["CAT_ID"];
+                    $output["CAT_NOM"] = $row["CAT_NOM"];
+                    $output["SCAT_ID"] = $row["SCAT_ID"];
+                    $output["SCAT_NOM"] = $row["SCAT_NOM"];
+                    $output["UND_ID"] = $row["UND_ID"];
                     $output["UND_NOM"] = $row["UND_NOM"];
-                    $output["MON_ID"]  = $row["MON_ID"];
+                    $output["MON_ID"] = $row["MON_ID"];
+                    $output["MON_NOM"] = $row["MON_NOM"];
                     $output["PROD_NOM"] = $row["PROD_NOM"];
                     $output["PROD_DESCRIP"] = $row["PROD_DESCRIP"];
                     $output["PROD_PCOMPRA"] = $row["PROD_PCOMPRA"];
-                    $output["PROD_PVENTA"] = $row["PROD_PVENTA"];
                     $output["PROD_STOCK"] = $row["PROD_STOCK"];
                     $output["PROD_FECHAVEN"] = $row["PROD_FECHAVEN"];
                     $output["PROD_IMG"] = $row["PROD_IMG"];
+                    $output["LISTP_A"] = $row["LISTP_A"] ?? ''; // Precios desde TM_LISTA_PRECIO
+                    $output["LISTP_B"] = $row["LISTP_B"] ?? '';
+                    $output["LISTP_C"] = $row["LISTP_C"] ?? '';
                     if ($row["PROD_IMG"] != '') {
                         $output["PROD_IMG"] = '<img src="../../assets/producto/'.$row["PROD_IMG"].'" class="rounded-circle avatar-xl img-thumbnail user-profile-image" alt="user-profile-image"></img><input type="hidden" name="hidden_producto_imagen" value="'.$row["PROD_IMG"].'" />';
                     } else {
@@ -209,16 +198,9 @@
                     $sub_array[] = $row["PROD_NOM"];
                     $sub_array[] = $row["PROD_PCOMPRA"];
                     
-                    // Calcular precios de venta A, B y C basados en el precio de compra
-                    $precio_venta_a = $row["PROD_PCOMPRA"] * 1.50;
-                    $precio_venta_b = $row["PROD_PCOMPRA"] * 1.30;
-                    $precio_venta_c = $row["PROD_PCOMPRA"] * 1.20;
-        
-                    // Formatear los precios de venta con dos decimales
-                    $sub_array[] = number_format($precio_venta_a);
-                    $sub_array[] = number_format($precio_venta_b);
-                    $sub_array[] = number_format($precio_venta_c);
-        
+                    $sub_array[] = $row["LISTP_A"];
+                    $sub_array[] = $row["LISTP_B"];
+                    $sub_array[] = $row["LISTP_C"];
                     $data[] = $sub_array;
                 }
         
