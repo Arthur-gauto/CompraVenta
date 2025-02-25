@@ -153,41 +153,35 @@ $(document).on("click","#btnagregar", function(){
     var compr_id = $("#compr_id").val();
     var prod_id = $("#prod_id").val();
     var prod_pcompra_bd = parseFloat($("#prod_pcompra").attr("data-original"));
-    var prod_pcompra = parseFloat($("#prod_pcompra").val()); // Precio ingresado manualmente
+    var prod_pcompra = parseFloat($("#prod_pcompra").val());
     var detc_cant = $("#detc_cant").val();
 
-    console.log(prod_pcompra_bd);
-    console.log(prod_pcompra);
-
     if($("#prod_id").val()=='' || $("#prod_pcompra").val()=='' || $("#detc_cant").val()==''){
+        swal.fire({ title: 'Compra', text: 'Error. Campos vacíos', icon: 'error' });
+    } else if (prod_pcompra > prod_pcompra_bd) {
+        actualizarPreciosModal(prod_pcompra);
+        $("#modalmantenimiento").modal("show");
+        $("#mantenimiento_form").off("submit").on("submit", function (e) {
+            e.preventDefault();
+            var precioA = parseFloat($("#precio_A").val()) || prod_pcompra;
+            var precioB = parseFloat($("#precio_B").val()) || prod_pcompra;
+            var precioC = parseFloat($("#precio_C").val()) || prod_pcompra;
 
-        swal.fire({
-            title: 'Compra',
-            text: 'Error. Campos vacíos',
-            icon: 'error'
-        })
+            $.post("../../controller/precio.php?op=guardar", {
+                prod_id: prod_id,
+                listp_a: precioA,
+                listp_b: precioB,
+                listp_c: precioC
+            }, function (data) {
+                console.log("Precios de venta actualizados:", data);
+            });
 
-    }else if (prod_pcompra > prod_pcompra_bd) {
-       // Llamamos a la función para actualizar los valores en el modal
-       actualizarPreciosModal(prod_pcompra);
-
-       // Abrimos el modal
-       $("#modalmantenimiento").modal("show");
-
-       // Configuramos el formulario para guardar los precios
-       $("#mantenimiento_form").off("submit").on("submit", function (e) {
-           e.preventDefault();
-           guardarDetalle(compr_id, prod_id, prod_pcompra, detc_cant);
-           $("#modalmantenimiento").modal("hide");
-       });
-
-    }else {
-        // Si el precio es menor o igual, guardar directamente
+            guardarDetalle(compr_id, prod_id, prod_pcompra, detc_cant);
+            $("#modalmantenimiento").modal("hide");
+        });
+    } else {
         guardarDetalle(compr_id, prod_id, prod_pcompra, detc_cant);
     }
-
-    
-
 });
 
 function guardarDetalle(compr_id, prod_id, prod_pcompra, detc_cant) {
@@ -196,12 +190,9 @@ function guardarDetalle(compr_id, prod_id, prod_pcompra, detc_cant) {
         prod_id: prod_id,
         prod_pcompra: prod_pcompra,
         detc_cant: detc_cant
-    }, function (data) {
-        console.log(data);
-    });
+    }, function (data) { console.log(data); });
 
     $.post("../../controller/compra.php?op=calculo", { compr_id: compr_id }, function (data) {
-        console.log(data);
         data = JSON.parse(data);
         $("#txtsubtotal").html(data.COMPR_SUBTOTAL);
         $("#txtigv").html(data.COMPR_IGV);
@@ -214,16 +205,21 @@ function guardarDetalle(compr_id, prod_id, prod_pcompra, detc_cant) {
 }
 
 function actualizarPreciosModal(precioCompra) {
-    console.log("Enviando al modal, precio de compra:", precioCompra);
-
-    // Asignar el precio de compra al input del modal
     $("#prod_pcompram").val(precioCompra);
-
-    // Calcular los precios iniciales con los aumentos predeterminados
-    $(".porcentaje-input").each(function () {
-        let porcentaje = parseFloat($(this).val()) || 0;
-        let nuevoPrecio = (precioCompra * (1 + porcentaje / 100)).toFixed(0);
-        $(this).closest("tr").find(".precio-input").val(nuevoPrecio);
+    var prod_id = $("#prod_id").val();
+    $.post("../../controller/precio.php?op=mostrar", { prod_id: prod_id }, function (data) {
+        data = JSON.parse(data);
+        if (data && data.LISTP_A) {
+            $("#precio_A").val(data.LISTP_A);
+            $("#precio_B").val(data.LISTP_B);
+            $("#precio_C").val(data.LISTP_C);
+        } else {
+            $(".porcentaje-input").each(function () {
+                let porcentaje = parseFloat($(this).val()) || 0;
+                let nuevoPrecio = (precioCompra * (1 + porcentaje / 100)).toFixed(2);
+                $(this).closest("tr").find(".precio-input").val(nuevoPrecio);
+            });
+        }
     });
 }
 
