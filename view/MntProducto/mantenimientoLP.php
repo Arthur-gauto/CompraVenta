@@ -6,7 +6,7 @@
                 <h5 class="modal-title">Lista de Precios</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form method="post" id="mantenimiento_form">
+            <form method="post" id="mantenimientolp_form">
                 <div class="modal-body">
                     
                     <input type="hidden" id="prod_id" name="prod_id">

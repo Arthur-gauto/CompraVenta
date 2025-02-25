@@ -202,7 +202,7 @@ $(document).on("click", ".btn-editar", function () {
      // Asignar el ID al input hidden
     actualizarPreciosModal(prod_pcompra);
         $("#modalmantenimientolp").modal("show");
-        $("#mantenimiento_form").off("submit").on("submit", function (e) {
+        $("#mantenimientolp_form").off("submit").on("submit", function (e) {
             e.preventDefault();
             var precioA = parseFloat($("#precio_A").val()) || prod_pcompra;
             var precioB = parseFloat($("#precio_B").val()) || prod_pcompra;

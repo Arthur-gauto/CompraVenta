@@ -23,7 +23,7 @@
                     <div class="row gy-2">
                         <div class="col-md-12">
                             <div>
-                                <label for="valueInput" class="form-label">Categoria</label>
+                                <label for="valueInput" class="form-label">Sub Categoria</label>
                                 <select type="text" class="form-control form-select" name="scat_id" id="scat_id" aria-label="Seleccionar">
                                     <option selected>Seleccionar </option>
                                 </select>

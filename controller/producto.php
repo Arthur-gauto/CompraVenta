@@ -45,9 +45,9 @@
                     $_POST["und_id"],
                     $_POST["mon_id"],
                     $_POST["prod_pcompra"],
-                    $_POST["prod_pventa"],
+                    null,
                     $_POST["prod_stock"],
-                    $_POST["prod_fechaven"],
+                    null,
                     $_POST["prod_img"]
                 );
         
@@ -83,7 +83,7 @@
                     $sub_array[] = $row["UND_NOM"];
                     $sub_array[] = $row["MON_NOM"];
                     $sub_array[] = $row["PROD_PCOMPRA"];
-                    $sub_array[] = $row["PROD_PVENTA"];
+                    $sub_array[] = $row["SCAT_NOM"];
                     $sub_array[] = $row["PROD_STOCK"];
                     $sub_array[] = $row["FECH_CREA"];
                     $sub_array[] = '<button type="button" onClick="editar('.$row["PROD_ID"].')" id="'.$row["PROD_ID"].'" class="btn btn-warning btn-icon waves-effect waves-light"><i class="ri-edit-2-line"></i></button>';
@@ -119,14 +119,13 @@
                 foreach ($datos as $row) {
                     $output["PROD_ID"] = $row["PROD_ID"];
                     $output["CAT_ID"]  = $row["CAT_ID"];
-                    $output["CAT_NOM"] = $row["CAT_NOM"]; 
+                    $output["SCAT_ID"]  = $row["SCAT_ID"];
                     $output["UND_ID"]  = $row["UND_ID"];
                     $output["UND_NOM"] = $row["UND_NOM"];
                     $output["MON_ID"]  = $row["MON_ID"];
                     $output["PROD_NOM"] = $row["PROD_NOM"];
                     $output["PROD_DESCRIP"] = $row["PROD_DESCRIP"];
                     $output["PROD_PCOMPRA"] = $row["PROD_PCOMPRA"];
-                    $output["PROD_PVENTA"] = $row["PROD_PVENTA"];
                     $output["PROD_STOCK"] = $row["PROD_STOCK"];
                     $output["PROD_FECHAVEN"] = $row["PROD_FECHAVEN"];
                     $output["PROD_IMG"] = $row["PROD_IMG"];
