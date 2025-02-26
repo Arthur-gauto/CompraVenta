@@ -110,11 +110,9 @@ $(document).ready(function(){
     
 });
 
-function editar(prod_id){
-    // Verifica que prod_id tiene el valor esperado
-    
-    $.post("../../controller/producto.php?op=mostrar",{prod_id:prod_id}, function(data)  {
-        data=JSON.parse(data);
+function editar(prod_id) {
+    $.post("../../controller/producto.php?op=mostrar", { prod_id: prod_id }, function (data) {
+        data = JSON.parse(data);
         $("#prod_id").val(data.PROD_ID);
         $("#prod_nom").val(data.PROD_NOM);
         $("#prod_descrip").val(data.PROD_DESCRIP);
@@ -122,15 +120,59 @@ function editar(prod_id){
         $("#prod_pventa").val(data.PROD_PVENTA);
         $("#prod_stock").val(data.PROD_STOCK);
         $("#cat_id").val(data.CAT_ID).trigger('change');
-        $("#scat_id").val(data.SCAT_ID).trigger('change');
-        $("#und_id").val(data.UND_ID).trigger('change');
-        $("#mon_id").val(data.MON_ID).trigger('change');
-        $("#pre_imagen").html(data.PROD_IMG);
+        
+        // Cargar las subcategorías y establecer el valor de scat_id
+        $.post("../../controller/subcategoria.php?op=combo", { cat_id: data.CAT_ID }, function (subcat_data) {
+            $("#scat_id").html(subcat_data);
+            $("#scat_id").val(data.SCAT_ID).trigger('change');
+            
+            // Establecer los demás valores después de cargar las subcategorías
+            $("#und_id").val(data.UND_ID).trigger('change');
+            $("#mon_id").val(data.MON_ID).trigger('change');
+            $("#pre_imagen").html(data.PROD_IMG);
+            
+            // Mostrar el modal después de cargar y establecer todos los valores
+            $('#lbltitulo').html('Editar Registro');
+            $('#modalmantenimiento').modal('show');
+        });
     });
-    $('#lbltitulo').html('Editar Registro');
-    $('#modalmantenimiento').modal('show');
-    
 }
+
+$(document).ready(function () {
+    $("#cat_id").change(function () {
+        var cat_id = $(this).val(); // Obtener la categoría seleccionada
+
+        if (cat_id) {
+            $.post("../../controller/subcategoria.php?op=combo", { cat_id: cat_id }, function (data) {
+                $("#scat_id").html(data);
+            });
+        } else {
+            // Si no hay categoría seleccionada, limpiar subcategorías
+            $("#scat_id").html('<option value="">Seleccione una subcategoría</option>');
+        }
+    });
+
+    // Inicializar el formulario de mantenimiento
+    init();
+});
+
+$(document).ready(function(){
+    $("#cat_id").change(function () {
+        var cat_id = $(this).val(); // Obtener la categoría seleccionada
+
+        if (cat_id) {
+            $.post("../../controller/subcategoria.php?op=combo", { cat_id: cat_id }, function (data) {
+                $("#scat_id").html(data);
+            });
+        } else {
+            // Si no hay categoría seleccionada, limpiar subcategorías
+            $("#scat_id").html('<option value="">Seleccione una subcategoría</option>');
+        }
+    });
+
+    // Inicializar el formulario de mantenimiento
+    init();
+});
 
 function eliminar(prod_id){
     swal.fire({

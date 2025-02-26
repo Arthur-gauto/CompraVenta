@@ -2,6 +2,9 @@ var emp_id = $('#EMP_IDx').val();
 var suc_id = $('#SUC_IDx').val();
 var usu_id = $('#USU_IDx').val();
 var originalPrice = 0;  // Variable para almacenar el precio original
+var listp_a = 0;
+var listp_b = 0;
+var listp_c = 0;
 
 $(document).ready(function(){
     var nro_factv = $('#nro_factv').val();
@@ -115,8 +118,11 @@ $(document).ready(function(){
             } else {
                 $("#cat_nom").val(data.CAT_NOM);
                 originalPrice = parseFloat(data.PROD_PCOMPRA);
-                var precioVenta = originalPrice * 1.50;
-                $("#prod_pventa").val(precioVenta.toFixed(0));
+                listp_a = parseFloat(data.LISTP_A) || 0;
+                listp_b = parseFloat(data.LISTP_B) || 0;
+                listp_c = parseFloat(data.LISTP_C) || 0;
+                // Mostrar el precio minorista por defecto
+                $("#prod_pventa").val(listp_a.toFixed(0));
                 $("#prod_stock").val(data.PROD_STOCK);
                 $("#und_nom").val(data.UND_NOM);
                 $("#cat_id").val(data.CAT_ID);
@@ -124,12 +130,21 @@ $(document).ready(function(){
         });
     });
 
-    // Evento para actualizar el precio de venta basado en el descuento seleccionado
+    // Evento para actualizar el precio de venta basado en la lista de precios seleccionada
     $("#pro_list").change(function() {
-        var pro_list = parseFloat($(this).val());
-        if (!isNaN(originalPrice) && !isNaN(pro_list)) {
-            var newPrice = originalPrice * (1 + (pro_list / 100));
-            $("#prod_pventa").val(newPrice.toFixed(0));
+        var selectedOption = $(this).val();
+        var price = 0;
+
+        if (selectedOption === 'listp_a') {
+            price = listp_a;
+        } else if (selectedOption === 'listp_b') {
+            price = listp_b;
+        } else if (selectedOption === 'listp_c') {
+            price = listp_c;
+        }
+
+        if (!isNaN(price)) {
+            $("#prod_pventa").val(price.toFixed(0));
         }
     });
 

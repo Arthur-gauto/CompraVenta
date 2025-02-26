@@ -131,9 +131,9 @@
                             <div class="col-md-1">
                                 <label for="pro_list" class="form-label">Lista</label>
                                 <select class="form-select" name="pro_list" id="pro_list">
-                                    <option selected value="50">A-50%</option>
-                                    <option value="30">B-30%</option>
-                                    <option value="20">B-20%</option>
+                                    <option selected value="listp_a">Minorista</option>
+                                    <option value="listp_b">Mayorista 1</option>
+                                    <option value="listp_c">Mayorista 2</option>
                                 </select>
                             </div>
                             <div class="col-md-1">

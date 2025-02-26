@@ -115,10 +115,12 @@
         //todo Mostrar información de registro según su ID
         case "mostrar":
             $datos = $producto->get_producto_x_prod_id($_POST["prod_id"]);
+            $output = [];
             if (is_array($datos) == true and count($datos) > 0) {
                 foreach ($datos as $row) {
                     $output["PROD_ID"] = $row["PROD_ID"];
                     $output["CAT_ID"]  = $row["CAT_ID"];
+                    $output["CAT_NOM"]  = $row["CAT_NOM"];
                     $output["SCAT_ID"]  = $row["SCAT_ID"];
                     $output["UND_ID"]  = $row["UND_ID"];
                     $output["UND_NOM"] = $row["UND_NOM"];
@@ -129,6 +131,9 @@
                     $output["PROD_STOCK"] = $row["PROD_STOCK"];
                     $output["PROD_FECHAVEN"] = $row["PROD_FECHAVEN"];
                     $output["PROD_IMG"] = $row["PROD_IMG"];
+                    $output["LISTP_A"] = $row["LISTP_A"] ?? ''; // Precios desde TM_LISTA_PRECIO
+                    $output["LISTP_B"] = $row["LISTP_B"] ?? '';
+                    $output["LISTP_C"] = $row["LISTP_C"] ?? '';
                     if ($row["PROD_IMG"] != '') {
                         $output["PROD_IMG"] = '<img src="../../assets/producto/'.$row["PROD_IMG"].'" class="rounded-circle avatar-xl img-thumbnail user-profile-image" alt="user-profile-image"></img><input type="hidden" name="hidden_producto_imagen" value="'.$row["PROD_IMG"].'" />';
                     } else {
