@@ -415,11 +415,8 @@ $(document).on("click", "#btnguardar", function(){
     var fech_fact = $("#fech_fact").val(); 
     var caj_id = $("#caj_id").val(); 
     var caj_egr = $("#caj_egr").val(); 
-    
+    var monto_total = $("#monto_total").val(); // Asegúrate de tener este campo en tu formulario
 
-    
-
-    console.log($("#caj_id").val());
     // Verificación de campos vacíos
     if (nro_fact.trim() === '' || fech_fact.trim() === '' || doc_id === '0' || pag_id === '0' || prov_id === '0' || mon_id === '0') {
         swal.fire({
@@ -428,48 +425,99 @@ $(document).on("click", "#btnguardar", function(){
             icon: 'error'
         })
     } else {
-        $.post("../../controller/compra.php?op=calculo", {compr_id: compr_id}, function(data) {
-            data = JSON.parse(data);
-            if (data.COMPR_TOTAL == null) {
-                swal.fire({
-                    title: 'Compra',
-                    text: 'Error. No existe detalle',
-                    icon: 'error'
-                })
-            } else {
-                $.post("../../controller/compra.php?op=guardar", {
-                    compr_id: compr_id,
-                    pag_id: pag_id,
-                    prov_id: prov_id,
-                    prov_ruc: prov_ruc,
-                    prov_direcc: prov_direcc,
-                    prov_correo: prov_correo,
-                    compr_coment: compr_coment,
-                    mon_id: mon_id,
-                    doc_id: doc_id,
-                    nro_fact: nro_fact, 
-                    fech_fact: fech_fact, 
-                    caj_id: caj_id
-                }, function(data) {
-                    swal.fire({
-                        title: 'Compra',
-                        text: 'Registrado correctamente con Nro: C-' + compr_id,
-                        icon: 'success',
-                        footer: "<a href='../ViewCompra/?c=" + compr_id + "' target='_blank'>Desea ver el documento</a>"
-                    })
-                    $.post("../../controller/caja.php?op=editaregr", {
-                        caj_id: caj_id,
-                        caj_egr: caj_egr
-                        
-                    }, function(data){
-                        console.log(caj_id,caj_egr);
-                        console.log("Correcto");
-                    });
-                });
-            }
-        });
+        if (pag_id === '2') {
+            // Crear un input de tipo fecha
+            var $fechaInput = $('<input type="date" id="fecha_vencimiento">');
+        
+            // Mostrar un cuadro de diálogo personalizado con el input
+            swal.fire({
+                title: 'Fecha de Vencimiento',
+                html: $fechaInput.prop('outerHTML'), // Insertar el input en el cuadro
+                showCancelButton: true,
+                confirmButtonText: 'Guardar',
+                cancelButtonText: 'Cancelar',
+                preConfirm: () => {
+                    var fecha_vencimiento = $('#fecha_vencimiento').val();
+                    if (!fecha_vencimiento) {
+                        swal.showValidationMessage('Debe seleccionar una fecha');
+                    }
+                    return fecha_vencimiento;
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var fecha_vencimiento = result.value;
+                    guardarCompra(compr_id, doc_id, pag_id, prov_id, prov_ruc, prov_direcc, prov_correo, compr_coment, mon_id, nro_fact, fech_fact, caj_id, caj_egr, monto_total, fecha_vencimiento);
+                }
+            });
+        
+        } else {
+            guardarCompra(compr_id, doc_id, pag_id, prov_id, prov_ruc, prov_direcc, prov_correo, compr_coment, mon_id, nro_fact, fech_fact, caj_id, caj_egr, monto_total, null);
+        }
     }
 });
+
+function guardarCompra(compr_id, doc_id, pag_id, prov_id, prov_ruc, prov_direcc, prov_correo, compr_coment, mon_id, nro_fact, fech_fact, caj_id, caj_egr, monto_total, fecha_vencimiento) {
+    // Obtener el valor de compr_total desde el DOM
+    var compr_total = parseFloat($("#txttotal").text());
+
+    // Asignar compr_total a monto_total
+    monto_total = compr_total;
+
+    $.post("../../controller/compra.php?op=calculo", { compr_id: compr_id }, function(data) {
+        data = JSON.parse(data);
+        if (data.COMPR_TOTAL == null) {
+            swal.fire({
+                title: 'Compra',
+                text: 'Error. No existe detalle',
+                icon: 'error'
+            });
+        } else {
+            $.post("../../controller/compra.php?op=guardar", {
+                compr_id: compr_id,
+                pag_id: pag_id,
+                prov_id: prov_id,
+                prov_ruc: prov_ruc,
+                prov_direcc: prov_direcc,
+                prov_correo: prov_correo,
+                compr_coment: compr_coment,
+                mon_id: mon_id,
+                doc_id: doc_id,
+                nro_fact: nro_fact,
+                fech_fact: fech_fact,
+                caj_id: caj_id,
+                fecha_vencimiento: fecha_vencimiento,
+                monto_total: monto_total // Usar el valor sincronizado
+            }, function(data) {
+                swal.fire({
+                    title: 'Compra',
+                    text: 'Registrado correctamente con Nro: C-' + compr_id,
+                    icon: 'success',
+                    footer: "Desea ver el documento"
+                });
+
+                $.post("../../controller/caja.php?op=editaregr", {
+                    caj_id: caj_id,
+                    caj_egr: caj_egr
+                }, function(data) {
+                    console.log(caj_id, caj_egr);
+                    console.log("Correcto");
+                });
+
+                // Enviar datos a pagocuota.php
+                if (pag_id === '2') {
+                    $.post("../../controller/pagocuota.php?op=guardaryeditar", {
+                        compr_id: compr_id,
+                        prov_id: prov_id,
+                        monto_total: monto_total, // Usar el valor sincronizado
+                        fecha_vencimiento: fecha_vencimiento
+                    }, function(data) {
+                        console.log("Pago de cuota registrado correctamente");
+                    });
+                }
+            });
+        }
+    });
+}
 
 
 $(document).on("click","#btnlimpiar", function(){

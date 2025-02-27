@@ -1,10 +1,10 @@
 <?php
-    require_once("../../config/conexion.php");
-    require_once("../../models/Rol.php");
-    $rol = new rol();
-    $datos= $rol -> validar_acceso_rol($_SESSION["USU_ID"],"mntventa");
-    if (isset($_SESSION["USU_ID"])){
-        if(is_array($datos) and count($datos)>0){
+require_once("../../config/conexion.php");
+require_once("../../models/Rol.php");
+$rol = new Rol();
+$datos = $rol->validar_acceso_rol($_SESSION["USU_ID"], "mntventa");
+if (isset($_SESSION["USU_ID"])) {
+    if (is_array($datos) && count($datos) > 0) {
 ?>
 
 <!doctype html>
@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="../../assets/css/venta.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <!-- CSS de Select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 </head>
 <body>
     <div id="layout-wrapper">
@@ -67,6 +69,10 @@
                                             <label for="mon_id" class="form-label">Moneda</label>
                                             <select id="mon_id" name="mon_id" class="form-select"></select>
                                         </div>
+                                        <div class="col-12" id="credito_field" style="display:none;">
+                                            <label for="cobro_pagado" class="form-label">Pago Inicial (Crédito)</label>
+                                            <input type="number" class="form-control" id="cobro_pagado" name="cobro_pagado" value="0" min="0" step="1" placeholder="0">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -83,9 +89,14 @@
                                 <div class="row g-2">
                                     <div class="col-md-6">
                                         <label for="cli_id" class="form-label">Cliente</label>
-                                        <select id="cli_id" name="cli_id" class="form-select">
-                                            <option value="0">Seleccionar cliente</option>
-                                        </select>
+                                        <div class="cliente-wrapper d-flex align-items-center">
+                                            <select id="cli_id" name="cli_id" class="form-select">
+                                                <option value="0">Seleccionar cliente</option>
+                                            </select>
+                                            <a href="../MntCliente/" class="btn btn-outline-primary btn-nuevo-cliente ms-2">
+                                                <i class="ri-user-add-line"></i>
+                                            </a>
+                                        </div>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="cli_ruc" class="form-label">RUC</label>
@@ -185,7 +196,7 @@
                                     <div class="total-item total fw-bold"><span>Total:</span> <strong id="txttotal" class="text-success fs-5">0</strong></div>
                                 </div>
                                 <div class="d-flex flex-column gap-1">
-                                    <button type="submit" id="btnguardar" class="btn btn-success">
+                                    <button type="button" id="btnguardar" class="btn btn-success">
                                         <i class="ri-save-line"></i> Guardar
                                     </button>
                                     <a id="btnlimpiar" class="btn btn-outline-secondary">
@@ -201,9 +212,12 @@
     </div>
 
     <?php require_once("../html/js.php"); ?>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <!-- Definir la fecha actual como variable JavaScript -->
+    <script>
+        var fechaActual = '<?php echo date('Y-m-d'); ?>';
+    </script>
     <script type="text/javascript" src="mntventa.js"></script>
+    <!-- Inicialización de DataTables -->
     <script>
         $(document).ready(function() {
             $('#table_data').DataTable({
@@ -224,12 +238,11 @@
 </body>
 </html>
 
-
 <?php
-        }else{
-            header("Location:".Conectar::ruta()."view/404/");
-        }
-    }else{
-        header("Location:".Conectar::ruta()."view/404/");
+    } else {
+        header("Location:" . Conectar::ruta() . "view/404/");
     }
+} else {
+    header("Location:" . Conectar::ruta() . "view/404/");
+}
 ?>

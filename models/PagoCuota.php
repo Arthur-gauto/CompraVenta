@@ -26,7 +26,7 @@
             $query = $conectar->prepare($sql);
             $query->bindValue(1, $cuota_id);
             $query->execute();
-            return $query->fetch(PDO::FETCH_ASSOC);
+            return $query->fetchAll(PDO::FETCH_ASSOC);
         }
 
         // TODO: REGISTRAR UNA NUEVA CUOTA
@@ -42,12 +42,12 @@
         }
 
         // TODO: REGISTRAR UN PAGO A UNA CUOTA
-        public function update_pago_cuota($cuota_id, $monto) {
+        public function update_pago_cuota($cuota_id, $cuota_pagada) {
             $conectar = parent::Conexion();
             $sql = "SP_U_PAGO_CUOTA_01 ?, ?";
             $query = $conectar->prepare($sql);
             $query->bindValue(1, $cuota_id);
-            $query->bindValue(2, $monto);
+            $query->bindValue(2, $cuota_pagada);
             $query->execute();
         }
 

@@ -58,27 +58,24 @@
             return $query->fetchAll(PDO::FETCH_ASSOC);
         }
 
-        public function update_venta($vent_id, $pag_id, $cli_id, $cli_ruc, $cli_direcc, $cli_correo, $vent_coment, $mon_id,$doc_id, $nro_factv, $fech_factv, $caj_id){
-            $conectar=parent::Conexion();
-            $sql="";
-            $sql="SP_U_VENTA_03 ?,?,?,?,?,?,?,?,?,?,?,?";
-            $query=$conectar->prepare($sql);
-            $query->bindValue(1,$vent_id);
-            $query->bindValue(2,$pag_id);
-            $query->bindValue(3,$cli_id);
-            $query->bindValue(4,$cli_ruc);
-            $query->bindValue(5,$cli_direcc);
-            $query->bindValue(6,$cli_correo);
-            $query->bindValue(7,$vent_coment);
-            $query->bindValue(8,$mon_id);
-            $query->bindValue(9,$doc_id);
-            $query->bindValue(10,$nro_factv);
-            $query->bindValue(11,$fech_factv);
-            $query->bindValue(12,$caj_id);
-            $query->execute();
-            return $query->fetchAll(PDO::FETCH_ASSOC);
+        public function update_venta($vent_id, $pag_id, $cli_id, $cli_ruc, $cli_direcc, $cli_correo, $vent_coment, $mon_id, $doc_id, $nro_factv, $fech_factv, $caj_id) {
+            $conectar = parent::Conexion();
+            $sql = "SP_U_VENTA_03 ?,?,?,?,?,?,?,?,?,?,?,?";
+            $query = $conectar->prepare($sql);
+            $query->bindValue(1, $vent_id, PDO::PARAM_INT);
+            $query->bindValue(2, $pag_id, PDO::PARAM_INT);
+            $query->bindValue(3, $cli_id, PDO::PARAM_INT);
+            $query->bindValue(4, $cli_ruc, PDO::PARAM_STR);
+            $query->bindValue(5, $cli_direcc, PDO::PARAM_STR);
+            $query->bindValue(6, $cli_correo, PDO::PARAM_STR);
+            $query->bindValue(7, $vent_coment, PDO::PARAM_STR);
+            $query->bindValue(8, $mon_id, PDO::PARAM_INT);
+            $query->bindValue(9, $doc_id, PDO::PARAM_INT);
+            $query->bindValue(10, $nro_factv, PDO::PARAM_STR);
+            $query->bindValue(11, $fech_factv, PDO::PARAM_STR);
+            $query->bindValue(12, $caj_id, PDO::PARAM_INT);
+            return $query->execute(); // Devuelve true si el UPDATE es exitoso
         }
-
         public function get_venta($vent_id){
             $conectar=parent::Conexion();
             $sql="";

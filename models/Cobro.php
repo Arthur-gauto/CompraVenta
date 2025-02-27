@@ -1,170 +1,105 @@
 <?php
-    class Cobro extends Conectar {
-        /* TODO: Listar Registros */
-        public function get_cobro($suc_id) {
-            $conectar = parent::Conexion();
-            $sql = "SELECT 
-                        c.*,
-                        v.VENT_ID,
-                        cl.CLI_NOM,
-                        p.PAG_NOM,
-                        m.MON_NOM
-                    FROM TM_COBRO c
-                    INNER JOIN TM_VENTA v ON c.VENTA_ID = v.VENT_ID
-                    INNER JOIN TM_CLIENTE cl ON v.CLI_ID = cl.CLI_ID
-                    INNER JOIN TM_PAGO p ON c.PAG_ID = p.PAG_ID
-                    INNER JOIN TM_MONEDA m ON c.MON_ID = m.MON_ID
-                    WHERE c.SUC_ID = ?";
-            
-            $sql = $conectar->prepare($sql);
-            $sql->bindValue(1, $suc_id);
-            $sql->execute();
-            return $sql->fetchAll(PDO::FETCH_ASSOC);
-        }
+class Cobro extends Conectar {
 
-        /* TODO: Registrar Cobro */
-        public function insert_cobro($caja_id, $suc_id, $usu_id, $venta_id, $cli_id, 
-                                   $cobro_monto, $pag_id, $mon_id, $cobro_comentario) {
-            $conectar = parent::Conexion();
-            $sql = "SP_I_COBRO_01 ?,?,?,?,?,?,?,?,?";
-            $query = $conectar->prepare($sql);
-            $query->bindValue(1, $caja_id);
-            $query->bindValue(2, $suc_id);
-            $query->bindValue(3, $usu_id);
-            $query->bindValue(4, $venta_id);
-            $query->bindValue(5, $cli_id);
-            $query->bindValue(6, $cobro_monto);
-            $query->bindValue(7, $pag_id);
-            $query->bindValue(8, $mon_id);
-            $query->bindValue(9, $cobro_comentario);
-            $query->execute();
-        }
-
-        /* TODO: Obtener registro por ID */
-        public function get_cobro_x_id($cobro_id) {
-            $conectar = parent::Conexion();
-            $sql = "SELECT * FROM TM_COBRO WHERE COBRO_ID = ? AND EST = 1";
-            $query = $conectar->prepare($sql);
-            $query->bindValue(1, $cobro_id);
-            $query->execute();
-            return $query->fetchAll(PDO::FETCH_ASSOC);
-        }
-
-        /* TODO: Anular Cobro */
-        public function delete_cobro($cobro_id) {
-            $conectar = parent::Conexion();
-            try {
-                $conectar->beginTransaction();
-
-                // Obtener información del cobro
-                $sql = "SELECT CAJA_ID, COBRO_MONTO FROM TM_COBRO WHERE COBRO_ID = ?";
-                $query = $conectar->prepare($sql);
-                $query->bindValue(1, $cobro_id);
-                $query->execute();
-                $cobro = $query->fetch(PDO::FETCH_ASSOC);
-
-                // Actualizar caja (restar el monto)
-                $sql = "UPDATE TM_CAJA 
-                       SET CAJA_INGRESO = CAJA_INGRESO - ?,
-                           CAJA_SALDO = CAJA_SALDO - ?
-                       WHERE CAJA_ID = ?";
-                $query = $conectar->prepare($sql);
-                $query->bindValue(1, $cobro['COBRO_MONTO']);
-                $query->bindValue(2, $cobro['COBRO_MONTO']);
-                $query->bindValue(3, $cobro['CAJA_ID']);
-                $query->execute();
-
-                // Anular cobro
-                $sql = "UPDATE TM_COBRO 
-                       SET EST = 0,
-                           FECH_CREA = GETDATE()
-                       WHERE COBRO_ID = ?";
-                $query = $conectar->prepare($sql);
-                $query->bindValue(1, $cobro_id);
-                $query->execute();
-
-                $conectar->commit();
-                return true;
-            } catch (Exception $e) {
-                $conectar->rollBack();
-                return false;
-            }
-        }
-        public function get_caja_detalle($caja_id) {
-            $conectar = parent::Conexion();
-            $sql = "SELECT 
-                        'I' as TIPO,
-                        c.COBRO_ID as ID,
-                        'Cobro #' + CAST(c.COBRO_ID as VARCHAR) as REFERENCIA,
-                        c.COBRO_FECHA as FECHA,
-                        p.PAG_NOM,
-                        m.MON_NOM,
-                        c.COBRO_MONTO as MONTO,
-                        c.COBRO_COMENTARIO as COMENTARIO,
-                        c.EST
-                    FROM TM_COBRO c
-                    INNER JOIN TM_PAGO p ON c.PAG_ID = p.PAG_ID
-                    INNER JOIN TM_MONEDA m ON c.MON_ID = m.MON_ID
-                    WHERE c.CAJA_ID = ?
-                    UNION ALL
-                    SELECT 
-                        'E' as TIPO,
-                        g.GASTO_ID as ID,
-                        'Gasto #' + CAST(g.GASTO_ID as VARCHAR) as REFERENCIA,
-                        g.GASTO_FECHA as FECHA,
-                        p.PAG_NOM,
-                        m.MON_NOM,
-                        g.GASTO_MONTO as MONTO,
-                        g.GASTO_COMENTARIO as COMENTARIO,
-                        g.EST
-                    FROM TM_GASTO g
-                    INNER JOIN TM_PAGO p ON g.PAG_ID = p.PAG_ID
-                    INNER JOIN TM_MONEDA m ON g.MON_ID = m.MON_ID
-                    WHERE g.CAJA_ID = ?
-                    ORDER BY FECHA DESC";
-            
-            $query = $conectar->prepare($sql);
-            $query->bindValue(1, $caja_id);
-            $query->bindValue(2, $caja_id);
-            $query->execute();
-            return $query->fetchAll(PDO::FETCH_ASSOC);
-        }
-
-        public function get_caja_x_id_detalle($caja_id) {
-            $conectar = parent::Conexion();
-            $sql = "SELECT 
-                        c.*,
-                        s.SUC_NOM,
-                        u.USU_NOM
-                    FROM TM_CAJA c
-                    INNER JOIN TM_SUCURSAL s ON c.SUC_ID = s.SUC_ID
-                    INNER JOIN TM_USUARIO u ON c.USU_ID = u.USU_ID
-                    WHERE c.CAJA_ID = ? AND c.EST = 1";
-            
-            $query = $conectar->prepare($sql);
-            $query->bindValue(1, $caja_id);
-            $query->execute();
-            return $query->fetchAll(PDO::FETCH_ASSOC);
-        }
-
-        public function get_cobro_detalle($cobro_id) {
-            $conectar = parent::Conexion();
-            $sql = "SELECT 
-                        c.*,
-                        cl.CLI_NOM,
-                        p.PAG_NOM,
-                        m.MON_NOM
-                    FROM TM_COBRO c
-                    INNER JOIN TM_CLIENTE cl ON c.CLI_ID = cl.CLI_ID
-                    INNER JOIN TM_PAGO p ON c.PAG_ID = p.PAG_ID
-                    INNER JOIN TM_MONEDA m ON c.MON_ID = m.MON_ID
-                    WHERE c.COBRO_ID = ? AND c.EST = 1";
-            
-            $query = $conectar->prepare($sql);
-            $query->bindValue(1, $cobro_id);
-            $query->execute();
-            return $query->fetchAll(PDO::FETCH_ASSOC);
-        }
+    // Registrar una venta a crédito con pago inicial
+    public function registrar_venta_credito($vent_id, $cli_id, $caj_id, $vent_total, $cobro_pagado) {
+        $conectar = parent::Conexion();
+        $sql = "sp_RegistrarVentaCredito ?, ?, ?, ?, ?, ?";
+        $query = $conectar->prepare($sql);
+        $query->bindValue(1, $vent_id, PDO::PARAM_INT);
+        $query->bindValue(2, $cli_id, PDO::PARAM_INT);
+        $query->bindValue(3, $caj_id, PDO::PARAM_INT);
+        $query->bindValue(4, $vent_total, PDO::PARAM_INT);
+        $query->bindValue(5, $cobro_pagado, PDO::PARAM_INT);
+        $query->bindParam(6, $cobro_id, PDO::PARAM_INT | PDO::PARAM_INPUT_OUTPUT, 10);
+        $query->execute();
+        return $cobro_id;
     }
-    
+
+    // Registrar un pago adicional
+    public function registrar_pago($vent_id, $cli_id, $caj_id, $cobro_pagado) {
+        $conectar = parent::Conexion();
+        $sql = "sp_RegistrarPago ?, ?, ?, ?, ?";
+        $query = $conectar->prepare($sql);
+        $query->bindValue(1, $vent_id, PDO::PARAM_INT);
+        $query->bindValue(2, $cli_id, PDO::PARAM_INT);
+        $query->bindValue(3, $caj_id, PDO::PARAM_INT);
+        $query->bindValue(4, $cobro_pagado, PDO::PARAM_INT);
+        $query->bindParam(5, $cobro_id, PDO::PARAM_INT | PDO::PARAM_INPUT_OUTPUT, 10);
+        $query->execute();
+        return $cobro_id;
+    }
+
+    // Consultar el historial de pagos por VENT_ID
+    public function get_historial_por_vent_id($vent_id) {
+        $conectar = parent::Conexion();
+        $sql = "SELECT COBRO_ID, COBRO_PAGADO, FECH_CREA,
+                       CASE 
+                           WHEN VENT_TOTAL = (SELECT SUM(COBRO_PAGADO) FROM TM_COBRO WHERE VENT_ID = ?) THEN 'Pagado'
+                           WHEN (SELECT SUM(COBRO_PAGADO) FROM TM_COBRO WHERE VENT_ID = ?) > 0 THEN 'Parcial'
+                           ELSE 'Pendiente'
+                       END AS EST
+                FROM TM_COBRO
+                WHERE VENT_ID = ?";
+        $query = $conectar->prepare($sql);
+        $query->bindValue(1, $vent_id, PDO::PARAM_INT);
+        $query->bindValue(2, $vent_id, PDO::PARAM_INT);
+        $query->bindValue(3, $vent_id, PDO::PARAM_INT);
+        $query->execute();
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Obtener ventas pendientes
+    public function get_ventas_pendientes($filtros = []) {
+        $conectar = parent::Conexion();
+        $sql = "SELECT TM_COBRO.VENT_ID, TM_COBRO.CLI_ID, TM_CLIENTE.CLI_NOM, TM_COBRO.VENT_TOTAL, 
+                       SUM(TM_COBRO.COBRO_PAGADO) AS TotalPagado, 
+                       (TM_COBRO.VENT_TOTAL - SUM(TM_COBRO.COBRO_PAGADO)) AS SaldoPendiente,
+                       TM_VENTA.FECH_FACTV
+                FROM TM_COBRO
+                JOIN TM_CLIENTE ON TM_COBRO.CLI_ID = TM_CLIENTE.CLI_ID
+                JOIN TM_VENTA ON TM_COBRO.VENT_ID = TM_VENTA.VENT_ID
+                WHERE 1=1";
+        if (isset($filtros["CLI_ID"])) {
+            $sql .= " AND TM_COBRO.CLI_ID = ?";
+        }
+        $sql .= " GROUP BY TM_COBRO.VENT_ID, TM_COBRO.CLI_ID, TM_CLIENTE.CLI_NOM, TM_COBRO.VENT_TOTAL, TM_VENTA.FECH_FACTV
+                  HAVING TM_COBRO.VENT_TOTAL > SUM(TM_COBRO.COBRO_PAGADO)";
+        $query = $conectar->prepare($sql);
+        if (isset($filtros["CLI_ID"])) {
+            $query->bindValue(1, $filtros["CLI_ID"], PDO::PARAM_INT);
+        }
+        $query->execute();
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Obtener resumen de una venta
+    public function get_resumen_venta($vent_id) {
+        $conectar = parent::Conexion();
+        $sql = "SELECT VENT_TOTAL, SUM(COBRO_PAGADO) AS TotalPagado, 
+                       (VENT_TOTAL - SUM(COBRO_PAGADO)) AS SaldoPendiente,
+                       CASE 
+                           WHEN VENT_TOTAL = SUM(COBRO_PAGADO) THEN 'Pagado'
+                           WHEN SUM(COBRO_PAGADO) > 0 THEN 'Parcial'
+                           ELSE 'Pendiente'
+                       END AS Estado
+                FROM TM_COBRO
+                WHERE VENT_ID = ?
+                GROUP BY VENT_ID, VENT_TOTAL";
+        $query = $conectar->prepare($sql);
+        $query->bindValue(1, $vent_id, PDO::PARAM_INT);
+        $query->execute();
+        return $query->fetch(PDO::FETCH_ASSOC) ?: ["VENT_TOTAL" => 0, "TotalPagado" => 0, "SaldoPendiente" => 0, "Estado" => "Pendiente"];
+    }
+
+    public function get_cobro_por_vent_id($vent_id) {
+        $conectar = parent::Conexion();
+        $sql = "SELECT TOP 1 VENT_ID, CLI_ID FROM TM_COBRO WHERE VENT_ID = ?";
+        $query = $conectar->prepare($sql);
+        $query->bindValue(1, $vent_id, PDO::PARAM_INT);
+        $query->execute();
+        return $query->fetch(PDO::FETCH_ASSOC);
+    }
+
+}
 ?>

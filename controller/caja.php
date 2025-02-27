@@ -112,23 +112,26 @@
                 echo json_encode($output);
             }
             break;
-        case "datoscaja":
-            $datos=$caja->datos_caja($_POST["suc_id"]);
-
-            if ($datos) {
-                $output = [
-                    "CAJ_ID"    => $datos["CAJ_ID"],
-                    "SUC_ID"    => $datos["SUC_ID"],
-                    "USU_ID"    => $datos["USU_ID"],
-                    "CAJ_ING"   => $datos["CAJ_ING"],
-                    "CAJ_EGR"   => $datos["CAJ_EGR"],
-                    "CAJ_FIN"   => $datos["CAJ_FIN"],
-                    "FECH_CREA" => $datos["FECH_CREA"]
-                ];
+            case "datoscaja":
+                $datos = $caja->datos_caja($_POST["suc_id"]);
+                if ($datos) {
+                    $output = [
+                        "CAJ_ID"    => $datos["CAJ_ID"],
+                        "SUC_ID"    => $datos["SUC_ID"],
+                        "USU_ID"    => $datos["USU_ID"],
+                        "CAJ_ING"   => $datos["CAJ_ING"],
+                        "CAJ_EGR"   => $datos["CAJ_EGR"],
+                        "CAJ_FIN"   => $datos["CAJ_FIN"],
+                        "FECH_CREA" => $datos["FECH_CREA"]
+                    ];
+                } else {
+                    $output = [
+                        "success" => false,
+                        "message" => "No hay una caja abierta para esta sucursal."
+                    ];
+                }
                 echo json_encode($output);
-            }
-            
-            break;
+                break;
         //todo Cambiar estado a 0 del Registro
         case "eliminar":
             $caja->delete_caja($_POST["caj_id"]);

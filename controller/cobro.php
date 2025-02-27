@@ -1,72 +1,102 @@
 <?php
-    require_once("../config/conexion.php");
-    require_once("../models/Cobro.php");
-    $cobro = new Cobro();
+require_once("../config/conexion.php");
+require_once("../models/Cobro.php");
 
-    switch($_GET["op"]){
-        /* Cases existentes se mantienen igual */
+$cobro = new Cobro();
 
-        case "mostrar_detalle":
-            $datos=$cobro->get_cobro_detalle($_POST["cobro_id"]);  
-            if(is_array($datos)==true and count($datos)>0){
-                foreach($datos as $row){
-                    $output["COBRO_ID"] = $row["COBRO_ID"];
-                    $output["VENTA_ID"] = $row["VENTA_ID"];
-                    $output["CLI_ID"] = $row["CLI_ID"];
-                    $output["CLI_NOM"] = $row["CLI_NOM"];
-                    $output["COBRO_FECHA"] = $row["COBRO_FECHA"];
-                    $output["PAG_NOM"] = $row["PAG_NOM"];
-                    $output["MON_NOM"] = $row["MON_NOM"];
-                    $output["COBRO_MONTO"] = $row["COBRO_MONTO"];
-                    $output["COBRO_COMENTARIO"] = $row["COBRO_COMENTARIO"];
-                }
-                echo json_encode($output);
-            }
+switch ($_GET["op"]) {
+    case "listar_pendientes":
+        $cli_id = isset($_POST["cli_id"]) && !empty($_POST["cli_id"]) ? $_POST["cli_id"] : null;
+        $datos = $cobro->get_ventas_pendientes($cli_id ? ["CLI_ID" => $cli_id] : []);
+        $data = [];
+        foreach ($datos as $row) {
+            $data[] = [
+                "VENT_ID" => $row["VENT_ID"],
+                "CLI_NOM" => $row["CLI_NOM"],
+                "VENT_TOTAL" => $row["VENT_TOTAL"],
+                "TotalPagado" => $row["TotalPagado"],
+                "SaldoPendiente" => $row["SaldoPendiente"],
+                "FECH_FACTV" => $row["FECH_FACTV"]
+            ];
+        }
+        $results = [
+            "sEcho" => 1,
+            "iTotalRecords" => count($data),
+            "iTotalDisplayRecords" => count($data),
+            "aaData" => $data
+        ];
+        echo json_encode($results);
+        break;
+
+    case "listar":
+        $vent_id = isset($_POST["vent_id"]) && !empty($_POST["vent_id"]) ? $_POST["vent_id"] : null;
+        if (!$vent_id) {
+            $results = [
+                "sEcho" => 1,
+                "iTotalRecords" => 0,
+                "iTotalDisplayRecords" => 0,
+                "aaData" => [],
+                "resumen" => ["VENT_TOTAL" => 0, "TotalPagado" => 0, "SaldoPendiente" => 0, "Estado" => "Pendiente"]
+            ];
+            echo json_encode($results);
             break;
+        }
+        $datos = $cobro->get_historial_por_vent_id($vent_id);
+        $data = [];
+        foreach ($datos as $row) {
+            $data[] = [
+                "COBRO_ID" => $row["COBRO_ID"],
+                "COBRO_PAGADO" => $row["COBRO_PAGADO"],
+                "FECH_CREA" => $row["FECH_CREA"],
+                "EST" => $row["EST"]
+            ];
+        }
+        $resumen = $cobro->get_resumen_venta($vent_id);
+        $results = [
+            "sEcho" => 1,
+            "iTotalRecords" => count($data),
+            "iTotalDisplayRecords" => count($data),
+            "aaData" => $data,
+            "resumen" => $resumen
+        ];
+        echo json_encode($results);
+        break;
 
-        case "listar":
-            try {
-                $datos = $cobro->get_cobro($_POST["suc_id"]);
-                $data = Array();
-                foreach($datos as $row){
-                    $sub_array = array();
-                    $sub_array[] = $row["COBRO_ID"];
-                    $sub_array[] = $row["VENTA_ID"];
-                    $sub_array[] = $row["CLI_NOM"];
-                    $sub_array[] = $row["COBRO_FECHA"];
-                    $sub_array[] = $row["PAG_NOM"];
-                    $sub_array[] = $row["MON_NOM"];
-                    $sub_array[] = $row["COBRO_MONTO"];
-                    $sub_array[] = $row["COBRO_COMENTARIO"];
-                    
-                    if ($row["EST"]==1){
-                        $sub_array[] = '<span class="badge bg-success">ACTIVO</span>';
-                    }else{
-                        $sub_array[] = '<span class="badge bg-danger">ANULADO</span>';
-                    }
+    case "registrar_pago":
+        try {
+            $vent_id = $_POST["vent_id"];
+            $cli_id = $_POST["cli_id"];
+            $caj_id = $_POST["caj_id"];
+            $cobro_pagado = isset($_POST["cobro_pagado"]) ? (int)$_POST["cobro_pagado"] : 0;
 
-                    $sub_array[] = '<button type="button" onClick="ver('.$row["COBRO_ID"].')" id="'.$row["COBRO_ID"].'" class="btn btn-info btn-icon waves-effect waves-light"><i class="ri-eye-fill"></i></button>';
-                    $sub_array[] = '<button type="button" onClick="eliminar('.$row["COBRO_ID"].')" id="'.$row["COBRO_ID"].'" class="btn btn-danger btn-icon waves-effect waves-light"><i class="ri-delete-bin-5-line"></i></button>';
-                    $data[] = $sub_array;
-                }
-
-                $results = array(
-                    "sEcho"=>1,
-                    "iTotalRecords"=>count($data),
-                    "iTotalDisplayRecords"=>count($data),
-                    "aaData"=>$data);
-                echo json_encode($results);
-            } catch (Exception $e) {
-                error_log("Error en listar cobros: " . $e->getMessage());
-                echo json_encode([
-                    "sEcho" => 1,
-                    "iTotalRecords" => 0,
-                    "iTotalDisplayRecords" => 0,
-                    "aaData" => [],
-                    "error" => $e->getMessage()
-                ]);
+            if ($cobro_pagado <= 0) {
+                throw new Exception("El monto a pagar debe ser mayor a 0.");
             }
-            break;
-    
-    }
+
+            $cobro_id = $cobro->registrar_pago($vent_id, $cli_id, $caj_id, $cobro_pagado);
+            echo json_encode(["success" => true, "message" => "Pago registrado con éxito", "COBRO_ID" => $cobro_id]);
+        } catch (Exception $e) {
+            echo json_encode(["success" => false, "message" => $e->getMessage()]);
+        }
+        break;
+
+    case "mostrar":
+        try {
+            $vent_id = $_POST["vent_id"];
+            if (empty($vent_id)) {
+                throw new Exception("ID de venta no proporcionado");
+            }
+            $data = $cobro->get_cobro_por_vent_id($vent_id);
+            if (!$data) {
+                throw new Exception("No se encontraron datos para VENT_ID: " . $vent_id);
+            }
+            echo json_encode($data);
+        } catch (Exception $e) {
+            echo json_encode([
+                "success" => false,
+                "message" => "Error: " . $e->getMessage()
+            ]);
+        }
+        break;
+}
 ?>

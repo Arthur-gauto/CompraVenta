@@ -1,12 +1,17 @@
-/* General Styles */
+/* Reset y Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     font-family: 'Inter', sans-serif;
     background-color: #f0f2f5;
-    margin: 0;
-    padding: 0;
     color: #2d3748;
 }
 
+/* Main Content */
 .main-content {
     padding: 15px;
 }
@@ -14,16 +19,20 @@ body {
 .page-content {
     background-color: #ffffff;
     border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 20px rgbasteam://store/0, 0, 0, 0.05);
     padding: 15px;
-    height: calc(100vh - 120px); /* Mantienes la altura fija */
-    overflow-y: auto; /* Habilita el scroll vertical */
+    min-height: calc(100vh - 120px);
+    overflow-y: auto;
 }
 
 /* Header Section */
 .header-section {
     border-bottom: 1px solid #e2e8f0;
     padding-bottom: 5px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .title {
@@ -36,11 +45,17 @@ body {
 .breadcrumb {
     font-size: 0.85rem;
     color: #718096;
+    margin: 0;
 }
 
 .breadcrumb-item a {
     color: #4a5568;
     text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.breadcrumb-item a:hover {
+    color: #2b6cb0;
 }
 
 .breadcrumb-item.active {
@@ -56,7 +71,7 @@ body {
 }
 
 .card-header {
-    background: linear-gradient(135deg, #edf2f7, #e2e8f0);
+    background: linear-gradient(135deg, #2b6cb0, #60a5fa);
     border-bottom: none;
     padding: 8px 12px;
     border-radius: 8px 8px 0 0;
@@ -65,19 +80,19 @@ body {
 .card-title {
     font-size: 1rem;
     font-weight: 600;
-    color: #2d3748;
+    color: #fff;
     margin: 0;
 }
 
 .card-body {
-    padding: 10px;
+    padding: 15px;
 }
 
 /* Form Elements */
 .form-label {
     font-weight: 600;
     color: #4a5568;
-    margin-bottom: 3px;
+    margin-bottom: 5px;
     font-size: 0.8rem;
     text-transform: uppercase;
 }
@@ -87,7 +102,7 @@ body {
     border: 1px solid #e2e8f0;
     padding: 6px 10px;
     font-size: 0.9rem;
-    height: 32px;
+    height: 34px;
     background-color: #f7fafc;
     transition: all 0.2s ease;
 }
@@ -96,15 +111,71 @@ body {
     border-color: #2b6cb0;
     box-shadow: 0 0 5px rgba(43, 108, 176, 0.2);
     background-color: #fff;
+    outline: none;
+}
+
+/* Cliente Wrapper para Select2 */
+.cliente-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* Espacio entre select y botón */
+}
+
+.cliente-wrapper .form-select,
+.cliente-wrapper .select2-container--default .select2-selection--single {
+    flex-grow: 1;
+    border-radius: 6px;
+    height: 34px;
+    margin: 0; /* Elimina márgenes adicionales */
+}
+
+.cliente-wrapper .select2-container--default .select2-selection--single {
+    border: 1px solid #e2e8f0;
+    background-color: #f7fafc;
+    padding: 0; /* Ajusta el padding interno */
+}
+
+.cliente-wrapper .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 34px; /* Alinea el texto verticalmente */
+    padding-left: 10px;
+    padding-right: 30px; /* Espacio para la flecha */
+    color: #2d3748;
+}
+
+.cliente-wrapper .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 34px;
+    width: 20px;
+}
+
+.cliente-wrapper .btn-nuevo-cliente {
+    border-radius: 6px;
+    padding: 0; /* Sin padding para hacerlo más pequeño */
+    width: 30px; /* Más pequeño que antes */
+    height: 30px; /* Cuadrado y compacto */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    border: 1px solid #2b6cb0;
 }
 
 /* Textarea */
 #vent_coment {
     resize: none;
-    min-height: 40px; /* Reducido para ahorrar espacio */
-    max-height: 40px;
+    min-height: 60px;
+    max-height: 100px;
     font-size: 0.9rem;
     padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    background-color: #f7fafc;
+    transition: all 0.2s ease;
+}
+
+#vent_coment:focus {
+    border-color: #2b6cb0;
+    box-shadow: 0 0 5px rgba(43, 108, 176, 0.2);
+    background-color: #fff;
 }
 
 /* Buttons */
@@ -122,8 +193,9 @@ body {
 }
 
 .btn-primary:hover {
-    background-color: #2c5282;
-    border-color: #2c5282;
+    background-color: #1e40af;
+    border-color: #1e40af;
+    transform: translateY(-2px);
 }
 
 .btn-success {
@@ -134,6 +206,20 @@ body {
 .btn-success:hover {
     background-color: #2f855a;
     border-color: #2f855a;
+    transform: translateY(-2px);
+}
+
+.btn-outline-primary {
+    border-color: #2b6cb0;
+    color: #2b6cb0;
+    background-color: transparent;
+}
+
+.btn-outline-primary:hover {
+    background-color: #dbeafe;
+    color: #1e40af;
+    border-color: #1e40af;
+    transform: translateY(-2px);
 }
 
 .btn-outline-secondary {
@@ -145,11 +231,17 @@ body {
 .btn-outline-secondary:hover {
     background-color: #edf2f7;
     color: #4a5568;
+    transform: translateY(-2px);
 }
 
 .btn-agregar {
     padding: 6px;
-    height: 32px;
+    height: 34px;
+    width: 100%;
+}
+
+.btn-nuevo-cliente {
+    transition: all 0.2s ease;
 }
 
 /* Table Styling */
@@ -158,37 +250,45 @@ body {
     border-collapse: separate;
     border-spacing: 0;
     width: 100%;
-    margin-bottom: 5px; /* Reducido para acercar el comentario */
+    margin-bottom: 10px;
+    border-radius: 6px;
+    overflow: hidden;
 }
 
 .table thead th {
     background: linear-gradient(135deg, #4a5568, #2d3748);
     color: #fff;
     font-weight: 600;
-    padding: 6px 10px;
+    padding: 8px 10px;
     border-bottom: 2px solid #e2e8f0;
+    text-align: center;
 }
 
 .table tbody td {
-    padding: 6px 10px;
+    padding: 8px 10px;
     border-bottom: 1px solid #edf2f7;
+    vertical-align: middle;
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
     background-color: #f7fafc;
 }
 
+.table-striped tbody tr:hover {
+    background-color: #eef2ff;
+}
+
 .table-bordered {
     border: 1px solid #e2e8f0;
 }
 
-/* Ajustes para DataTables */
+/* DataTables Adjustments */
 .dataTables_wrapper {
-    margin-bottom: 5px; /* Reducido para integrar mejor */
+    margin-bottom: 10px;
 }
 
 .dataTables_wrapper .dataTables_paginate {
-    margin-top: 5px;
+    margin-top: 10px;
 }
 
 .dataTables_wrapper .dataTables_paginate .paginate_button {
@@ -199,6 +299,7 @@ body {
     background-color: #fff;
     color: #4a5568;
     font-size: 0.85rem;
+    transition: all 0.2s ease;
 }
 
 .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
@@ -217,7 +318,7 @@ body {
 .total-box {
     background-color: #f7fafc;
     border-radius: 6px;
-    padding: 8px 12px;
+    padding: 12px;
     border: 1px solid #e2e8f0;
     flex-grow: 1;
 }
@@ -227,6 +328,7 @@ body {
     justify-content: space-between;
     font-size: 0.9rem;
     color: #4a5568;
+    margin-bottom: 5px;
 }
 
 .total-item span {
@@ -239,27 +341,42 @@ body {
 
 .total-item.total {
     border-top: 1px dashed #e2e8f0;
-    margin-top: 4px;
-    padding-top: 4px;
+    margin-top: 5px;
+    padding-top: 5px;
     color: #2d3748;
+}
+
+.total-item.total strong {
+    color: #38a169;
+    font-size: 1.2rem;
 }
 
 /* Payment Options */
 .payment-options {
     background-color: #edf2f7;
-    padding: 8px;
+    padding: 10px;
     border-radius: 6px;
-    margin-top: 5px;
+    margin-top: 10px;
+    transition: all 0.3s ease;
 }
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
+    .main-content {
+        padding: 10px;
+    }
+
+    .page-content {
+        padding: 10px;
+    }
+
     .card-body {
-        padding: 5px;
+        padding: 10px;
     }
 
     .btn {
         padding: 4px 8px;
+        font-size: 0.85rem;
     }
 
     .table {
@@ -267,55 +384,76 @@ body {
     }
 
     .total-box {
-        padding: 6px;
+        padding: 8px;
     }
 
     #vent_coment {
-        min-height: 50px; /* Algo más alto en móviles */
+        min-height: 80px;
+    }
+
+    .header-section {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .breadcrumb {
+        margin-top: 5px;
+    }
+
+    .cliente-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .cliente-wrapper .btn-nuevo-cliente {
+        margin-top: 5px;
+        width: 100%;
+        height: 34px;
     }
 }
 
-/* Resaltar cambios en totales */
+/* Highlight Animation */
 .highlight {
     animation: highlight 1s ease;
 }
+
 @keyframes highlight {
     0% { background-color: #d4edda; }
     100% { background-color: transparent; }
 }
 
-/* Efecto hover en botones */
+/* Hover Effect on Buttons */
 .btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Resaltar cambios en totales */
-.highlight {
-    animation: highlight 1s ease;
-}
-@keyframes highlight {
-    0% { background-color: #d4edda; }
-    100% { background-color: transparent; }
-}
-
-/* Efecto hover en botones */
-.btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Validación en tiempo real */
+/* Validation */
 .is-invalid {
     border-color: #dc3545;
 }
+
 .text-danger {
     font-size: 0.8rem;
     color: #dc3545;
 }
 
-/* Estilo para botones pequeños en la tabla */
+/* Small Buttons */
 .btn-sm {
-    padding: 2px 5px;
+    padding: 4px 8px;
     font-size: 0.75rem;
+}
+
+/* Icon Alignment */
+.btn i {
+    margin-right: 5px;
+}
+
+.btn-nuevo-cliente i {
+    margin: 0;
+}
+
+/* Custom Adjustments */
+#credito_field .form-control {
+    height: 34px;
 }
