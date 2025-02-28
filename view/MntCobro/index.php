@@ -44,7 +44,7 @@ if (isset($_SESSION["USU_ID"])) {
                     <div class="col-lg-12">
                         <div class="card card-compact">
                             <div class="card-header">
-                                <h4 class="card-title">Ventas Pendientes</h4>
+                                <h4 class="card-title">Ventas Pendiente</h4>
                             </div>
                             <div class="card-body">
                                 <table id="table_pendientes" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
