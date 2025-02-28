@@ -1,7 +1,7 @@
 var suc_id = $('#SUC_IDx').val();
-function init (){
-    $("#mantenimiento_form").on("submit", function(e){
-        
+
+function init() {
+    $("#mantenimiento_form").on("submit", function(e) {
         guardaryeditar(e);
     });
 }
@@ -12,7 +12,6 @@ function guardaryeditar(e) {
     var formData = new FormData($("#mantenimiento_form")[0]);  
     formData.append('suc_id', $("#SUC_IDx").val());
 
-    // Primera petición AJAX
     $.ajax({
         url: "../../controller/producto.php?op=guardaryeditar",
         type: "POST",
@@ -20,8 +19,8 @@ function guardaryeditar(e) {
         contentType: false,
         processData: false,
         success: function(data) {
-            $('#modalmantenimiento').modal('hide'); // Cierra el modal
-            $('#table_data').DataTable().ajax.reload(); // Recargar tabla
+            $('#modalmantenimiento').modal('hide');
+            $('#table_data').DataTable().ajax.reload();
 
             swal.fire({
                 title: 'Producto',
@@ -31,37 +30,35 @@ function guardaryeditar(e) {
                     confirmButton: 'btn-success'
                 }
             });
-
-            
         }
     });
 }
 
-
-$(document).ready(function(){
-    $.post("../../controller/categoria.php?op=combo",{suc_id:suc_id},function(data){
+$(document).ready(function() {
+    // Cargar combos
+    $.post("../../controller/categoria.php?op=combo", { suc_id: suc_id }, function(data) {
         $("#cat_id").html(data);
     });
-    $.post("../../controller/moneda.php?op=combo",{suc_id:suc_id},function(data){
+    $.post("../../controller/moneda.php?op=combo", { suc_id: suc_id }, function(data) {
         $("#mon_id").html(data);
     });
-    $.post("../../controller/unidad.php?op=combo",{suc_id:suc_id},function(data){
+    $.post("../../controller/unidad.php?op=combo", { suc_id: suc_id }, function(data) {
         $("#und_id").html(data);
     });
 
-    $("#cat_id").change(function () {
-        var cat_id = $(this).val(); // Obtener la categoría seleccionada
-
+    // Manejar cambio de categoría para cargar subcategorías
+    $("#cat_id").change(function() {
+        var cat_id = $(this).val();
         if (cat_id) {
-            $.post("../../controller/subcategoria.php?op=combo", { cat_id: cat_id }, function (data) {
+            $.post("../../controller/subcategoria.php?op=combo", { cat_id: cat_id }, function(data) {
                 $("#scat_id").html(data);
             });
         } else {
-            // Si no hay categoría seleccionada, limpiar subcategorías
             $("#scat_id").html('<option value="">Seleccione una subcategoría</option>');
         }
     });
 
+    // Inicializar DataTable
     $('#table_data').DataTable({
         "aProcessing": true,
         "aServerSide": true,
@@ -71,47 +68,49 @@ $(document).ready(function(){
             'excelHtml5',
             'csvHtml5',
         ],
-        "ajax":{
-            url:"../../controller/producto.php?op=listar",
-            type:"post",
-            data:{suc_id:suc_id},
-            error: function (xhr, error, thrown) {
+        "ajax": {
+            url: "../../controller/producto.php?op=listar",
+            type: "post",
+            data: { suc_id: suc_id },
+            error: function(xhr, error, thrown) {
                 console.log('Error en DataTable:', error);
                 console.log('Respuesta del servidor:', xhr.responseText);
             }
         },
         "bDestroy": true,
         "responsive": true,
-        "bInfo":true,
+        "bInfo": true,
         "iDisplayLength": 10,
-        "order": [[ 0, "desc" ]],
+        "order": [[0, "desc"]],
         "language": {
-            "sProcessing":     "Procesando...",
-            "sLengthMenu":     "Mostrar _MENU_ registros",
-            "sZeroRecords":    "No se encontraron resultados",
-            "sEmptyTable":     "Ningún dato disponible en esta tabla",
-            "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-            "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
-            "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
-            "sInfoPostFix":    "",
-            "sSearch":         "Buscar:",
-            "sUrl":           "",
-            "sInfoThousands":  ",",
+            "sProcessing": "Procesando...",
+            "sLengthMenu": "Mostrar _MENU_ registros",
+            "sZeroRecords": "No se encontraron resultados",
+            "sEmptyTable": "Ningún dato disponible en esta tabla",
+            "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix": "",
+            "sSearch": "Buscar:",
+            "sUrl": "",
+            "sInfoThousands": ",",
             "sLoadingRecords": "Cargando...",
             "oPaginate": {
-                "sFirst":    "Primero",
-                "sLast":     "Último",
-                "sNext":     "Siguiente",
+                "sFirst": "Primero",
+                "sLast": "Último",
+                "sNext": "Siguiente",
                 "sPrevious": "Anterior"
             }
         }
     });
-    
-    
+
+    // Inicializar el formulario de mantenimiento
+    init();
 });
 
+// Resto del código (editar, eliminar, etc.) permanece igual
 function editar(prod_id) {
-    $.post("../../controller/producto.php?op=mostrar", { prod_id: prod_id }, function (data) {
+    $.post("../../controller/producto.php?op=mostrar", { prod_id: prod_id }, function(data) {
         data = JSON.parse(data);
         $("#prod_id").val(data.PROD_ID);
         $("#prod_nom").val(data.PROD_NOM);
@@ -120,85 +119,41 @@ function editar(prod_id) {
         $("#prod_pventa").val(data.PROD_PVENTA);
         $("#prod_stock").val(data.PROD_STOCK);
         $("#cat_id").val(data.CAT_ID).trigger('change');
-        
-        // Cargar las subcategorías y establecer el valor de scat_id
-        $.post("../../controller/subcategoria.php?op=combo", { cat_id: data.CAT_ID }, function (subcat_data) {
+
+        $.post("../../controller/subcategoria.php?op=combo", { cat_id: data.CAT_ID }, function(subcat_data) {
             $("#scat_id").html(subcat_data);
             $("#scat_id").val(data.SCAT_ID).trigger('change');
-            
-            // Establecer los demás valores después de cargar las subcategorías
             $("#und_id").val(data.UND_ID).trigger('change');
             $("#mon_id").val(data.MON_ID).trigger('change');
             $("#pre_imagen").html(data.PROD_IMG);
-            
-            // Mostrar el modal después de cargar y establecer todos los valores
             $('#lbltitulo').html('Editar Registro');
             $('#modalmantenimiento').modal('show');
         });
     });
 }
 
-$(document).ready(function () {
-    $("#cat_id").change(function () {
-        var cat_id = $(this).val(); // Obtener la categoría seleccionada
-
-        if (cat_id) {
-            $.post("../../controller/subcategoria.php?op=combo", { cat_id: cat_id }, function (data) {
-                $("#scat_id").html(data);
-            });
-        } else {
-            // Si no hay categoría seleccionada, limpiar subcategorías
-            $("#scat_id").html('<option value="">Seleccione una subcategoría</option>');
-        }
-    });
-
-    // Inicializar el formulario de mantenimiento
-    init();
-});
-
-$(document).ready(function(){
-    $("#cat_id").change(function () {
-        var cat_id = $(this).val(); // Obtener la categoría seleccionada
-
-        if (cat_id) {
-            $.post("../../controller/subcategoria.php?op=combo", { cat_id: cat_id }, function (data) {
-                $("#scat_id").html(data);
-            });
-        } else {
-            // Si no hay categoría seleccionada, limpiar subcategorías
-            $("#scat_id").html('<option value="">Seleccione una subcategoría</option>');
-        }
-    });
-
-    // Inicializar el formulario de mantenimiento
-    init();
-});
-
-function eliminar(prod_id){
+function eliminar(prod_id) {
     swal.fire({
-        title:"ELIMINAR",
-        text:"¿Desea eliminar el registro?",
+        title: "ELIMINAR",
+        text: "¿Desea eliminar el registro?",
         icon: "question",
         confirmButtonText: "Si",
         showCancelButton: true,
         cancelButtonText: "No",
-    }).then((result)=>{
-        if (result.value){
-            $.post("../../controller/producto.php?op=eliminar",{prod_id:prod_id}, function(data)  {
-            });
-
+    }).then((result) => {
+        if (result.value) {
+            $.post("../../controller/producto.php?op=eliminar", { prod_id: prod_id }, function(data) {});
             $('#table_data').DataTable().ajax.reload();
-
             swal.fire({
-                title:'Producto',
+                title: 'Producto',
                 text: 'Registro eliminado',
                 icon: 'success',
                 customClass: {
-                    confirmButton: 'btn-danger'  // Personalización del botón de confirmación para el error
+                    confirmButton: 'btn-danger'
                 }
-            })
+            });
         }
-    })
+    });
 }
 
 $(document).on("click","#btnnuevo", function(){
