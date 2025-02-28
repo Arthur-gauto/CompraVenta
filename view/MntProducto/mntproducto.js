@@ -1,13 +1,18 @@
 var suc_id = $('#SUC_IDx').val();
 
 function init() {
-    $("#mantenimiento_form").on("submit", function(e) {
+    // Desvincular cualquier evento submit previo para evitar duplicados
+    $("#mantenimiento_form").off("submit").on("submit", function(e) {
         guardaryeditar(e);
     });
 }
 
 function guardaryeditar(e) {
     e.preventDefault();
+
+    // Deshabilitar el botón de envío para evitar múltiples clics
+    var $submitButton = $("#mantenimiento_form").find('button[type="submit"]');
+    $submitButton.prop('disabled', true);
 
     var formData = new FormData($("#mantenimiento_form")[0]);  
     formData.append('suc_id', $("#SUC_IDx").val());
@@ -30,6 +35,13 @@ function guardaryeditar(e) {
                     confirmButton: 'btn-success'
                 }
             });
+        },
+        error: function(xhr, status, error) {
+            console.log("Error en AJAX:", error);
+        },
+        complete: function() {
+            // Rehabilitar el botón después de completar la solicitud
+            $submitButton.prop('disabled', false);
         }
     });
 }
@@ -108,7 +120,6 @@ $(document).ready(function() {
     init();
 });
 
-// Resto del código (editar, eliminar, etc.) permanece igual
 function editar(prod_id) {
     $.post("../../controller/producto.php?op=mostrar", { prod_id: prod_id }, function(data) {
         data = JSON.parse(data);
@@ -156,7 +167,7 @@ function eliminar(prod_id) {
     });
 }
 
-$(document).on("click","#btnnuevo", function(){
+$(document).on("click", "#btnnuevo", function() {
     $("#prod_id").val('');
     $("#prod_nom").val('');
     $("#prod_descrip").val('');
@@ -176,76 +187,70 @@ $(document).on("click","#btnnuevo", function(){
 function filePreview(input) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
-        reader.onload = function (e) {
-            $('#pre_imagen').html('<img src='+e.target.result+' class="rounded-circle avatar-xl img-thumbnail user-profile-image" alt="user-profile-image"></img>');
+        reader.onload = function(e) {
+            $('#pre_imagen').html('<img src=' + e.target.result + ' class="rounded-circle avatar-xl img-thumbnail user-profile-image" alt="user-profile-image"></img>');
         }
         reader.readAsDataURL(input.files[0]);
     }
 }
 
-$(document).on('change','#prod_img',function(){
+$(document).on('change', '#prod_img', function() {
     filePreview(this);
 });
 
-$(document).on("click","#btnremovephoto", function(){
+$(document).on("click", "#btnremovephoto", function() {
     $("#prod_img").val('');
     $("#pre_imagen").html('<img src="../../assets/producto/no_imagen.png" class="rounded-circle avatar-xl img-thumbnail user-profile-image" alt="user-profile-image"></img><input type="hidden" name="hidden_producto_imagen" value="" />');
-});  
+});
 
-$(document).on("click", ".btn-editar", function () {
-    let prodId = $(this).data("prod-id"); // Obtener el ID del producto
-    var prod_id =$("#prod_id").val();
-    console.log("Botón clickeado, prodId:", prod_id); // Para verificar
-     // Asignar el ID al input hidden
+$(document).on("click", ".btn-editar", function() {
+    let prodId = $(this).data("prod-id");
+    var prod_id = $("#prod_id").val();
+    console.log("Botón clickeado, prodId:", prod_id);
     actualizarPreciosModal(prod_pcompra);
-        $("#modalmantenimientolp").modal("show");
-        $("#mantenimientolp_form").off("submit").on("submit", function (e) {
-            e.preventDefault();
-            var precioA = parseFloat($("#precio_A").val()) || prod_pcompra;
-            var precioB = parseFloat($("#precio_B").val()) || prod_pcompra;
-            var precioC = parseFloat($("#precio_C").val()) || prod_pcompra;
+    $("#modalmantenimientolp").modal("show");
+    $("#mantenimientolp_form").off("submit").on("submit", function(e) {
+        e.preventDefault();
+        var precioA = parseFloat($("#precio_A").val()) || prod_pcompra;
+        var precioB = parseFloat($("#precio_B").val()) || prod_pcompra;
+        var precioC = parseFloat($("#precio_C").val()) || prod_pcompra;
 
-            $.post("../../controller/precio.php?op=guardar", {
-                prod_id: prod_id,
-                listp_a: precioA,
-                listp_b: precioB,
-                listp_c: precioC
-            }, function (data) {
-                console.log("Precios de venta actualizados:", data);
-            });
-
-            $("#modalmantenimientolp").modal("hide");
+        $.post("../../controller/precio.php?op=guardar", {
+            prod_id: prod_id,
+            listp_a: precioA,
+            listp_b: precioB,
+            listp_c: precioC
+        }, function(data) {
+            console.log("Precios de venta actualizados:", data);
         });
+
+        $("#modalmantenimientolp").modal("hide");
+    });
 });
 
 function abrirModalListaPrecios(prod_id) {
-    // Guardamos el ID del producto en un campo oculto del modal
-    
-
-    // Hacer una petición AJAX para obtener los datos de las listas de precios
     $.post("../../controller/producto.php?op=mostrar_listaprecio", { prod_id: prod_id }, function(data) {
         data = JSON.parse(data);
         $("#prod_id").val(prod_id);
-        // Llenar los inputs del modal con los datos obtenidos
         $("#lista_precio_A").val(data.LISTP_A);
         $("#lista_precio_B").val(data.LISTP_B);
         $("#lista_precio_C").val(data.LISTP_C);
     });
 
-    // Mostrar el modal de listas de precios
     $("#modalmantenimientolp").modal("show");
 }
+
 function actualizarPreciosModal(precioCompra) {
     $("#prod_pcompram").val(precioCompra);
     var prod_id = $("#prod_id").val();
-    $.post("../../controller/precio.php?op=mostrar", { prod_id: prod_id }, function (data) {
+    $.post("../../controller/precio.php?op=mostrar", { prod_id: prod_id }, function(data) {
         data = JSON.parse(data);
         if (data && data.LISTP_A) {
             $("#precio_A").val(data.LISTP_A);
             $("#precio_B").val(data.LISTP_B);
             $("#precio_C").val(data.LISTP_C);
         } else {
-            $(".porcentaje-input").each(function () {
+            $(".porcentaje-input").each(function() {
                 let porcentaje = parseFloat($(this).val()) || 0;
                 let nuevoPrecio = (precioCompra * (1 + porcentaje / 100)).toFixed(2);
                 $(this).closest("tr").find(".precio-input").val(nuevoPrecio);
@@ -255,9 +260,8 @@ function actualizarPreciosModal(precioCompra) {
 }
 
 function actualizarDesdePrecio(precioCompra) {
-    $(".precio-input").each(function () {
+    $(".precio-input").each(function() {
         let precioFinal = parseFloat($(this).val()) || 0;
-
         if (precioCompra > 0 && precioFinal > 0) {
             let porcentaje = (((precioFinal / precioCompra) - 1) * 100).toFixed(0);
             $(this).closest("tr").find(".porcentaje-input").val(porcentaje);
@@ -266,21 +270,19 @@ function actualizarDesdePrecio(precioCompra) {
 }
 
 function actualizarDesdePorcentaje(precioCompra) {
-    $(".porcentaje-input").each(function () {
+    $(".porcentaje-input").each(function() {
         let porcentaje = parseFloat($(this).val()) || 0;
         let nuevoPrecio = (precioCompra * (1 + porcentaje / 100)).toFixed(0);
         $(this).closest("tr").find(".precio-input").val(nuevoPrecio);
     });
 }
 
-$(document).on("input", ".precio-input", function () {
+$(document).on("input", ".precio-input", function() {
     let precioCompra = parseFloat($("#prod_pcompra").val()) || 0;
     actualizarDesdePrecio(precioCompra);
 });
 
-$(document).on("input", ".porcentaje-input", function () {
+$(document).on("input", ".porcentaje-input", function() {
     let precioCompra = parseFloat($("#prod_pcompra").val()) || 0;
     actualizarDesdePorcentaje(precioCompra);
 });
-
-init();
