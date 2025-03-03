@@ -1,32 +1,50 @@
 <?php
-    require_once("../../config/conexion.php");
-    require_once("../../models/Rol.php");
-    $rol = new rol();
-    $datos= $rol -> validar_acceso_rol($_SESSION["USU_ID"],"dashboard");
-    if (isset($_SESSION["USU_ID"])){
-        if(is_array($datos) and count($datos)>0){
-            require_once("../../models/Producto.php");
-            $producto = new Producto();
-            $datos_producto=$producto->get_producto_x_suc_id($_SESSION["SUC_ID"]);
+ob_start();
 
-            require_once("../../models/Categoria.php");
-            $categoria = new Categoria();
-            $datos_categoria=$categoria->get_categoria_x_suc_id($_SESSION["SUC_ID"]);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-            require_once("../../models/Cliente.php");
-            $cliente = new Cliente();
-            $datos_cliente=$cliente->get_cliente_x_emp_id($_SESSION["EMP_ID"]);
+// No es necesario session_start() aquí, ya que se inicia en login.php
+// session_start();
 
-            require_once("../../models/Proveedor.php");
-            $proveedor = new Proveedor();
-            $datos_proveedor=$proveedor->get_proveedor_x_emp_id($_SESSION["EMP_ID"]);
+file_put_contents('debug.log', "Sesión en home/index.php: " . print_r($_SESSION, true) . "\n", FILE_APPEND);
+
+require_once("../../config/conexion.php");
+require_once("../../models/Rol.php");
+
+if (!isset($_SESSION["USU_ID"])) {
+    file_put_contents('debug.log', "No hay sesión activa, redirigiendo a login.php\n", FILE_APPEND);
+    header("Location: " . Conectar::ruta() . "login.php?error=session");
+    exit();
+}
+
+$rol = new Rol();
+$datos = $rol->validar_acceso_rol($_SESSION["USU_ID"], "dashboard");
+
+file_put_contents('debug.log', "Resultado validar_acceso_rol: " . print_r($datos, true) . "\n", FILE_APPEND);
+
+if (is_array($datos) && count($datos) > 0) {
+    require_once("../../models/Producto.php");
+    $producto = new Producto();
+    $datos_producto = $producto->get_producto_x_suc_id($_SESSION["SUC_ID"]);
+
+    require_once("../../models/Categoria.php");
+    $categoria = new Categoria();
+    $datos_categoria = $categoria->get_categoria_x_suc_id($_SESSION["SUC_ID"]);
+
+    require_once("../../models/Cliente.php");
+    $cliente = new Cliente();
+    $datos_cliente = $cliente->get_cliente_x_emp_id($_SESSION["EMP_ID"]);
+
+    require_once("../../models/Proveedor.php");
+    $proveedor = new Proveedor();
+    $datos_proveedor = $proveedor->get_proveedor_x_emp_id($_SESSION["EMP_ID"]);
 ?>
 
 <!doctype html>
 <html lang="es" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg" data-sidebar-image="none">
-
 <head>
-
     <title>Arthur | Home</title>
     <?php require_once("../html/head.php"); ?>
 
@@ -35,46 +53,36 @@
 
     <!--Swiper slider css-->
     <link href="../../assets/libs/swiper/swiper-bundle.min.css" rel="stylesheet" type="text/css" />
-
 </head>
-
 <body>
     <div id="layout-wrapper">
-
         <?php require_once("../html/header.php"); ?>
-
         <?php require_once("../html/menu.php"); ?>
         
         <div class="main-content">
-
             <div class="page-content">
                 <div class="container-fluid">
-
                     <div class="row">
                         <div class="col-12">
                             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                                 <h4 class="mb-sm-0">Inicio</h4>
-
                                 <div class="page-title-right">
                                     <ol class="breadcrumb m-0">
                                         <li class="breadcrumb-item"><a href="javascript: void(0);">Menu</a></li>
                                         <li class="breadcrumb-item active">Inicio</li>
                                     </ol>
                                 </div>
-
                             </div>
                         </div>
                     </div>
-                 
                     <div class="row">
                         <div class="col">
-
                             <div class="h-100">
                                 <div class="row mb-3 pb-1">
                                     <div class="col-12">
                                         <div class="d-flex align-items-lg-center flex-lg-row flex-column">
                                             <div class="flex-grow-1">
-                                                <h4 class="fs-16 mb-1">Buen dia, <?php echo $_SESSION["USU_NOM"]?>!</h4>
+                                                <h4 class="fs-16 mb-1">Buen día, <?php echo $_SESSION["USU_NOM"]?>!</h4>
                                                 <p class="text-muted mb-0">Esto es lo que está sucediendo con tu tienda hoy.</p>
                                             </div>
                                             <div class="mt-3 mt-lg-0">
@@ -92,9 +100,7 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="row">
-
                                     <div class="col-xl-3 col-md-6">
                                         <div class="card card-animate">
                                             <div class="card-body">
@@ -117,13 +123,12 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="col-xl-3 col-md-6">
                                         <div class="card card-animate">
                                             <div class="card-body">
                                                 <div class="d-flex align-items-center">
                                                     <div class="flex-grow-1 overflow-hidden">
-                                                     <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Total Categorias</p>
+                                                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Total Categorias</p>
                                                     </div>
                                                 </div>
                                                 <div class="d-flex align-items-end justify-content-between mt-4">
@@ -140,7 +145,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="col-xl-3 col-md-6">
                                         <div class="card card-animate">
                                             <div class="card-body">
@@ -163,7 +167,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="col-xl-3 col-md-6">
                                         <div class="card card-animate">
                                             <div class="card-body">
@@ -186,15 +189,13 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
-
                                 <div class="row">
                                     <div class="col-xl-12">
                                         <div class="card card-height-100">
                                             <div class="card-header align-items-center d-flex">
-                                                    <h4 class="card-title mb-0 flex-grow-1">Compras</h4>
-                                                </div>
+                                                <h4 class="card-title mb-0 flex-grow-1">Compras</h4>
+                                            </div>
                                             <div class="card-body p-0 pb-2">
                                                 <div class="w-100">
                                                     <canvas id="grafcompra" class="chartjs-chart" data-colors='["--vz-success-rgb, 0.8", "--vz-primary-rgb, 0.9"]'></canvas>
@@ -202,12 +203,11 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="col-xl-12">
                                         <div class="card card-height-100">
                                             <div class="card-header align-items-center d-flex">
-                                                    <h4 class="card-title mb-0 flex-grow-1">Ventas</h4>
-                                                </div>
+                                                <h4 class="card-title mb-0 flex-grow-1">Ventas</h4>
+                                            </div>
                                             <div class="card-body p-0 pb-2">
                                                 <div class="w-100">
                                                     <canvas id="grafventa" class="chartjs-chart" data-colors='["--vz-danger-rgb, 0.8", "--vz-primary-rgb, 0.9"]'></canvas>
@@ -215,26 +215,19 @@
                                             </div>
                                         </div>
                                     </div>
-
-                                  
                                 </div>
-
                                 <div class="row">
                                     <div class="col-xl-6">
                                         <div class="card">
                                             <div class="card-header align-items-center d-flex">
                                                 <h4 class="card-title mb-0 flex-grow-1">Top 5 Productos - Compras</h4>
                                             </div>
-
                                             <div class="card-body">
                                                 <div class="table-responsive table-card">
                                                     <table class="table table-hover table-centered align-middle table-nowrap mb-0">
-                                                        <tbody id="listtopcompraproducto">
-   
-                                                        </tbody>
+                                                        <tbody id="listtopcompraproducto"></tbody>
                                                     </table>
                                                 </div>
-
                                                 <div class="align-items-center mt-4 pt-2 justify-content-between d-flex">
                                                     <div class="flex-shrink-0">
                                                         <div class="text-muted">
@@ -242,26 +235,20 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="col-xl-6">
                                         <div class="card card-height-100">
                                             <div class="card-header align-items-center d-flex">
                                                 <h4 class="card-title mb-0 flex-grow-1">Top 5 Productos - Ventas</h4>
                                             </div>
-
                                             <div class="card-body">
                                                 <div class="table-responsive table-card">
                                                     <table class="table table-centered table-hover align-middle table-nowrap mb-0">
-                                                        <tbody id="listtopventaproducto">
-                                                            
-                                                        </tbody>
+                                                        <tbody id="listtopventaproducto"></tbody>
                                                     </table>
                                                 </div>
-
                                                 <div class="align-items-center mt-4 pt-2 justify-content-between d-flex">
                                                     <div class="flex-shrink-0">
                                                         <div class="text-muted">
@@ -269,31 +256,26 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
-                                            </div> 
-                                        </div> 
-                                    </div> 
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-
                                 <div class="row">
                                     <div class="col-xl-4">
                                         <div class="card card-height-100">
                                             <div class="card-header align-items-center d-flex">
                                                 <h4 class="card-title mb-0 flex-grow-1">Consumo Compras Por Categoria</h4>
                                             </div>
-
                                             <div class="card-body">
                                                 <canvas id="grafdona" class="chartjs-chart" data-colors='["--vz-primary", "--vz-success", "--vz-warning", "--vz-danger", "--vz-info"]'></canvas>
                                             </div>
-                                        </div> <!-- .card-->
-                                    </div> <!-- .col-->
-
+                                        </div>
+                                    </div>
                                     <div class="col-xl-8">
                                         <div class="card">
                                             <div class="card-header align-items-center d-flex">
                                                 <h4 class="card-title mb-0 flex-grow-1">Compras Recientes</h4>
                                             </div>
-
                                             <div class="card-body">
                                                 <div class="table-responsive table-card">
                                                     <table class="table table-borderless table-centered align-middle table-nowrap mb-0">
@@ -308,19 +290,15 @@
                                                                 <th scope="col">total</th>
                                                             </tr>
                                                         </thead>
-                                                        <tbody id="listventatop5">
-                                                            
-                                                        </tbody>
+                                                        <tbody id="listventatop5"></tbody>
                                                     </table>
                                                 </div>
                                             </div>
-                                        </div> 
-                                    </div> 
-                                </div> 
-                            </div> 
-
-                        </div> 
-
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-auto layout-rightside-col">
                             <div class="overlay"></div>
                             <div class="layout-rightside">
@@ -330,39 +308,24 @@
                                             <h6 class="text-muted mb-0 text-uppercase fw-semibold">Actividad Reciente</h6>
                                         </div>
                                         <div data-simplebar style="max-height: 710px;" class="p-3 pt-0">
-                                            <div class="acitivity-timeline acitivity-main" id="listcompraventa">
-                                                
-                                            </div>
+                                            <div class="acitivity-timeline acitivity-main" id="listcompraventa"></div>
                                         </div>
-
-                                        <!-- TODO TOTAL DE CATEGORIA -->
                                         <div class="p-3 mt-2">
-                                            <h6 class="text-muted mb-3 text-uppercase fw-semibold">TOTAL DE STOCK POR CATEGORIA
-                                            </h6>
-
-                                            <ol class="ps-3 text-muted" id="listcategoriastock">
-                                            </ol>
+                                            <h6 class="text-muted mb-3 text-uppercase fw-semibold">TOTAL DE STOCK POR CATEGORIA</h6>
+                                            <ol class="ps-3 text-muted" id="listcategoriastock"></ol>
                                             <div class="mt-3 text-center">
                                                 <a href="../MntCategoria/" class="text-muted text-decoration-underline">Ver Todas Las Categorias</a>
                                             </div>
                                         </div>
-                                        <!-- FIN: TOTAL DE CATEGORIA -->
                                     </div>
-                                </div> 
+                                </div>
                             </div>
-
-                        </div> 
+                        </div>
                     </div>
-
                 </div>
-
             </div>
-
-
             <?php require_once("../html/footer.php"); ?>
-
         </div>
-        
     </div>
 
     <?php require_once("../html/js.php"); ?>
@@ -386,18 +349,12 @@
     <script src="../../assets/js/pages/chartjs.init.js"></script>
 
     <script type="text/javascript" src="home.js"></script>
-
-    
-
-    
 </body>
-
 </html>
 <?php
-        }else{
-            header("Location:".Conectar::ruta()."view/404/");
-        }
-    }else{
-        header("Location:".Conectar::ruta()."view/404/");
-    }
+} else {
+    file_put_contents('debug.log', "Acceso denegado: " . print_r($datos, true) . "\n", FILE_APPEND);
+    header("Location: " . Conectar::ruta() . "view/404/");
+    exit();
+}
 ?>
