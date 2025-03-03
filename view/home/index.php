@@ -1,6 +1,11 @@
 <?php
 ob_start();
 
+// Desactivar la visualización de warnings y errores en pantalla
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
+error_reporting(0);
+
 session_start();
 
 file_put_contents('debug.log', "Sesión en home/index.php: " . print_r($_SESSION, true) . "\n", FILE_APPEND);
