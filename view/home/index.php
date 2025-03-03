@@ -1,15 +1,11 @@
 <?php
 ob_start();
 
-// Mantener la depuración temporalmente para diagnosticar el problema
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Iniciar la sesión (solo si no está activa)
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+session_start();
 
 file_put_contents('debug.log', "Sesión en home/index.php: " . print_r($_SESSION, true) . "\n", FILE_APPEND);
 
