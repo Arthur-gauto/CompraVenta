@@ -1,11 +1,12 @@
 <?php
 ob_start();
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+// Desactivar la depuración solo en el login para que no se muestren warnings
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
+error_reporting(0);
 
-ini_set('session.cookie_secure', 1); // Para HTTPS en Azure
+ini_set('session.cookie_secure', 1);
 ini_set('session.cookie_httponly', 1);
 session_start();
 
@@ -101,6 +102,21 @@ if (isset($_POST["enviar"]) && $_POST["enviar"] == "si") {
 
                                         <div class="mt-4">
                                             <form action="" method="post" id="login_form">
+                                                <?php
+                                                if (isset($_GET['error'])) {
+                                                    echo '<div class="alert alert-danger" role="alert">';
+                                                    if ($_GET['error'] == 'login') {
+                                                        echo "Correo o contraseña incorrectos. Por favor, verifica tus credenciales.";
+                                                    } elseif ($_GET['error'] == 'empty') {
+                                                        echo "Por favor, completa todos los campos del formulario.";
+                                                    } elseif ($_GET['error'] == 'invalid') {
+                                                        echo "Solicitud inválida. Por favor, intenta de nuevo.";
+                                                    } elseif ($_GET['error'] == 'exception') {
+                                                        echo "Ocurrió un error interno. Por favor, intenta de nuevo más tarde.";
+                                                    }
+                                                    echo '</div>';
+                                                }
+                                                ?>
                                                 <div class="mb-3">
                                                     <label for="emp_id" class="form-label">Empresa</label>
                                                     <select type="text" class="form-control form-select" name="emp_id" id="emp_id" aria-label="Seleccionar">
