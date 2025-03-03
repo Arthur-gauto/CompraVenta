@@ -1,10 +1,6 @@
 <?php
 ob_start();
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 session_start();
 
 file_put_contents('debug.log', "Sesión en home/index.php: " . print_r($_SESSION, true) . "\n", FILE_APPEND);
